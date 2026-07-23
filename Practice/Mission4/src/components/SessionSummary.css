@@ -1,0 +1,58 @@
+.session-summary {
+  max-width: 480px;
+  margin: 40px auto 0;
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.session-summary h2 {
+  margin: 0;
+}
+
+.session-summary-total {
+  color: var(--text);
+}
+
+.session-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 24px;
+  font-size: 14px;
+}
+
+.session-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-again {
+  background: #e5484d;
+}
+.dot-hard {
+  background: #f5a524;
+}
+.dot-good {
+  background: #2fb344;
+}
+.dot-easy {
+  background: #3b82f6;
+}
+
+.session-summary-link {
+  text-decoration: none;
+  margin-top: 8px;
+}

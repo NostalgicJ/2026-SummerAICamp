@@ -1,0 +1,20 @@
+{
+  "id": "english-basic-verbs-1",
+  "name": "영어 기초 동사 1",
+  "description": "일상 대화에서 자주 쓰는 영어 기초 동사 12개",
+  "language": { "front": "en", "back": "ko" },
+  "cards": [
+    { "id": "c001", "front": "go", "back": "가다", "example": "I go to school every day." },
+    { "id": "c002", "front": "come", "back": "오다", "example": "Please come here." },
+    { "id": "c003", "front": "eat", "back": "먹다", "example": "We eat breakfast at 8." },
+    { "id": "c004", "front": "drink", "back": "마시다", "example": "She drinks coffee every morning." },
+    { "id": "c005", "front": "sleep", "back": "자다", "example": "I sleep eight hours a night." },
+    { "id": "c006", "front": "run", "back": "달리다", "example": "He runs in the park." },
+    { "id": "c007", "front": "read", "back": "읽다", "example": "They read books after dinner." },
+    { "id": "c008", "front": "write", "back": "쓰다", "example": "She writes a letter every week." },
+    { "id": "c009", "front": "speak", "back": "말하다", "example": "Can you speak English?" },
+    { "id": "c010", "front": "listen", "back": "듣다", "example": "I listen to music while working." },
+    { "id": "c011", "front": "buy", "back": "사다", "example": "We bought some fruit yesterday." },
+    { "id": "c012", "front": "make", "back": "만들다", "example": "He makes dinner for his family." }
+  ]
+}

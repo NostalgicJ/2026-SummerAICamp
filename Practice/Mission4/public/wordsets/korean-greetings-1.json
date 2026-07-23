@@ -1,0 +1,18 @@
+{
+  "id": "korean-greetings-1",
+  "name": "한국어 인사말 1",
+  "description": "외국어 학습자를 위한 한국어 기초 인사 표현 10개",
+  "language": { "front": "ko", "back": "en" },
+  "cards": [
+    { "id": "c001", "front": "안녕하세요", "back": "Hello (polite)", "example": "안녕하세요, 처음 뵙겠습니다." },
+    { "id": "c002", "front": "안녕히 가세요", "back": "Goodbye (to someone leaving)", "example": "안녕히 가세요, 또 만나요." },
+    { "id": "c003", "front": "감사합니다", "back": "Thank you", "example": "도와주셔서 감사합니다." },
+    { "id": "c004", "front": "죄송합니다", "back": "I'm sorry", "example": "늦어서 죄송합니다." },
+    { "id": "c005", "front": "괜찮아요", "back": "It's okay / I'm fine", "example": "괜찮아요, 걱정하지 마세요." },
+    { "id": "c006", "front": "반갑습니다", "back": "Nice to meet you", "example": "만나서 반갑습니다." },
+    { "id": "c007", "front": "잘 지내세요?", "back": "How are you?", "example": "요즘 잘 지내세요?" },
+    { "id": "c008", "front": "네", "back": "Yes", "example": "네, 맞아요." },
+    { "id": "c009", "front": "아니요", "back": "No", "example": "아니요, 그렇지 않아요." },
+    { "id": "c010", "front": "실례합니다", "back": "Excuse me", "example": "실례합니다, 길 좀 물어볼게요." }
+  ]
+}

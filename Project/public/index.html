@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>코딩테스트 데일리</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    background: #f5f5f7;
+    color: #1c1c1e;
+  }
+  h1 {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .date {
+    color: #6e6e73;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .company-badge {
+    display: inline-block;
+    background: #eef0ff;
+    color: #4340c9;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .name {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #6e6e73;
+    margin-bottom: 16px;
+  }
+  .meta span {
+    background: #f0f0f2;
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  .exp {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .link-btn {
+    display: inline-block;
+    background: #1c1c1e;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .error {
+    color: #d70015;
+  }
+</style>
+</head>
+<body>
+  <h1>코딩테스트 데일리</h1>
+  <div class="date" id="date"></div>
+  <div class="card" id="card">불러오는 중...</div>
+
+  <script>
+    async function loadToday() {
+      const cardEl = document.getElementById('card');
+      const dateEl = document.getElementById('date');
+      try {
+        const res = await fetch('/api/today');
+        if (!res.ok) throw new Error('요청 실패');
+        const data = await res.json();
+        const p = data.problem;
+
+        dateEl.textContent = data.date;
+        cardEl.innerHTML = `
+          <div class="company-badge">${escapeHtml(p.company)}</div>
+          <div class="name">${escapeHtml(p.name)}</div>
+          <div class="meta">
+            <span>${escapeHtml(p.plat)}</span>
+            <span>난이도 ${escapeHtml(String(p.level))}</span>
+            <span>${escapeHtml(p.tags)}</span>
+          </div>
+          <div class="exp">${escapeHtml(p.exp)}</div>
+          <a class="link-btn" href="${p.url}" target="_blank" rel="noopener">문제 풀러 가기 →</a>
+        `;
+      } catch (err) {
+        cardEl.innerHTML = '<div class="error">오늘의 문제를 불러오지 못했습니다.</div>';
+      }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    loadToday();
+  </script>
+</body>
+</html>

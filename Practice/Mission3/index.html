@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사이버 윷놀이</title>
+<style>
+  :root {
+    --bg: #1b2a22;
+    --bg-grad-2: #0f1a14;
+    --board-bg: #f4ead6;
+    --board-line: #8a6a3f;
+    --node: #fffaf0;
+    --node-border: #8a6a3f;
+    --corner: #e8c874;
+    --corner-border: #9c7a2e;
+    --center: #d98b5f;
+    --text: #f4ead6;
+    --panel-bg: rgba(0,0,0,0.25);
+    --highlight: #ffd76b;
+    --player-a: #e0483e;
+    --player-a-dark: #a5271f;
+    --player-b: #3e7fe0;
+    --player-b-dark: #1f4aa5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 18px;
+    background: radial-gradient(circle at 50% 0%, var(--bg) 0%, var(--bg-grad-2) 100%);
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    color: var(--text);
+  }
+
+  .game-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .board-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 20px;
+    background: var(--panel-bg);
+    border-radius: 18px;
+  }
+
+  /* 화면이 넓으면(주로 PC) 말판과 조작판을 좌우로 나란히, 세로 중앙 맞춰 배치해 스크롤 없이 한눈에 보이게 한다 */
+  @media (min-width: 1000px) {
+    .game-layout {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+    .board-column { width: auto; height: 596px; }
+    .turn-panel { width: 360px; height: 596px; align-self: center; }
+    /* 프롬프트가 뜨거나 로그가 늘어나도 카드 높이는 고정, 로그 영역만 늘었다 줄었다 하게 */
+    .turn-panel .log-box { flex: 1; max-height: none; min-height: 0; }
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    margin-top: -2px;
+    opacity: 0.85;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  .board-wrap {
+    position: relative;
+    width: min(82vw, 470px);
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.4));
+  }
+
+  .board-bg {
+    fill: var(--board-bg);
+    stroke: var(--board-line);
+    stroke-width: 2;
+  }
+
+  .path-line {
+    fill: none;
+    stroke: var(--board-line);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .shortcut-line {
+    fill: none;
+    stroke: var(--board-line);
+    stroke-width: 2.5;
+    stroke-dasharray: 6 8;
+    opacity: 0.7;
+  }
+
+  .node {
+    fill: var(--node);
+    stroke: var(--node-border);
+    stroke-width: 1.5;
+  }
+
+  .node.corner {
+    fill: var(--corner);
+    stroke: var(--corner-border);
+    stroke-width: 2;
+  }
+
+  .node.center {
+    fill: var(--center);
+    stroke: var(--corner-border);
+    stroke-width: 2;
+  }
+
+  .node.start {
+    fill: var(--corner);
+    stroke: var(--player-a);
+    stroke-width: 3;
+  }
+
+  .node-label {
+    font-size: 11px;
+    fill: #5a4425;
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+  }
+
+  .piece {
+    stroke: rgba(0,0,0,0.35);
+    stroke-width: 1.5;
+  }
+
+  .piece.player-a { fill: var(--player-a); }
+  .piece.player-b { fill: var(--player-b); }
+
+  .piece.clickable {
+    cursor: pointer;
+    stroke: #fff8e0;
+    stroke-width: 2.5;
+    animation: piecePulse 1.1s ease-in-out infinite;
+  }
+
+  @keyframes piecePulse {
+    0%, 100% { filter: drop-shadow(0 0 1px #fff2b0); }
+    50% { filter: drop-shadow(0 0 6px #fff2b0); }
+  }
+
+  .node.shortcut-dot {
+    fill: var(--board-bg);
+    stroke: var(--board-line);
+    stroke-width: 1.5;
+    opacity: 0.85;
+  }
+
+  .piece.piggyback {
+    stroke: #2a1c0c;
+    stroke-width: 2;
+  }
+
+  .stack-badge {
+    font-size: 9px;
+    font-weight: 800;
+    fill: #fff8e0;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+  }
+
+  .legend {
+    display: flex;
+    gap: 24px;
+    padding: 10px 20px;
+    background: var(--panel-bg);
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1.5px solid rgba(0,0,0,0.35);
+  }
+
+  .swatch.a { background: var(--player-a); }
+  .swatch.b { background: var(--player-b); }
+
+  .turn-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: min(82vw, 460px);
+    padding: 20px;
+    background: var(--panel-bg);
+    border-radius: 18px;
+  }
+
+  .turn-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 5px 16px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.2);
+    transition: background 0.25s, color 0.25s;
+  }
+
+  .turn-banner .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .turn-banner.player-a .dot { background: var(--player-a); }
+  .turn-banner.player-b .dot { background: var(--player-b); }
+
+  .sticks {
+    display: flex;
+    gap: 9px;
+    height: 90px;
+    align-items: center;
+    perspective: 500px;
+  }
+
+  .stick {
+    width: 20px;
+    height: 82px;
+    border-radius: 7px;
+    background: linear-gradient(180deg, #6b4a2a, #4a3018);
+    border: 2px solid #2e1e0e;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.4);
+  }
+
+  .stick.flat {
+    background: linear-gradient(180deg, #fdf6e6, #f0e2c0);
+    border-color: #a5854f;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.15);
+  }
+
+  .stick.spin {
+    animation: stickSpin 0.7s ease-in-out;
+  }
+
+  @keyframes stickSpin {
+    0%   { transform: rotate(0deg) translateY(0); }
+    30%  { transform: rotate(260deg) translateY(-16px); }
+    60%  { transform: rotate(-200deg) translateY(-4px); }
+    100% { transform: rotate(0deg) translateY(0); }
+  }
+
+  .throw-btn {
+    padding: 11px 30px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(180deg, #e8c874, #c9a24f);
+    color: #3a2a10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .throw-btn:active { transform: translateY(2px); }
+  .throw-btn:disabled { opacity: 0.45; cursor: default; }
+
+  .result-area {
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .result-text {
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+
+  .extra-note {
+    font-size: 0.85rem;
+    color: var(--highlight);
+    font-weight: 700;
+    min-height: 1.1em;
+  }
+
+  .prob-table {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .prob-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.18);
+    font-size: 0.82rem;
+    min-width: 48px;
+    transition: background 0.3s, transform 0.3s;
+  }
+
+  .prob-item .name { font-weight: 700; font-size: 0.9rem; }
+
+  .prob-item.active {
+    background: var(--corner);
+    color: #3a2a10;
+    transform: scale(1.12);
+  }
+
+  .log-box {
+    width: 100%;
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(10, 8, 6, 0.78);
+  }
+
+  .log-box .log-a { color: #ff9a90; font-weight: 600; }
+  .log-box .log-b { color: #9dc0ff; font-weight: 600; }
+
+  .move-instruction {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--highlight);
+    min-height: 1.3em;
+    text-align: center;
+  }
+
+  .pending-choices {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pending-chip {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.25);
+    color: var(--text);
+  }
+
+  .pending-chip.selected {
+    background: var(--corner);
+    border-color: var(--corner-border);
+    color: #3a2a10;
+  }
+
+  .shortcut-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .shortcut-prompt .prompt-msg {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .shortcut-prompt .prompt-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .shortcut-prompt button {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(180deg, #e8c874, #c9a24f);
+    color: #3a2a10;
+  }
+
+  .shortcut-prompt button.secondary {
+    background: linear-gradient(180deg, #dfe6da, #b9c4b2);
+  }
+
+  .finish-status {
+    display: flex;
+    gap: 20px;
+    font-size: 0.82rem;
+    opacity: 0.85;
+  }
+
+  @keyframes piecePop {
+    0% { transform: scale(0.3); opacity: 0.4; }
+    60% { transform: scale(1.25); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  .piece {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: piecePop 0.35s ease-out;
+  }
+
+  .win-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 10, 0.72);
+    backdrop-filter: blur(3px);
+    z-index: 50;
+    overflow: hidden;
+  }
+
+  .win-overlay.show { display: flex; }
+
+  .win-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 36px 44px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, #2a2018, #1a140e);
+    border: 2px solid var(--corner);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+    animation: winPop 0.45s cubic-bezier(.34,1.56,.64,1);
+    text-align: center;
+  }
+
+  @keyframes winPop {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .win-trophy { font-size: 3.2rem; }
+
+  .win-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .win-title.player-a { color: var(--player-a); }
+  .win-title.player-b { color: var(--player-b); }
+
+  .restart-btn {
+    margin-top: 6px;
+    padding: 10px 28px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(180deg, #e8c874, #c9a24f);
+    color: #3a2a10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  }
+
+  .confetti {
+    position: absolute;
+    top: -20px;
+    font-size: 1.4rem;
+    animation: confettiFall linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(420px) rotate(360deg); opacity: 0; }
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #eef2ea;
+      --bg-grad-2: #d9e2d3;
+      --text: #24331f;
+      --panel-bg: rgba(255,255,255,0.55);
+      --highlight: #8a5a12;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bg: #eef2ea;
+    --bg-grad-2: #d9e2d3;
+    --text: #24331f;
+    --panel-bg: rgba(255,255,255,0.55);
+    --highlight: #8a5a12;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1b2a22;
+    --bg-grad-2: #0f1a14;
+    --text: #f4ead6;
+    --panel-bg: rgba(0,0,0,0.25);
+    --highlight: #ffd76b;
+  }
+</style>
+</head>
+<body>
+  <h1>🎲 사이버 윷놀이</h1>
+  <div class="subtitle">친구와 즐기는 1:1 턴제 대결</div>
+
+  <div class="game-layout">
+  <div class="board-column">
+  <div class="board-wrap">
+    <svg id="board" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch a"></span>Player A</div>
+    <div class="legend-item"><span class="swatch b"></span>Player B</div>
+  </div>
+
+  <div class="finish-status">
+    <span>Player A 완주 <span id="finishA">0</span>/2</span>
+    <span>Player B 완주 <span id="finishB">0</span>/2</span>
+  </div>
+  </div>
+
+  <div class="turn-panel">
+    <div class="turn-banner player-a" id="turnBanner">
+      <span class="dot"></span>
+      <span id="turnLabel">Player A의 차례</span>
+    </div>
+
+    <div class="sticks" id="sticks"></div>
+
+    <button class="throw-btn" id="throwBtn">윷 던지기</button>
+
+    <div class="result-area">
+      <div class="result-text" id="resultText">&nbsp;</div>
+      <div class="extra-note" id="extraNote">&nbsp;</div>
+    </div>
+
+    <div class="prob-table" id="probTable"></div>
+
+    <div class="move-instruction" id="moveInstruction">&nbsp;</div>
+    <div class="pending-choices" id="pendingChoices"></div>
+
+    <div class="shortcut-prompt" id="shortcutPrompt" style="display:none;">
+      <div class="prompt-msg" id="shortcutMsg">지름길(중심 경유)로 이동할까요?</div>
+      <div class="prompt-buttons">
+        <button id="shortcutYes">지름길로</button>
+        <button class="secondary" id="shortcutNo">일반 경로로</button>
+      </div>
+    </div>
+
+    <div class="log-box" id="logBox"></div>
+  </div>
+  </div>
+
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-card" id="winCard">
+      <div class="win-trophy">🏆</div>
+      <div class="win-title" id="winTitle">Player A 승리!</div>
+      <div>말 2개가 모두 완주했습니다</div>
+      <button class="restart-btn" id="restartBtn">다시 시작</button>
+    </div>
+  </div>
+
+<script>
+  // 외곽 20칸(0~19, 모서리 0/5/10/15) + 중심(center) 좌표를 계산한다.
+  const MARGIN = 100;
+  const SIZE = 400; // MARGIN ~ MARGIN+SIZE 정사각형
+  const MAX = MARGIN + SIZE;
+  const CENTER = { x: MARGIN + SIZE / 2, y: MARGIN + SIZE / 2 };
+
+  function lerpPoints(from, to, count) {
+    // from, to 사이(양끝 제외)에 count개의 등분점을 반환
+    const pts = [];
+    for (let i = 1; i <= count; i++) {
+      const t = i / (count + 1);
+      pts.push({ x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t });
+    }
+    return pts;
+  }
+
+  const corners = {
+    0: { x: MAX, y: MAX },      // 시작점 (우하단)
+    5: { x: MAX, y: MARGIN },   // 우상단
+    10: { x: MARGIN, y: MARGIN }, // 좌상단 (가장 먼 모서리)
+    15: { x: MARGIN, y: MAX },  // 좌하단
+  };
+
+  const outer = new Array(20);
+  outer[0] = corners[0];
+  outer[5] = corners[5];
+  outer[10] = corners[10];
+  outer[15] = corners[15];
+
+  lerpPoints(corners[0], corners[5], 4).forEach((p, i) => outer[1 + i] = p);
+  lerpPoints(corners[5], corners[10], 4).forEach((p, i) => outer[6 + i] = p);
+  lerpPoints(corners[10], corners[15], 4).forEach((p, i) => outer[11 + i] = p);
+  lerpPoints(corners[15], corners[0], 4).forEach((p, i) => outer[16 + i] = p);
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("board");
+
+  function el(tag, attrs) {
+    const e = document.createElementNS(svgNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  // 배경판
+  svg.appendChild(el("rect", {
+    x: MARGIN - 40, y: MARGIN - 40, width: SIZE + 80, height: SIZE + 80,
+    rx: 24, class: "board-bg"
+  }));
+
+  // 외곽 순환 경로 선
+  let pathD = `M ${outer[0].x} ${outer[0].y} `;
+  for (let i = 1; i < 20; i++) pathD += `L ${outer[i].x} ${outer[i].y} `;
+  pathD += `L ${outer[0].x} ${outer[0].y}`;
+  svg.appendChild(el("path", { d: pathD, class: "path-line" }));
+
+  // 대각선 지름길 (모서리 - 중심 - 반대 모서리)
+  [[0, 10], [5, 15]].forEach(([a, b]) => {
+    svg.appendChild(el("path", {
+      d: `M ${corners[a].x} ${corners[a].y} L ${CENTER.x} ${CENTER.y} L ${corners[b].x} ${corners[b].y}`,
+      class: "shortcut-line"
+    }));
+  });
+
+  // 중심 노드
+  svg.appendChild(el("circle", { cx: CENTER.x, cy: CENTER.y, r: 14, class: "node center" }));
+
+  // 외곽 20개 노드 (모서리는 크게, 시작점은 강조)
+  outer.forEach((p, i) => {
+    const isCorner = i === 5 || i === 10 || i === 15;
+    const isStart = i === 0;
+    const r = isCorner || isStart ? 15 : 11;
+    const cls = isStart ? "node start" : isCorner ? "node corner" : "node";
+    svg.appendChild(el("circle", { cx: p.x, cy: p.y, r, class: cls }));
+  });
+
+  svg.appendChild(el("text", { x: outer[0].x, y: outer[0].y + 30, class: "node-label" })).textContent = "출발/도착";
+
+  // 지름길 위의 중간 지점 (모서리 - 점 - 점 - 중심 - 점 - 점 - 반대 모서리, 한 변에 2칸씩)
+  const [P1, P2] = lerpPoints(corners[0], CENTER, 2);
+  const [P3, P4] = lerpPoints(CENTER, corners[10], 2);
+  const [Q1, Q2] = lerpPoints(corners[5], CENTER, 2);
+  const [Q3, Q4] = lerpPoints(CENTER, corners[15], 2);
+
+  // diag0b(10→중심→0): 10번 모서리에서 출발하는 순서로 나열
+  const DIAG0B_PTS = [P4, P3, CENTER, P2, P1];
+  // diag5f(5→중심→15): 5번 모서리에서 출발하는 순서로 나열
+  const DIAG5F_PTS = [Q1, Q2, CENTER, Q3, Q4];
+
+  [P1, P2, P3, P4, Q1, Q2, Q3, Q4].forEach(p => {
+    svg.appendChild(el("circle", { cx: p.x, cy: p.y, r: 7, class: "node shortcut-dot" }));
+  });
+
+  // 말은 <g id="pieces"> 안에 매번 다시 그린다 (renderPieces 참고)
+  const piecesLayer = el("g", { id: "pieces" });
+  svg.appendChild(piecesLayer);
+
+  // ===== 2단계: 턴 방식 + 윷 던지기 =====
+
+  // 결과 이름/이동칸수는 막대(윷 4개) 중 뒤집힌 개수(flats)로 결정된다
+  const YUT_RESULTS = [
+    { flats: 0, name: "모", steps: 5, extra: true },
+    { flats: 1, name: "도", steps: 1, extra: false },
+    { flats: 2, name: "개", steps: 2, extra: false },
+    { flats: 3, name: "걸", steps: 3, extra: false },
+    { flats: 4, name: "윷", steps: 4, extra: true },
+  ];
+
+  function makeStartPiece(id) {
+    // groupId가 같은 말들은 업혀서 항상 함께 움직인다. 처음엔 각자 자기 id가 곧 groupId.
+    return { id, groupId: id, pos: { kind: "main", idx: 0 }, finished: false };
+  }
+
+  function createInitialState() {
+    return {
+      currentPlayer: "A",
+      busy: false,
+      pendingQueue: [],       // 아직 말에 적용하지 않은 던지기 결과들
+      selectedPending: 0,     // pendingQueue 중 다음에 적용할 항목의 인덱스
+      awaitingChoice: false,  // 지름길/업기 선택 대기 중이면 말 클릭 금지
+      bonusThrows: 0,         // 상대 말을 잡아서 적립된 추가 던지기 횟수
+      gameOver: false,
+      pieces: {
+        A: [makeStartPiece(0), makeStartPiece(1)],
+        B: [makeStartPiece(0), makeStartPiece(1)],
+      },
+    };
+  }
+
+  const game = createInitialState();
+
+  const sticksEl = document.getElementById("sticks");
+  const throwBtn = document.getElementById("throwBtn");
+  const turnBanner = document.getElementById("turnBanner");
+  const turnLabel = document.getElementById("turnLabel");
+  const resultText = document.getElementById("resultText");
+  const extraNote = document.getElementById("extraNote");
+  const probTable = document.getElementById("probTable");
+  const logBox = document.getElementById("logBox");
+  const moveInstruction = document.getElementById("moveInstruction");
+  const pendingChoices = document.getElementById("pendingChoices");
+  const shortcutPrompt = document.getElementById("shortcutPrompt");
+  const shortcutMsg = document.getElementById("shortcutMsg");
+  const shortcutYes = document.getElementById("shortcutYes");
+  const shortcutNo = document.getElementById("shortcutNo");
+  const finishAEl = document.getElementById("finishA");
+  const finishBEl = document.getElementById("finishB");
+  const winOverlay = document.getElementById("winOverlay");
+  const winCard = document.getElementById("winCard");
+  const winTitle = document.getElementById("winTitle");
+  const restartBtn = document.getElementById("restartBtn");
+
+  // ===== 3단계: 말 이동 경로 그래프 =====
+  // main: 외곽 0~19 (0=출발/도착, 출발점은 지름길 없이 항상 외곽길로만 진행)
+  // diag0b: 10번 모서리 → (2칸) → 중심 → (2칸) → 0번(도착)으로 가는 지름길, 총 6칸
+  // diag5f: 5번 모서리 → (2칸) → 중심 → (2칸) → 15번 모서리로 가는 지름길, 총 6칸
+  // 15번 모서리의 지름길은 진행 방향상 뒤로 가는 것이라 실전에서 쓸모가 없어 제공하지 않는다.
+  function posToXY(pos) {
+    if (pos.kind === "main") return outer[pos.idx];
+    if (pos.kind === "diag0b") return DIAG0B_PTS[pos.idx - 1];
+    if (pos.kind === "diag5f") return DIAG5F_PTS[pos.idx - 1];
+    return null;
+  }
+
+  function stepOnce(cur) {
+    if (cur.kind === "main") {
+      const n = cur.idx + 1;
+      if (n >= 20) return { kind: "finished" };
+      return { kind: "main", idx: n };
+    }
+    if (cur.kind === "diag0b") {
+      const n = cur.idx + 1;
+      return n >= 6 ? { kind: "finished" } : { kind: "diag0b", idx: n };
+    }
+    if (cur.kind === "diag5f") {
+      const n = cur.idx + 1;
+      return n >= 6 ? { kind: "main", idx: 15 } : { kind: "diag5f", idx: n };
+    }
+    return cur;
+  }
+
+  // 두 대각선은 중앙(center)에서 만난다. diag5f의 idx3과 diag0b의 idx3은
+  // 같은 물리적 칸(중앙)을 가리킨다.
+  function isCenter(pos) {
+    return (pos.kind === "diag5f" || pos.kind === "diag0b") && pos.idx === 3;
+  }
+
+  function isFork(pos) {
+    if (pos.kind === "main") return pos.idx === 5 || pos.idx === 10;
+    return isCenter(pos);
+  }
+
+  function samePos(a, b) {
+    if (isCenter(a) && isCenter(b)) return true;
+    return a.kind === b.kind && a.idx === b.idx;
+  }
+
+  function groupLabel(group) {
+    const nums = group.map(p => p.id + 1).join("+");
+    return group.length > 1 ? `말${nums}(업음)` : `말${nums}`;
+  }
+
+  function advance(pos, steps, useShortcut) {
+    let cur = { ...pos };
+    if (useShortcut && cur.kind === "main") {
+      if (cur.idx === 5) cur = { kind: "diag5f", idx: 0 };
+      else if (cur.idx === 10) cur = { kind: "diag0b", idx: 0 };
+    } else if (useShortcut && isCenter(cur)) {
+      // 중앙에서 반대쪽 대각선으로 갈아탄다 (5-15 대각선 ↔ 0-10 대각선)
+      cur = { kind: cur.kind === "diag5f" ? "diag0b" : "diag5f", idx: 3 };
+    }
+    for (let i = 0; i < steps; i++) {
+      cur = stepOnce(cur);
+      if (cur.kind === "finished") return { pos: cur, finished: true };
+    }
+    return { pos: cur, finished: false };
+  }
+
+  const stickDivs = [];
+  for (let i = 0; i < 4; i++) {
+    const d = document.createElement("div");
+    d.className = "stick";
+    sticksEl.appendChild(d);
+    stickDivs.push(d);
+  }
+
+  const DISPLAY_ORDER = ["도", "개", "걸", "윷", "모"];
+  DISPLAY_ORDER.map(name => YUT_RESULTS.find(r => r.name === name)).forEach(r => {
+    const item = document.createElement("div");
+    item.className = "prob-item";
+    item.id = `prob-${r.name}`;
+    item.innerHTML = `<span class="name">${r.name}</span>`;
+    probTable.appendChild(item);
+  });
+
+  function renderTurn() {
+    const p = game.currentPlayer;
+    turnBanner.className = `turn-banner player-${p.toLowerCase()}`;
+    turnLabel.textContent = `Player ${p}의 차례`;
+  }
+
+  function addLog(message, player) {
+    const line = document.createElement("div");
+    line.className = player === "A" ? "log-a" : "log-b";
+    line.textContent = message;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function renderFinishStatus() {
+    finishAEl.textContent = game.pieces.A.filter(p => p.finished).length;
+    finishBEl.textContent = game.pieces.B.filter(p => p.finished).length;
+  }
+
+  function renderPieces() {
+    piecesLayer.innerHTML = "";
+
+    // 1) 같은 좌표에 있는 말들을 모은다 (플레이어가 달라도 한 칸에 같이 있을 수 있음)
+    const bySquare = new Map();
+    ["A", "B"].forEach(player => {
+      game.pieces[player].forEach(piece => {
+        if (piece.finished) return;
+        const xy = posToXY(piece.pos);
+        const key = `${xy.x},${xy.y}`;
+        if (!bySquare.has(key)) bySquare.set(key, { xy, items: [] });
+        bySquare.get(key).items.push({ player, piece });
+      });
+    });
+
+    const quadOffsets = [{ dx: -9, dy: -9 }, { dx: 9, dy: -9 }, { dx: -9, dy: 9 }, { dx: 9, dy: 9 }];
+
+    bySquare.forEach(({ xy, items }) => {
+      // 2) 같은 칸 안에서 player+groupId가 같은 말들은 업힌 하나의 묶음으로 그린다
+      const stackMap = new Map();
+      items.forEach(item => {
+        const key = `${item.player}-${item.piece.groupId}`;
+        if (!stackMap.has(key)) stackMap.set(key, []);
+        stackMap.get(key).push(item);
+      });
+      const stacks = Array.from(stackMap.values());
+
+      stacks.forEach((stackItems, i) => {
+        const o = stacks.length === 1 ? { dx: 0, dy: 0 } : quadOffsets[i % 4];
+        const player = stackItems[0].player;
+        const isStack = stackItems.length > 1;
+        const anyFinished = stackItems.some(it => it.piece.finished);
+        const clickable = !game.awaitingChoice && !game.gameOver && player === game.currentPlayer &&
+          game.pendingQueue.length > 0 && !anyFinished;
+        const cx = xy.x + o.dx;
+        const cy = xy.y + o.dy;
+        const circle = el("circle", {
+          cx, cy, r: isStack ? 11 : 8,
+          class: `piece player-${player.toLowerCase()}${clickable ? " clickable" : ""}${isStack ? " piggyback" : ""}`,
+        });
+        if (clickable) {
+          const groupId = stackItems[0].piece.groupId;
+          circle.addEventListener("click", () => onGroupClick(player, groupId));
+        }
+        piecesLayer.appendChild(circle);
+        if (isStack) {
+          const badge = el("text", { x: cx, y: cy, class: "stack-badge" });
+          badge.textContent = stackItems.length;
+          piecesLayer.appendChild(badge);
+        }
+      });
+    });
+
+    renderFinishStatus();
+  }
+
+  function updateMoveInstruction() {
+    pendingChoices.innerHTML = "";
+    if (game.pendingQueue.length === 0) {
+      moveInstruction.textContent = " ";
+      return;
+    }
+    if (game.selectedPending >= game.pendingQueue.length) game.selectedPending = 0;
+
+    if (game.pendingQueue.length === 1) {
+      const mv = game.pendingQueue[0];
+      moveInstruction.textContent = `이동할 말을 선택하세요 → 적용될 이동: ${mv.name}(${mv.steps}칸)`;
+      return;
+    }
+
+    const selected = game.pendingQueue[game.selectedPending];
+    moveInstruction.textContent =
+      `먼저 적용할 이동을 고른 뒤 말을 선택하세요 → 적용될 이동: ${selected.name}(${selected.steps}칸)`;
+    game.pendingQueue.forEach((mv, idx) => {
+      const chip = document.createElement("button");
+      chip.className = `pending-chip${idx === game.selectedPending ? " selected" : ""}`;
+      chip.textContent = `${mv.name}(${mv.steps}칸)`;
+      chip.onclick = () => {
+        if (game.awaitingChoice) return;
+        game.selectedPending = idx;
+        updateMoveInstruction();
+      };
+      pendingChoices.appendChild(chip);
+    });
+  }
+
+  function beginMovePhase() {
+    const player = game.currentPlayer;
+    const movable = game.pieces[player].some(p => !p.finished);
+    if (!movable) {
+      addLog(`Player ${player}: 이동 가능한 말이 없어 턴 자동 종료`, player);
+      game.pendingQueue = [];
+      endMovePhase();
+      return;
+    }
+    game.selectedPending = 0;
+    updateMoveInstruction();
+    renderPieces();
+  }
+
+  function endMovePhase() {
+    moveInstruction.textContent = " ";
+    if (game.bonusThrows > 0) {
+      game.bonusThrows--;
+      extraNote.textContent = "🎯 상대 말을 잡아 한 번 더 던지세요!";
+      throwBtn.disabled = false;
+      renderPieces();
+      return;
+    }
+    game.currentPlayer = game.currentPlayer === "A" ? "B" : "A";
+    renderTurn();
+    addLog(`→ Player ${game.currentPlayer} 차례로 전환`, game.currentPlayer);
+    throwBtn.disabled = false;
+    renderPieces();
+  }
+
+  const CONFETTI_EMOJI = ["🎉", "🎊", "⭐", "🥳"];
+
+  function showWinScreen(player) {
+    throwBtn.disabled = true;
+    winTitle.textContent = `Player ${player} 승리!`;
+    winTitle.className = `win-title player-${player.toLowerCase()}`;
+
+    winCard.querySelectorAll(".confetti").forEach(e => e.remove());
+    for (let i = 0; i < 24; i++) {
+      const c = document.createElement("span");
+      c.className = "confetti";
+      c.textContent = CONFETTI_EMOJI[i % CONFETTI_EMOJI.length];
+      c.style.left = `${Math.random() * 100}%`;
+      c.style.animationDuration = `${1.4 + Math.random() * 1.2}s`;
+      c.style.animationDelay = `${Math.random() * 0.6}s`;
+      winCard.appendChild(c);
+    }
+
+    winOverlay.classList.add("show");
+  }
+
+  function resetGame() {
+    Object.assign(game, createInitialState());
+    logBox.innerHTML = "";
+    resultText.textContent = " ";
+    extraNote.textContent = " ";
+    moveInstruction.textContent = " ";
+    pendingChoices.innerHTML = "";
+    Object.values(document.querySelectorAll(".prob-item")).forEach(el => el.classList.remove("active"));
+    stickDivs.forEach(d => d.classList.remove("flat", "spin"));
+    winOverlay.classList.remove("show");
+    throwBtn.disabled = false;
+    renderTurn();
+    renderPieces();
+  }
+
+  restartBtn.addEventListener("click", resetGame);
+
+  function onGroupClick(player, groupId) {
+    if (game.gameOver || game.awaitingChoice || player !== game.currentPlayer || game.pendingQueue.length === 0) return;
+    const group = game.pieces[player].filter(p => p.groupId === groupId && !p.finished);
+    if (group.length === 0) return;
+    const moveInfo = game.pendingQueue[game.selectedPending];
+    if (isFork(group[0].pos)) {
+      game.awaitingChoice = true;
+      if (isCenter(group[0].pos)) {
+        shortcutMsg.textContent = "중앙에서 반대쪽 대각선으로 갈아탈까요?";
+        shortcutYes.textContent = "반대쪽 대각선으로";
+        shortcutNo.textContent = "이대로 계속";
+      } else {
+        shortcutMsg.textContent = "지름길(중심 경유)로 이동할까요?";
+        shortcutYes.textContent = "지름길로";
+        shortcutNo.textContent = "일반 경로로";
+      }
+      shortcutPrompt.style.display = "flex";
+      renderPieces();
+      const cleanup = () => {
+        shortcutPrompt.style.display = "none";
+        game.awaitingChoice = false;
+        shortcutYes.onclick = null;
+        shortcutNo.onclick = null;
+      };
+      shortcutYes.onclick = () => { cleanup(); applyMove(player, groupId, moveInfo, true); };
+      shortcutNo.onclick = () => { cleanup(); applyMove(player, groupId, moveInfo, false); };
+    } else {
+      applyMove(player, groupId, moveInfo, false);
+    }
+  }
+
+  function finishMoveStep() {
+    renderPieces();
+    if (game.pendingQueue.length > 0) updateMoveInstruction();
+    else endMovePhase();
+  }
+
+  function applyMove(player, groupId, moveInfo, useShortcut) {
+    const group = game.pieces[player].filter(p => p.groupId === groupId && !p.finished);
+    const { pos, finished } = advance(group[0].pos, moveInfo.steps, useShortcut);
+    game.pendingQueue.splice(game.selectedPending, 1);
+    game.selectedPending = 0;
+    const label = groupLabel(group);
+
+    if (finished) {
+      group.forEach(p => { p.finished = true; });
+      addLog(`Player ${player}: ${label} ${moveInfo.name}(${moveInfo.steps}칸) 이동 → 완주!`, player);
+      if (game.pieces[player].every(p => p.finished)) {
+        game.pendingQueue = [];
+        game.gameOver = true;
+        addLog(`🏆 Player ${player} 승리!`, player);
+        renderPieces();
+        showWinScreen(player);
+        return;
+      }
+      finishMoveStep();
+      return;
+    }
+
+    group.forEach(p => { p.pos = pos; });
+    addLog(`Player ${player}: ${label} ${moveInfo.name}(${moveInfo.steps}칸) 이동`, player);
+
+    // 잡기: 도착한 칸에 상대 말이 있으면 시작점으로 돌려보내고 추가 턴을 적립한다
+    const opponent = player === "A" ? "B" : "A";
+    const captured = game.pieces[opponent].filter(p => !p.finished && samePos(p.pos, pos));
+    if (captured.length > 0) {
+      captured.forEach(p => {
+        p.pos = { kind: "main", idx: 0 };
+        p.groupId = p.id; // 업혀 있었더라도 잡히면 각자 흩어져 시작점으로
+      });
+      game.bonusThrows++;
+      addLog(`Player ${player}: 상대 말 ${captured.length}개를 잡았습니다! 🎯`, player);
+    }
+
+    // 업기: 도착한 칸에 내 다른 말(다른 그룹)이 있으면 무조건 합쳐서 함께 움직인다
+    const ownOthers = game.pieces[player].filter(p => !p.finished && p.groupId !== groupId && samePos(p.pos, pos));
+    if (ownOthers.length > 0) {
+      ownOthers.forEach(p => { p.groupId = groupId; });
+      addLog(`Player ${player}: 말을 업었습니다!`, player);
+    }
+
+    finishMoveStep();
+  }
+
+  function rollOnce() {
+    // 막대 4개, 각각 50% 확률로 평평한 면이 위로 (전통 확률 분포 재현)
+    let flats = 0;
+    for (let i = 0; i < 4; i++) if (Math.random() < 0.5) flats++;
+    return YUT_RESULTS.find(r => r.flats === flats);
+  }
+
+  function throwYut() {
+    if (game.busy || game.gameOver) return;
+    game.busy = true;
+    throwBtn.disabled = true;
+    resultText.textContent = " ";
+    extraNote.textContent = " ";
+    Object.values(document.querySelectorAll(".prob-item")).forEach(el => el.classList.remove("active"));
+
+    const result = rollOnce();
+    stickDivs.forEach((d, i) => {
+      d.classList.remove("flat", "spin");
+      void d.offsetWidth; // 애니메이션 재시작을 위한 리플로우
+      d.classList.add("spin");
+      if (i < result.flats) d.classList.add("flat");
+    });
+
+    setTimeout(() => {
+      resultText.textContent = `${result.name} (${result.steps}칸)`;
+      document.getElementById(`prob-${result.name}`).classList.add("active");
+
+      const player = game.currentPlayer;
+      game.pendingQueue.push(result);
+      game.busy = false;
+
+      if (result.extra) {
+        extraNote.textContent = "🎉 윷·모! 한 번 더 던지세요";
+        addLog(`Player ${player}: ${result.name}(${result.steps}칸) → 추가 턴`, player);
+        throwBtn.disabled = false;
+      } else {
+        addLog(`Player ${player}: ${result.name}(${result.steps}칸)`, player);
+        throwBtn.disabled = true;
+        beginMovePhase();
+      }
+    }, 700);
+  }
+
+  throwBtn.addEventListener("click", throwYut);
+  renderTurn();
+  renderPieces();
+</script>
+</body>
+</html>

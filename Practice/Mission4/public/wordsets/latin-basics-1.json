@@ -1,0 +1,18 @@
+{
+  "id": "latin-basics-1",
+  "name": "라틴어 기초 어휘 1",
+  "description": "일상 라틴어 기본 단어 10개",
+  "language": { "front": "la", "back": "ko" },
+  "cards": [
+    { "id": "c001", "front": "aqua", "back": "물", "example": "Aqua vitae necessaria est." },
+    { "id": "c002", "front": "terra", "back": "땅, 대지", "example": "Terra rotunda est." },
+    { "id": "c003", "front": "ignis", "back": "불", "example": "Ignis in foco ardet." },
+    { "id": "c004", "front": "ventus", "back": "바람", "example": "Ventus fortis flat." },
+    { "id": "c005", "front": "sol", "back": "태양", "example": "Sol lucet in caelo." },
+    { "id": "c006", "front": "luna", "back": "달", "example": "Luna nocte lucet." },
+    { "id": "c007", "front": "stella", "back": "별", "example": "Stellae in caelo micant." },
+    { "id": "c008", "front": "arbor", "back": "나무", "example": "Arbor alta est." },
+    { "id": "c009", "front": "flos", "back": "꽃", "example": "Flos pulcher est." },
+    { "id": "c010", "front": "mare", "back": "바다", "example": "Mare vastum est." }
+  ]
+}
