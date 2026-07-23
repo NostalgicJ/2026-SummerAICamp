@@ -1114,7 +1114,7 @@
   }
 
   function throwYut() {
-    if (game.busy || game.gameOver) return;
+    if (game.busy || game.gameOver || throwBtn.disabled) return;
     game.busy = true;
     throwBtn.disabled = true;
     resultText.textContent = " ";
