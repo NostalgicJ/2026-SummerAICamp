@@ -1,0 +1,1252 @@
+<title>알고핑 AlGoPing — 프로젝트 소개</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --paper: #f6f5fa;
+    --surface: #ffffff;
+    --surface-2: #edeaf9;
+    --ink: #1c1b2e;
+    --ink-soft: #5a5872;
+    --border: #e5e2f0;
+    --indigo: #6367ff;
+    --indigo-ink: #4b4fd6;
+    --periwinkle: #8494ff;
+    --lilac: #c9beff;
+    --lilac-tint: #eeeafb;
+    --amber: #ffb800;
+    --amber-bg: #fff8e6;
+    --amber-ink: #a6790a;
+    --mint: #34c759;
+    --mint-bg: #e6f9ec;
+    --mint-ink: #1c7c3f;
+    --coral: #d70015;
+    --shadow-color: 99, 103, 255;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #14162b;
+      --surface: #1c1e3d;
+      --surface-2: #242a54;
+      --ink: #f2f2f7;
+      --ink-soft: #9aa3d9;
+      --border: #3a4080;
+      --indigo: #6e8cfb;
+      --indigo-ink: #a7b9ff;
+      --periwinkle: #50589c;
+      --lilac: #3c467b;
+      --lilac-tint: #242a54;
+      --amber: #ffcf5c;
+      --amber-bg: #332a12;
+      --amber-ink: #ffcf5c;
+      --mint: #34c759;
+      --mint-bg: #103b21;
+      --mint-ink: #7fe6a3;
+      --coral: #ff6961;
+      --shadow-color: 0, 0, 0;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #14162b;
+    --surface: #1c1e3d;
+    --surface-2: #242a54;
+    --ink: #f2f2f7;
+    --ink-soft: #9aa3d9;
+    --border: #3a4080;
+    --indigo: #6e8cfb;
+    --indigo-ink: #a7b9ff;
+    --periwinkle: #50589c;
+    --lilac: #3c467b;
+    --lilac-tint: #242a54;
+    --amber: #ffcf5c;
+    --amber-bg: #332a12;
+    --amber-ink: #ffcf5c;
+    --mint: #34c759;
+    --mint-bg: #103b21;
+    --mint-ink: #7fe6a3;
+    --coral: #ff6961;
+    --shadow-color: 0, 0, 0;
+  }
+
+  :root[data-theme="light"] {
+    --paper: #f6f5fa;
+    --surface: #ffffff;
+    --surface-2: #edeaf9;
+    --ink: #1c1b2e;
+    --ink-soft: #5a5872;
+    --border: #e5e2f0;
+    --indigo: #6367ff;
+    --indigo-ink: #4b4fd6;
+    --periwinkle: #8494ff;
+    --lilac: #c9beff;
+    --lilac-tint: #eeeafb;
+    --amber: #ffb800;
+    --amber-bg: #fff8e6;
+    --amber-ink: #a6790a;
+    --mint: #34c759;
+    --mint-bg: #e6f9ec;
+    --mint-ink: #1c7c3f;
+    --coral: #d70015;
+    --shadow-color: 99, 103, 255;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  body {
+    font-family: "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, -apple-system,
+      BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+    line-height: 1.7;
+    font-size: 16px;
+    overflow-x: hidden;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .display {
+    font-family: ui-rounded, "SF Pro Rounded", "Apple SD Gothic Neo", -apple-system, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    word-break: keep-all;
+  }
+
+  .mono {
+    font-family: ui-monospace, "SF Mono", "D2Coding", "Menlo", monospace;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--indigo-ink);
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 16px;
+    height: 2px;
+    background: var(--indigo);
+    border-radius: 2px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    padding: 88px 0 64px;
+    background:
+      radial-gradient(60% 50% at 15% 0%, rgba(132, 148, 255, 0.20), transparent 70%),
+      radial-gradient(50% 40% at 100% 10%, rgba(201, 190, 255, 0.28), transparent 70%),
+      var(--paper);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero { padding: 56px 0 40px; }
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+
+  .wordmark .bell {
+    width: 68px;
+    height: 68px;
+    border-radius: 19px;
+    background: var(--lilac-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(var(--shadow-color), 0.12);
+  }
+
+  .wordmark .name {
+    font-size: clamp(38px, 5vw, 56px);
+    line-height: 1;
+    color: var(--ink);
+  }
+  .wordmark .name b { color: var(--indigo); font-weight: 800; }
+
+  .wordmark-tagline {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 26px 86px;
+  }
+  .wordmark-tagline b { color: var(--indigo-ink); font-weight: 700; }
+  @media (max-width: 480px) {
+    .wordmark-tagline { margin-left: 0; }
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.28;
+    margin: 0 0 20px;
+  }
+
+  .hero h1 .accent { color: var(--indigo); }
+
+  .hero p.lede {
+    font-size: 17.5px;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin: 0 0 28px;
+  }
+
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    box-shadow: 0 2px 8px rgba(var(--shadow-color), 0.06);
+  }
+  .stat-chip b { color: var(--indigo); font-weight: 800; }
+
+  /* hero visual */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(132, 148, 255, 0.4), transparent 72%);
+    filter: blur(6px);
+    z-index: 0;
+    animation: glowPulse 5s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { transform: scale(1); opacity: 0.75; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-glow { animation: none; } }
+
+  .notif-toast {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    width: min(340px, 90%);
+    transform: translate(-50%, -140%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 15px 17px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    box-shadow: 0 20px 44px rgba(var(--shadow-color), 0.24);
+    z-index: 3;
+    animation: dropIn 900ms cubic-bezier(.2,.8,.2,1) 400ms forwards;
+  }
+  .notif-ghost {
+    top: 2px;
+    left: calc(50% + 34px);
+    transform: translate(-50%, 0) rotate(3deg) scale(0.92);
+    opacity: 0.5;
+    z-index: 2;
+    box-shadow: 0 14px 30px rgba(var(--shadow-color), 0.16);
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .notif-toast { animation: none; transform: translate(-50%, 0); }
+  }
+  @keyframes dropIn {
+    0% { transform: translate(-50%, -140%); opacity: 0; }
+    70% { transform: translate(-50%, 6%); opacity: 1; }
+    100% { transform: translate(-50%, 0); opacity: 1; }
+  }
+  .notif-toast .icon {
+    width: 34px; height: 34px; border-radius: 9px; background: var(--lilac-tint);
+    display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0;
+  }
+  .notif-toast .title { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+  .notif-toast .body { font-size: 14.5px; color: var(--ink); margin-top: 2px; font-weight: 600; }
+
+  .phone-card {
+    position: relative;
+    z-index: 1;
+    width: min(380px, 92%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 26px 24px 24px;
+    box-shadow: 0 34px 70px -18px rgba(var(--shadow-color), 0.38), 0 4px 18px rgba(var(--shadow-color), 0.1);
+    animation: floatCard 4.6s ease-in-out 1.2s infinite;
+  }
+  @keyframes floatCard {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50% { transform: rotate(-2deg) translateY(-10px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .phone-card { animation: none; transform: rotate(-3deg); }
+  }
+  .phone-card::before {
+    content: "";
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 50px; height: 5px; border-radius: 4px; background: var(--border);
+  }
+  .p-chip {
+    display: inline-block; background: var(--lilac-tint); color: var(--indigo-ink);
+    font-size: 12.5px; font-weight: 700; padding: 4px 11px; border-radius: 8px; margin: 16px 0 11px;
+  }
+  .phone-card h3 { font-size: 22px; margin: 0 0 10px; }
+  .p-meta { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+  .p-meta span {
+    font-size: 12px; background: var(--surface-2); color: var(--ink-soft); padding: 4px 9px; border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .p-key {
+    background: var(--amber-bg); border-left: 3px solid var(--amber); border-radius: 8px;
+    padding: 12px 14px; font-size: 13.5px; line-height: 1.5; color: var(--ink);
+  }
+  .p-key b { color: var(--amber-ink); display: block; font-size: 12px; margin-bottom: 4px; }
+
+  .streak-badge {
+    position: absolute;
+    right: 2%;
+    bottom: 10%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px 15px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    box-shadow: 0 14px 30px rgba(var(--shadow-color), 0.2);
+    opacity: 0;
+    animation: badgeIn 640ms cubic-bezier(.2,.8,.2,1) 1100ms forwards, floatBadge 3.6s ease-in-out 1.8s infinite;
+  }
+  .streak-badge .n { color: var(--indigo-ink); }
+  @keyframes badgeIn {
+    0% { opacity: 0; transform: translateY(14px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .streak-badge { animation: none; opacity: 1; }
+  }
+  @media (max-width: 520px) {
+    .streak-badge { right: 4%; bottom: 4%; padding: 8px 12px; font-size: 12px; }
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section.band { padding: 100px 0; }
+  section.band.alt { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  @media (max-width: 700px) { section.band { padding: 64px 0; } }
+
+  .band > .wrap > h2 {
+    font-size: clamp(28px, 3.4vw, 38px);
+    margin: 12px 0 18px;
+  }
+  .band > .wrap > .sub {
+    color: var(--ink-soft);
+    max-width: 640px;
+    font-size: 18px;
+    line-height: 1.75;
+    text-wrap: pretty;
+    margin-bottom: 44px;
+  }
+
+  /* intent cards */
+  .intent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 760px) { .intent-grid { grid-template-columns: 1fr; } }
+
+  .intent-card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px 26px 22px;
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+  .intent-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--indigo);
+    box-shadow: 0 16px 32px rgba(var(--shadow-color), 0.14);
+  }
+  section.band.alt .intent-card { background: var(--paper); }
+  .intent-card h3 {
+    font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0 0 18px; display: flex; align-items: center; gap: 8px;
+  }
+  .intent-card.problem h3 { color: var(--coral); }
+  .intent-card.solution h3 { color: var(--mint-ink); }
+  .intent-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .intent-card li { position: relative; padding-left: 22px; font-size: 16.5px; line-height: 1.6; text-wrap: pretty; }
+  .intent-card li::before { content: "—"; position: absolute; left: 0; color: var(--ink-soft); }
+
+  .scope-note {
+    margin-top: 24px;
+    background: var(--lilac-tint);
+    border-radius: 14px;
+    padding: 20px 24px;
+    font-size: 16px;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: var(--ink-soft);
+  }
+  .scope-note b { color: var(--indigo-ink); }
+
+  /* ---------- DIAGRAM (vertical pipeline) ---------- */
+  .flow-label {
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--indigo-ink);
+    margin: 52px 0 22px;
+  }
+  .flow-label:first-child { margin-top: 0; }
+
+  .flow-steps {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .flow-steps::before {
+    content: "";
+    position: absolute;
+    left: 27px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--indigo), var(--border) 88%);
+    opacity: 0.5;
+  }
+  .flow-step {
+    position: relative;
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+    padding: 16px 14px;
+    margin: 0 -14px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease;
+  }
+  .flow-step:first-child { padding-top: 16px; }
+  .flow-step:hover { background: var(--surface-2); transform: translateX(4px); }
+  section.band.alt .flow-step:hover { background: var(--paper); }
+  .flow-icon {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    box-shadow: 0 4px 14px rgba(var(--shadow-color), 0.1);
+    transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  }
+  section.band.alt .flow-icon { background: var(--paper); }
+  .flow-step:hover .flow-icon { border-color: var(--indigo); transform: scale(1.08); }
+  .flow-step.is-done .flow-icon {
+    border-color: var(--indigo);
+    box-shadow: 0 0 0 4px rgba(var(--shadow-color), 0.16), 0 4px 14px rgba(var(--shadow-color), 0.15);
+  }
+  .flow-text { padding-top: 8px; max-width: 560px; }
+  .flow-text .t { display: block; font-weight: 700; font-size: 17px; margin-bottom: 5px; transition: color 160ms ease; }
+  .flow-step.is-done .flow-text .t { color: var(--indigo-ink); }
+  .flow-text .d { color: var(--ink-soft); font-size: 14.5px; line-height: 1.6; text-wrap: pretty; }
+  .flow-hint {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    margin: 4px 0 0;
+  }
+
+  .flow-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin: 32px 0 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+  }
+  section.band.alt .flow-note { background: var(--surface); }
+  .flow-note-icon {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  section.band.alt .flow-note-icon { background: var(--paper); }
+  .flow-note p {
+    margin: 0;
+    padding-top: 3px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    text-wrap: pretty;
+    color: var(--ink-soft);
+  }
+  .flow-note .pill {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 3px 9px;
+    margin: 0 1px;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  section.band.alt .flow-note .pill { background: var(--paper); }
+
+  /* ---------- SIMULATOR ---------- */
+  .sim-shell {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px;
+  }
+  section.band:not(.alt) .sim-shell { background: var(--surface-2); }
+  .sim-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .sim-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 5px;
+    border-radius: 12px;
+  }
+  .sim-tab-btn {
+    border: none; background: transparent; padding: 11px 18px; border-radius: 8px;
+    font-weight: 700; font-size: 15px; color: var(--ink-soft); cursor: pointer;
+    font-family: inherit;
+  }
+  .sim-tab-btn.active { background: var(--indigo); color: #fff; }
+
+  .theme-toggle {
+    display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--ink-soft); font-weight: 600;
+  }
+  .theme-toggle button {
+    border: 1px solid var(--border); background: var(--surface); border-radius: 999px;
+    width: 56px; height: 30px; position: relative; cursor: pointer; padding: 0;
+  }
+  .theme-toggle button::after {
+    content: "☀️"; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 12px;
+    transition: transform 220ms ease;
+  }
+  .theme-toggle button.is-dark::after { content: "🌙"; transform: translateX(26px); background: var(--indigo); }
+
+  .device {
+    width: min(420px, 100%);
+    margin: 0 auto;
+    border-radius: 24px;
+    padding: 28px;
+    font-size: 15px;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  /* scoped light/dark tokens for the device — independent from page theme */
+  .device.is-light {
+    background: #ffffff; color: #1c1c1e; border: 1px solid #e5e2f0;
+    --d-bg:#f6f5fa; --d-surface:#ffffff; --d-text:#1c1c1e; --d-sub:#6b6b80; --d-border:#e5e2f0;
+    --d-chip:#eeeafb; --d-accent:#6367ff; --d-key-bg:#fff8e6; --d-key-border:#ffb800; --d-key-label:#a6790a;
+    --d-succ-bg:#e6f9ec; --d-succ-border:#34c759; --d-succ-text:#1c7c3f;
+  }
+  .device.is-dark {
+    background: #1c1e3d; color: #f2f2f7; border: 1px solid #3a4080;
+    --d-bg:#14162b; --d-surface:#242a54; --d-text:#f2f2f7; --d-sub:#9aa3d9; --d-border:#3a4080;
+    --d-chip:#2a2e5c; --d-accent:#6e8cfb; --d-key-bg:#332a12; --d-key-border:#ffb800; --d-key-label:#ffcf5c;
+    --d-succ-bg:#103b21; --d-succ-border:#34c759; --d-succ-text:#7fe6a3;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 260ms ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+  .d-badge { display: inline-block; background: var(--d-chip); color: var(--d-accent); font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 8px; }
+  .d-title { font-size: 23px; font-weight: 800; margin: 14px 0 10px; }
+  .d-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .d-meta span { font-size: 12.5px; background: var(--d-chip); color: var(--d-sub); padding: 4px 10px; border-radius: 6px; }
+  .d-key { background: var(--d-key-bg); border-left: 3px solid var(--d-key-border); border-radius: 10px; padding: 14px 16px; font-size: 14.5px; line-height: 1.55; margin-bottom: 16px; }
+  .d-key b { color: var(--d-key-label); display: block; font-size: 12.5px; margin-bottom: 5px; }
+  .d-steps { font-size: 14.5px; line-height: 1.5; color: var(--d-sub); padding-left: 20px; margin: 0 0 18px; }
+  .d-steps li { margin-bottom: 9px; }
+  .d-row { display: flex; gap: 10px; }
+  .d-btn { flex: 1; text-align: center; padding: 13px; border-radius: 10px; font-size: 14.5px; font-weight: 700; border: 1px solid var(--d-border); background: var(--d-surface); }
+  .d-btn.primary { background: var(--d-accent); color: #fff; border-color: transparent; }
+  .d-btn { transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 120ms ease; }
+  .d-btn:active { transform: scale(0.97); }
+  .d-btn.is-solved { background: var(--d-succ-bg); border-color: var(--d-succ-border); color: var(--d-succ-text); }
+  .d-row + .d-row { margin-top: 10px; }
+  .screen-pop { animation: fadeUp 280ms ease; }
+  .d-solved-badge { background: var(--d-succ-bg); border: 1px solid var(--d-succ-border); color: var(--d-succ-text); font-size: 12.5px; font-weight: 700; padding: 4px 11px; border-radius: 999px; display: inline-block; margin-bottom: 10px; }
+
+  .d-group { margin-bottom: 20px; }
+  .d-group-label { font-size: 13px; color: var(--d-sub); margin-bottom: 10px; }
+  .d-chipset { display: flex; gap: 8px; flex-wrap: wrap; }
+  .d-chip { font-size: 13px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--d-border); background: var(--d-surface); }
+  .d-chip.on { background: var(--d-accent); color: #fff; border-color: transparent; }
+  .d-field { font-size: 14px; color: var(--d-sub); margin-bottom: 12px; }
+  .d-empty { text-align: center; padding: 40px 14px; color: var(--d-sub); font-size: 14.5px; line-height: 1.6; }
+  .d-empty .n { font-size: 17px; color: var(--d-text); font-weight: 700; margin-bottom: 8px; }
+
+  .sim-caption {
+    text-align: center; font-size: 14px; color: var(--ink-soft); margin-top: 22px;
+  }
+
+  /* ---------- TIMELINE (mistakes) ---------- */
+  .timeline { position: relative; padding-left: 34px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--border);
+  }
+  .t-item { position: relative; padding-bottom: 48px; }
+  .t-item:last-child { padding-bottom: 0; }
+  .t-item::before {
+    content: ""; position: absolute; left: -34px; top: 4px; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--surface); border: 3px solid var(--indigo);
+  }
+  .t-phase {
+    display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 0.03em;
+    color: var(--indigo-ink); background: var(--lilac-tint); padding: 5px 12px; border-radius: 7px; margin-bottom: 14px;
+  }
+  .t-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    padding: 6px 10px;
+    margin: 0 -10px 0;
+    border-radius: 10px;
+    transition: background 160ms ease;
+  }
+  .t-header:hover { background: var(--surface-2); }
+  section.band.alt .t-header:hover { background: var(--paper); }
+  .t-item h4 { font-size: 21px; line-height: 1.4; margin: 0; text-wrap: pretty; }
+  .t-chevron {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: var(--ink-soft);
+    transition: transform 220ms ease;
+    padding-top: 4px;
+  }
+  .t-item.open .t-chevron { transform: rotate(180deg); color: var(--indigo); }
+  .t-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    margin-top: 16px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 320ms ease, opacity 220ms ease, margin-top 220ms ease;
+  }
+  .t-item.open .t-cols { max-height: 600px; opacity: 1; }
+  @media (max-width: 700px) { .t-cols { grid-template-columns: 1fr; } }
+  .t-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; font-size: 15px; line-height: 1.6; text-wrap: pretty; }
+  section.band.alt .t-box { background: var(--paper); }
+  .t-box .k { font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
+  .t-box.before .k { color: var(--coral); }
+  .t-box.after .k { color: var(--mint-ink); }
+
+  /* ---------- Q&A notifications (chat-style, alternating sides) ---------- */
+  .qa-stack { display: flex; flex-direction: column; gap: 30px; max-width: 700px; margin: 0 auto; }
+  .qa-pair { display: flex; flex-direction: column; gap: 4px; }
+  .notif {
+    display: flex; gap: 14px; align-items: flex-start;
+    max-width: 82%;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 18px 22px;
+    box-shadow: 0 6px 18px rgba(var(--shadow-color), 0.07);
+  }
+  section.band.alt .notif { background: var(--paper); }
+  .notif .av {
+    width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; background: var(--surface-2);
+  }
+  .notif.question { align-self: flex-start; border-bottom-left-radius: 6px; }
+  .notif.reply {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+    border-bottom-right-radius: 6px;
+  }
+  .notif.reply .av { background: var(--indigo); color: #fff; }
+  .notif .who { font-size: 13.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 5px; display: flex; gap: 8px; align-items: center; }
+  .notif.reply .who { color: var(--indigo-ink); justify-content: flex-end; }
+  .notif .msg { font-size: 16.5px; line-height: 1.6; color: var(--ink); text-wrap: pretty; }
+
+  .notif.question {
+    cursor: pointer;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+  .notif.question:hover { border-color: var(--indigo); transform: translateX(3px); }
+  .qa-hint {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--indigo-ink);
+    opacity: 0.75;
+  }
+  .qa-reply-wrap {
+    display: flex;
+    justify-content: flex-end;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 320ms ease, opacity 220ms ease, margin-top 220ms ease;
+  }
+  .qa-pair.open .qa-reply-wrap { max-height: 400px; opacity: 1; margin-top: 10px; }
+
+  /* ---------- phase tracker ---------- */
+  .phase-track { display: flex; flex-wrap: wrap; gap: 10px; }
+  .phase-pill {
+    font-size: 14.5px; font-weight: 700; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border);
+  }
+  .phase-pill.done { background: var(--mint-bg); border-color: var(--mint-border, var(--mint)); color: var(--mint-ink); }
+  .phase-pill.next { background: var(--surface); color: var(--ink-soft); }
+
+  footer {
+    padding: 56px 0 64px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 560ms ease, transform 560ms ease;
+    }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="wordmark">
+        <span class="bell">🔔</span>
+        <span class="name display">AlGo<b>Ping</b></span>
+      </div>
+      <span class="wordmark-tagline"><b>Algorithm</b>이 <b>Go</b>하면, <b>Ping</b>이 온다</span>
+      <h1 class="display">기업마다 다른 출제 경향,<br><span class="accent">무작위로 풀지 않기로 했다.</span></h1>
+      <p class="lede">목표 기업(네이버·카카오·쿠팡·토스·삼성 등) 출제 경향에 맞춘 오늘의 문제를 매일 정해진 시간에 푸시로 받아보는 PWA. 로그인 없이 링크 하나로 나만의 설정을 갖는다.</p>
+      <div class="stat-row">
+        <span class="stat-chip"><b>38</b>문제 · 9개 기업군</span>
+        <span class="stat-chip"><b>26</b>종 알고리즘 사전</span>
+        <span class="stat-chip">로그인 <b>없음</b></span>
+        <span class="stat-chip">라이트 / 다크 <b>완전 대응</b></span>
+        <span class="stat-chip">출제 순서 <b>3가지</b></span>
+        <span class="stat-chip">PWA · <b>홈 화면 설치</b></span>
+        <span class="stat-chip">GitHub PR로 <b>계속 확장</b></span>
+        <span class="stat-chip">인프라 <b>완전 무료</b></span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-glow"></div>
+      <div class="notif-toast notif-ghost">
+        <span class="icon">🔔</span>
+        <div>
+          <div class="title">AlGoPing · 어제</div>
+          <div class="body">오늘의 문제 도착: 후보키 (Lv.2)</div>
+        </div>
+      </div>
+      <div class="notif-toast">
+        <span class="icon">🔔</span>
+        <div>
+          <div class="title">AlGoPing · 지금</div>
+          <div class="body">오늘의 문제 도착: 전화번호 목록 (Lv.2)</div>
+        </div>
+      </div>
+      <div class="phone-card">
+        <span class="p-chip">토스</span>
+        <h3>전화번호 목록</h3>
+        <div class="p-meta">
+          <span>프로그래머스</span><span>난이도 2</span><span>해시,정렬</span><span>🕐 25~35분</span>
+        </div>
+        <div class="p-key"><b>💡 핵심 포인트</b>정렬하면 접두어 관계가 있는 두 번호는 항상 바로 옆에 붙어있다는 성질을 이용하세요.</div>
+      </div>
+      <div class="streak-badge">🔥 <span class="n">3일 연속</span> 도착</div>
+    </div>
+  </div>
+</div>
+
+<section class="band">
+  <div class="wrap">
+    <span class="eyebrow">Intent</span>
+    <h2 class="display">왜 만들었나</h2>
+    <p class="sub">코딩테스트는 기업마다 자주 나오는 유형과 평가 포인트가 다르다. 그런데 목표 없이 풀면 실제 시험에서 낯선 유형에 시간을 뺏긴다 — 그 문제 정의에서 출발했다.</p>
+    <div class="intent-grid">
+      <div class="intent-card problem reveal">
+        <h3>😩 풀지 못한 문제</h3>
+        <ul>
+          <li>기업마다 출제 경향이 다른데 무작위로 문제를 풀며 시간을 낭비했다</li>
+          <li>"매일 한 문제씩" 다짐은 세우기 쉬워도 지키기 어려웠다</li>
+          <li>기존 코테 사이트는 개인화된 정시 알림도, 기업별 문제 선별도 해주지 않았다</li>
+        </ul>
+      </div>
+      <div class="intent-card solution reveal">
+        <h3>✅ 대신 만든 것</h3>
+        <ul>
+          <li>기업 · 알고리즘 태그 · 난이도로 나만의 "오늘의 문제" 필터</li>
+          <li>로그인 없이 익명 clientId 하나로 설정이 그대로 유지</li>
+          <li>새 문제는 GitHub PR로 제안 → 검토 후 반영, 계속 채워지는 구조</li>
+        </ul>
+      </div>
+    </div>
+    <div class="scope-note">
+      의도적으로 <b>범위 밖</b>에 둔 것도 있다 — 로그인/계정, 자동 채점, PR 자동 병합, 통계 대시보드는 지금 버전에서 다루지 않는다. 문제 원문은 스크래핑하거나 iframe으로 끌어오지 않고, <b>핵심 포인트 · 풀이 접근을 항상 직접 작성</b>해 저작권 문제를 피한다.
+    </div>
+  </div>
+</section>
+
+<section class="band alt">
+  <div class="wrap">
+    <span class="eyebrow">System Flow</span>
+    <h2 class="display">동작 흐름</h2>
+    <p class="sub">서버는 늘 깨어있지 않다. 15분마다 깨워져 "지금 보낼 사람"을 판정하고, 문제 제안은 사람이 검토해야만 실제로 반영된다.</p>
+
+    <div class="flow-label">① 매일 알림이 도착하기까지</div>
+    <p class="flow-hint">👆 각 단계를 눌러보면 표시가 남아요.</p>
+    <div class="flow-steps" data-flow-group>
+      <div class="flow-step reveal">
+        <span class="flow-icon">⏰</span>
+        <span class="flow-text"><span class="t">GitHub Actions / cron-job.org</span><span class="d">15분마다 /api/send-daily 호출</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">🖥️</span>
+        <span class="flow-text"><span class="t">Express 서버 판정</span><span class="d">요일 · 시각 · 일시정지 · 오늘 중복발송 여부 체크</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">🎯</span>
+        <span class="flow-text"><span class="t">오늘의 문제 계산</span><span class="d">기업/태그/난이도 필터 + 순차·랜덤·안 푼 우선</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">📲</span>
+        <span class="flow-text"><span class="t">web-push 발송</span><span class="d">VAPID 키로 서명해 Push 서비스로 전달</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">🔔</span>
+        <span class="flow-text"><span class="t">기기에 알림 도착</span><span class="d">잠금화면 · 알림센터에 표시</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">👆</span>
+        <span class="flow-text"><span class="t">알림 클릭 → 앱 진입</span><span class="d">서비스 워커가 앱으로 포커스 이동</span></span>
+      </div>
+    </div>
+    <div class="flow-note">
+      <span class="flow-note-icon">🗄️</span>
+      <p>위 판정 · 계산 단계는 전부 <span class="pill mono">storage.js</span>를 거쳐, <span class="pill">Postgres(Neon)</span> 또는 <span class="pill">로컬 파일 폴백</span> 위에서 똑같이 동작한다.</p>
+    </div>
+
+    <div class="flow-label">② 문제가 늘어나는 방법</div>
+    <div class="flow-steps" data-flow-group>
+      <div class="flow-step reveal">
+        <span class="flow-icon">📝</span>
+        <span class="flow-text"><span class="t">문제 제안 폼</span><span class="d">완전 공개, 누구나 제출 가능</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">🤖</span>
+        <span class="flow-text"><span class="t">github-suggest.js</span><span class="d">브랜치 생성 → problems.json 커밋 → PR 생성</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">🙋</span>
+        <span class="flow-text"><span class="t">저장소 소유자 리뷰</span><span class="d">스팸·품질 확인, 자동 병합 없음</span></span>
+      </div>
+      <div class="flow-step reveal">
+        <span class="flow-icon">📄</span>
+        <span class="flow-text"><span class="t">problems.json 갱신</span><span class="d">다음 배포부터 오늘의 문제 풀에 반영</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <span class="eyebrow">Live Preview</span>
+    <h2 class="display">실제 동작 화면</h2>
+    <p class="sub">실제 앱(로컬 실행 화면)에서 그대로 가져온 4개 탭. 스위치를 눌러 라이트/다크 팔레트가 실제로 어떻게 바뀌는지 확인할 수 있다 — 이 부분은 시행착오 끝에 다듬어졌다.</p>
+
+    <div class="sim-shell">
+      <div class="sim-controls">
+        <div class="sim-tabs" id="simTabs">
+          <button class="sim-tab-btn active" data-screen="today">오늘의 문제</button>
+          <button class="sim-tab-btn" data-screen="solved">풀이 기록</button>
+          <button class="sim-tab-btn" data-screen="algo">알고리즘</button>
+          <button class="sim-tab-btn" data-screen="settings">설정</button>
+        </div>
+        <div class="theme-toggle">
+          <span id="themeLabel">라이트</span>
+          <button id="simThemeBtn" aria-label="화면 라이트/다크 전환"></button>
+        </div>
+      </div>
+
+      <div class="device is-light" id="device">
+        <div class="screen active" id="screen-today">
+          <span class="d-badge">토스</span>
+          <div class="d-title">전화번호 목록</div>
+          <div class="d-meta"><span>프로그래머스</span><span>난이도 2</span><span>해시,정렬</span><span>🕐 25~35분</span></div>
+          <div class="d-key"><b>💡 핵심 포인트</b>어떤 번호가 다른 번호의 접두어인지 확인하려고 모든 쌍을 비교하면 느립니다. 정렬하면 접두어 관계가 있는 두 번호는 항상 바로 옆에 있다는 성질을 이용하세요.</div>
+          <ol class="d-steps">
+            <li>전화번호 배열을 문자열 기준으로 정렬합니다.</li>
+            <li>정렬된 배열에서 인접한 두 번호만 비교합니다.</li>
+            <li>앞 번호가 뒤 번호의 접두어라면 false를 반환합니다.</li>
+          </ol>
+          <div class="d-row"><div class="d-btn primary">문제 풀러 가기 →</div><div class="d-btn">🧠 알고리즘 보기</div></div>
+          <div class="d-row"><div class="d-btn">🔄 건너뛰기</div><div class="d-btn">✅ 풀었음 체크</div></div>
+        </div>
+
+        <div class="screen" id="screen-solved">
+          <div class="d-empty">
+            <div class="n">지금까지 0개 풀었어요</div>
+            아직 풀었음으로 체크한 문제가 없어요.<br>문제를 풀고 체크하면 여기 쌓여요.
+          </div>
+          <div class="d-row"><div class="d-btn">풀었음 기록 전체 초기화</div></div>
+        </div>
+
+        <div class="screen" id="screen-algo">
+          <div class="d-group-label">🔍 궁금한 유형을 선택하면 아래에서 바로 볼 수 있어요</div>
+          <div class="d-chipset" style="margin-bottom:14px;">
+            <span class="d-chip on">BFS</span><span class="d-chip">DFS</span><span class="d-chip">DP</span><span class="d-chip">그리디</span>
+            <span class="d-chip">다익스트라</span><span class="d-chip">해시</span><span class="d-chip">힙</span><span class="d-chip">+19개</span>
+          </div>
+          <div class="d-key" style="background:var(--d-chip); border-left-color: var(--d-accent);">
+            <b>BFS (너비 우선 탐색)</b>
+            시작점에서 가까운 노드부터 한 단계씩 넓게 퍼져나가며 탐색 — "최단 거리"라는 단어가 보이면 먼저 의심.
+          </div>
+          <div class="d-field" style="opacity:.7">DFS (깊이 우선 탐색) ▾</div>
+          <div class="d-field" style="opacity:.7">DP (동적 계획법) ▾</div>
+          <div class="d-field" style="opacity:.7">다익스트라 알고리즘 ▾</div>
+        </div>
+
+        <div class="screen" id="screen-settings">
+          <div class="d-group">
+            <div class="d-group-label">알림 스케줄</div>
+            <div class="d-field">알림 시간 · <b>09:00</b> &nbsp;·&nbsp; 하루 발송 문제 수 · <b>1개</b></div>
+            <div class="d-chipset">
+              <span class="d-chip on">일</span><span class="d-chip on">월</span><span class="d-chip on">화</span>
+              <span class="d-chip on">수</span><span class="d-chip on">목</span><span class="d-chip on">금</span><span class="d-chip on">토</span>
+            </div>
+          </div>
+          <div class="d-group">
+            <div class="d-group-label">기업 (미선택 시 전체)</div>
+            <div class="d-chipset">
+              <span class="d-chip">SK</span><span class="d-chip">네이버</span><span class="d-chip">당근</span>
+              <span class="d-chip">배민</span><span class="d-chip">삼성</span><span class="d-chip on">카카오</span>
+              <span class="d-chip">쿠팡</span><span class="d-chip on">토스</span><span class="d-chip">현대</span>
+            </div>
+          </div>
+          <div class="d-group">
+            <div class="d-group-label">알고리즘 태그 (26종 중 일부)</div>
+            <div class="d-chipset">
+              <span class="d-chip">BFS</span><span class="d-chip">DFS</span><span class="d-chip">DP</span>
+              <span class="d-chip on">해시</span><span class="d-chip on">정렬</span><span class="d-chip">그리디</span>
+              <span class="d-chip">+20개</span>
+            </div>
+          </div>
+          <div class="d-row"><div class="d-btn primary">설정 저장</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="sim-caption">※ 실제 로컬 서버(localhost:3000)에서 캡처한 문구 · 배색을 그대로 재현했다.</p>
+  </div>
+</section>
+
+<section class="band alt">
+  <div class="wrap">
+    <span class="eyebrow">Trial &amp; Error</span>
+    <h2 class="display">만들면서 저지른 실수들</h2>
+    <p class="sub">TODO 체크리스트에 실제로 남아있는 시행착오 4개. 숨기지 않고 그대로 옮겼다.</p>
+
+    <div class="timeline">
+      <div class="t-item open reveal">
+        <div class="t-header">
+          <div>
+            <span class="t-phase">PHASE 1 · 문제 데이터</span>
+            <h4>백준 위주로 초안을 짰다가, 서비스 종료를 뒤늦게 알았다</h4>
+          </div>
+          <span class="t-chevron">▾</span>
+        </div>
+        <div class="t-cols">
+          <div class="t-box before"><div class="k">초안</div>백준 23개 + 프로그래머스 6개로 첫 데이터셋을 구성했다.</div>
+          <div class="t-box after"><div class="k">발견 &amp; 조치</div>백준이 2026-04-28부로 서비스를 종료한 것을 확인 → 23개 전부 프로그래머스의 살아있는 문제로 교체. 이후 "링크는 실제 접속 확인 후에만 등록"을 원칙으로 세웠다.</div>
+        </div>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-header">
+          <div>
+            <span class="t-phase">PHASE 5 · 라이트 모드</span>
+            <h4>팔레트를 배경 전체에 썼더니 눈이 부시다는 피드백을 받았다</h4>
+          </div>
+          <span class="t-chevron">▾</span>
+        </div>
+        <div class="t-cols">
+          <div class="t-box before"><div class="k">초안</div>선택한 컬러 팔레트(#ffdbfd 포함)를 배경색 그대로 적용했다.</div>
+          <div class="t-box after"><div class="k">조치</div>팔레트 색은 버튼 · 강조 요소로만 좁히고, 배경은 눈이 편한 무채색(#f6f5fa)으로 낮췄다.</div>
+        </div>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-header">
+          <div>
+            <span class="t-phase">PHASE 5 · 다크 모드</span>
+            <h4>다크 모드에서 글자가 안 보인다는 지적을 받았다</h4>
+          </div>
+          <span class="t-chevron">▾</span>
+        </div>
+        <div class="t-cols">
+          <div class="t-box before"><div class="k">원인</div>칩 배경(chip-bg)이 그 위 텍스트와 명도 차이가 부족했다.</div>
+          <div class="t-box after"><div class="k">조치</div>칩 배경을 훨씬 어둡게(#2a2e5c) 낮춰서 대비를 확보했다.</div>
+        </div>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-header">
+          <div>
+            <span class="t-phase">PHASE 5 · 알고리즘 탭</span>
+            <h4>안내 문구와 칩 목록이 겹쳐 보이는 CSS 버그가 있었다</h4>
+          </div>
+          <span class="t-chevron">▾</span>
+        </div>
+        <div class="t-cols">
+          <div class="t-box before"><div class="k">원인</div>.group-label 스타일이 특정 래퍼에만 종속돼 있어 다른 곳에서 깨졌다.</div>
+          <div class="t-box after"><div class="k">조치</div>셀렉터를 일반화하고, 안내 문구와 칩 사이에 구분선을 추가했다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <span class="eyebrow">Group Feedback</span>
+    <h2 class="display">발표하며 받은 질문들</h2>
+    <p class="sub">그룹 발표 때 나온 질문과 그 자리에서, 또는 다음 버전에서 답한 내용이다.</p>
+
+    <div class="qa-stack">
+      <div class="qa-pair open reveal">
+        <div class="notif question" data-qa-toggle><span class="av">🙋</span><div><div class="who">팀원 <span class="qa-hint">답변 접기 ▴</span></div><div class="msg">로그인도 없는데 사용자 설정이랑 풀이 기록은 어디에 저장돼요?</div></div></div>
+        <div class="qa-reply-wrap"><div class="notif reply"><span class="av">🔔</span><div><div class="who">AlGoPing</div><div class="msg">브라우저에서 발급한 익명 clientId(UUID)를 localStorage에 저장하고, 서버가 Postgres subscribers 테이블(또는 로컬 파일)에 매핑해요. 계정이 없어도 설정이 유지되는 이유예요.</div></div></div></div>
+      </div>
+      <div class="qa-pair reveal">
+        <div class="notif question" data-qa-toggle><span class="av">🙋</span><div><div class="who">팀원 <span class="qa-hint">답변 보기 ▾</span></div><div class="msg">문제 제안 폼이 완전 공개면 스팸이나 이상한 제안이 들어오지 않아요?</div></div></div>
+        <div class="qa-reply-wrap"><div class="notif reply"><span class="av">🔔</span><div><div class="who">AlGoPing</div><div class="msg">제출되면 GitHub API로 브랜치·커밋·PR까지는 자동 생성되지만, problems.json에 실제로 반영되는 건 항상 제 리뷰 후 수동 병합이에요. 자동 병합은 의도적으로 범위 밖에 뒀어요.</div></div></div></div>
+      </div>
+      <div class="qa-pair reveal">
+        <div class="notif question" data-qa-toggle><span class="av">🙋</span><div><div class="who">팀원 <span class="qa-hint">답변 보기 ▾</span></div><div class="msg">무료 서버(Render)인데 알림이 제 시간에 오나요?</div></div></div>
+        <div class="qa-reply-wrap"><div class="notif reply"><span class="av">🔔</span><div><div class="who">AlGoPing</div><div class="msg">서버가 항상 깨어있지 않아서, GitHub Actions가 15분마다 깨워 발송 대상을 판정해요. 그래서 목표 시각 대비 최대 30분의 오차는 허용 범위로 잡아뒀어요.</div></div></div></div>
+      </div>
+      <div class="qa-pair reveal">
+        <div class="notif question" data-qa-toggle><span class="av">🙋</span><div><div class="who">팀원 <span class="qa-hint">답변 보기 ▾</span></div><div class="msg">오늘의 문제 말고, 알고리즘 개념만 따로 훑어보는 화면도 있으면 좋겠어요.</div></div></div>
+        <div class="qa-reply-wrap"><div class="notif reply"><span class="av">🔔</span><div><div class="who">AlGoPing</div><div class="msg">좋은 제안이라 반영했어요 — 문제 태그 기반 /api/algorithms를 만들고, 오늘의 문제·설정·풀이기록과 동급인 4번째 탭 "알고리즘"을 새로 추가했어요.</div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt">
+  <div class="wrap">
+    <span class="eyebrow">Now</span>
+    <h2 class="display">지금 여기까지 왔다</h2>
+    <p class="sub">PRD의 Phase 0~9 중, 지금 실제로 동작을 확인한 범위와 아직 남은 범위.</p>
+    <div class="phase-track">
+      <span class="phase-pill done">Phase 0 · 셋업 ✓</span>
+      <span class="phase-pill done">Phase 1 · 오늘의 문제 ✓</span>
+      <span class="phase-pill done">Phase 2 · 필터 ✓</span>
+      <span class="phase-pill done">Phase 3 · 건너뛰기·풀었음 ✓</span>
+      <span class="phase-pill done">Phase 4 · Postgres 연동 ✓</span>
+      <span class="phase-pill done">Phase 5 · PWA·Push ✓</span>
+      <span class="phase-pill done">Phase 6 · 스케줄 자동화 ✓</span>
+      <span class="phase-pill next">Phase 7 · PR 자동화</span>
+      <span class="phase-pill next">Phase 8 · 실배포</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  알고핑 AlGoPing · 2026 Summer AI Camp 개인 프로젝트 소개 페이지 · 2026-07-24 기준
+</footer>
+
+<script>
+  // ---- simulator: tab switching ----
+  const tabs = document.querySelectorAll('.sim-tab-btn');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      screens.forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
+    });
+  });
+
+  // ---- simulator: light/dark palette toggle ----
+  const themeBtn = document.getElementById('simThemeBtn');
+  const device = document.getElementById('device');
+  const themeLabel = document.getElementById('themeLabel');
+  themeBtn.addEventListener('click', () => {
+    const goingDark = !device.classList.contains('is-dark');
+    device.classList.toggle('is-dark', goingDark);
+    device.classList.toggle('is-light', !goingDark);
+    themeBtn.classList.toggle('is-dark', goingDark);
+    themeLabel.textContent = goingDark ? '다크' : '라이트';
+  });
+
+  // ---- simulator: "건너뛰기" cycles real problems.json entries, "풀었음 체크" toggles solved state ----
+  const MOCK_PROBLEMS = [
+    {
+      badge: '토스', title: '전화번호 목록', plat: '프로그래머스', level: '난이도 2', tags: '해시,정렬', time: '🕐 25~35분',
+      key: '어떤 번호가 다른 번호의 접두어인지 확인하려고 모든 쌍을 비교하면 느립니다. 정렬하면 접두어 관계가 있는 두 번호는 항상 바로 옆에 있다는 성질을 이용하세요.',
+      steps: ['전화번호 배열을 문자열 기준으로 정렬합니다.', '정렬된 배열에서 인접한 두 번호만 비교합니다.', '앞 번호가 뒤 번호의 접두어라면 false를 반환합니다.']
+    },
+    {
+      badge: '카카오', title: '오픈채팅방', plat: '프로그래머스', level: '난이도 2', tags: '문자열,해시', time: '🕐 20~30분',
+      key: "닉네임이 언제, 몇 번 바뀌어도 '가장 최근 닉네임'만 알면 모든 로그 문장을 다시 만들 수 있습니다. 매 순간을 추적하지 말고 끝난 뒤 한 번 더 훑는다고 생각하세요.",
+      steps: ['유저ID별 가장 최근 닉네임만 해시맵에 계속 덮어씁니다.', 'Enter/Leave 액션만 순서대로 별도 저장해둡니다.', '해시맵의 최종 닉네임으로 Enter/Leave 문장을 만들어 출력합니다.']
+    },
+    {
+      badge: '카카오', title: '캐시', plat: '프로그래머스', level: '난이도 2', tags: '구현,LRU', time: '🕐 25~35분',
+      key: "LRU는 '가장 오래 안 쓴 것부터 버린다'는 규칙입니다. 시간을 재지 않고도 리스트 속 위치로 최근 사용 여부를 표현할 수 있습니다.",
+      steps: ['도시가 들어오면 캐시에 있는지(히트) 검사합니다.', '히트면 제거 후 맨 뒤에 다시 추가합니다(비용 1).', '미스면 가득 찼을 때 맨 앞을 제거하고 새로 추가합니다(비용 5).']
+    }
+  ];
+  let mockIndex = 0;
+  const todayScreen = document.getElementById('screen-today');
+  const solveBtn = todayScreen.querySelector('.d-row:last-child .d-btn:last-child');
+  const skipBtn = todayScreen.querySelector('.d-row:last-child .d-btn:first-child');
+
+  function renderMockProblem(i) {
+    const p = MOCK_PROBLEMS[i];
+    todayScreen.querySelector('.d-badge').textContent = p.badge;
+    todayScreen.querySelector('.d-title').textContent = p.title;
+    const metaSpans = todayScreen.querySelectorAll('.d-meta span');
+    metaSpans[0].textContent = p.plat;
+    metaSpans[1].textContent = p.level;
+    metaSpans[2].textContent = p.tags;
+    metaSpans[3].textContent = p.time;
+    todayScreen.querySelector('.d-key').innerHTML = '<b>💡 핵심 포인트</b>' + p.key;
+    const stepsEl = todayScreen.querySelector('.d-steps');
+    stepsEl.innerHTML = p.steps.map(s => '<li>' + s + '</li>').join('');
+    todayScreen.classList.remove('screen-pop');
+    void todayScreen.offsetWidth;
+    todayScreen.classList.add('screen-pop');
+    solveBtn.classList.remove('is-solved');
+    solveBtn.textContent = '✅ 풀었음 체크';
+  }
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', () => {
+      mockIndex = (mockIndex + 1) % MOCK_PROBLEMS.length;
+      renderMockProblem(mockIndex);
+    });
+  }
+  if (solveBtn) {
+    solveBtn.addEventListener('click', () => {
+      const solved = solveBtn.classList.toggle('is-solved');
+      solveBtn.textContent = solved ? '✅ 풀었음!' : '✅ 풀었음 체크';
+    });
+  }
+
+  // ---- flow diagram: click a step to mark it visited ----
+  document.querySelectorAll('.flow-step').forEach(step => {
+    step.addEventListener('click', () => step.classList.toggle('is-done'));
+  });
+
+  // ---- trial & error timeline: click header to expand/collapse ----
+  document.querySelectorAll('.t-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.closest('.t-item').classList.toggle('open');
+    });
+  });
+
+  // ---- group Q&A: click question to reveal/hide the reply ----
+  document.querySelectorAll('[data-qa-toggle]').forEach(q => {
+    q.addEventListener('click', () => {
+      const pair = q.closest('.qa-pair');
+      const open = pair.classList.toggle('open');
+      q.querySelector('.qa-hint').textContent = open ? '답변 접기 ▴' : '답변 보기 ▾';
+    });
+  });
+
+  // ---- scroll reveal ----
+  if ('IntersectionObserver' in window) {
+    const revealEls = document.querySelectorAll('.reveal');
+    revealEls.forEach((el, i) => { el.style.transitionDelay = Math.min(i % 6, 5) * 60 + 'ms'; });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+  }
+</script>
