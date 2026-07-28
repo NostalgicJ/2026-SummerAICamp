@@ -48,8 +48,13 @@
 
       document.getElementById('date').textContent = data.date;
       document.getElementById('card').innerHTML = `
-        <div class="company-badge">${escapeHtml(p.company)}</div>
-        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="name-row">
+          <div class="name">${escapeHtml(p.name)}</div>
+          <div class="curation">
+            <div class="curation-hint">💡 이 기업 코테 스타일로 골랐어요</div>
+            <div class="company-badge">${escapeHtml(p.company)}</div>
+          </div>
+        </div>
         <div class="meta">
           <span>${escapeHtml(p.plat)}</span>
           <span>난이도 ${escapeHtml(String(p.level))}</span>

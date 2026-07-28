@@ -80,11 +80,14 @@
     }
 
     function renderStatTiles(data) {
+      // 스트릭이 끊긴 걸 차갑게 "0"으로만 보여주면 회피를 유발할 수 있어서,
+      // 이땐 죄책감을 주지 않는 문구로 대신한다.
+      const streakTile = data.streak.current === 0
+        ? `<div class="stat-tile-value">🌱</div><div class="stat-tile-label">오늘부터 다시 시작해요</div>`
+        : `<div class="stat-tile-value">🔥 ${data.streak.current}</div><div class="stat-tile-label">현재 연속(일)</div>`;
+
       document.getElementById('statTiles').innerHTML = `
-        <div class="stat-tile">
-          <div class="stat-tile-value">🔥 ${data.streak.current}</div>
-          <div class="stat-tile-label">현재 연속(일)</div>
-        </div>
+        <div class="stat-tile">${streakTile}</div>
         <div class="stat-tile">
           <div class="stat-tile-value">🏆 ${data.streak.longest}</div>
           <div class="stat-tile-label">최고 기록(일)</div>

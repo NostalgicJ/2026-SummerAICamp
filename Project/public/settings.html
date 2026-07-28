@@ -63,39 +63,53 @@
         <option value="3">3개</option>
       </select>
     </div>
-    <div class="settings-group" style="margin-bottom: 0;">
-      <label class="group-label">일시정지</label>
-      <div class="action-row" style="margin-top: 0;">
-        <button class="action-btn" id="pauseToggleBtn">지금 알림 끄기</button>
-        <input type="date" id="pauseUntil" />
+    <button type="button" class="section-toggle section-toggle--sub" id="pauseSectionToggle">
+      <span id="pauseSectionToggleLabel">⏸ 일시정지 설정</span>
+      <span class="chevron">▼</span>
+    </button>
+    <div id="pauseSectionBody" hidden>
+      <div class="settings-group" style="margin-top: 14px; margin-bottom: 0;">
+        <div class="action-row" style="margin-top: 0;">
+          <button class="action-btn" id="pauseToggleBtn">지금 알림 끄기</button>
+          <input type="date" id="pauseUntil" />
+        </div>
+        <div class="save-status" id="pauseHint" style="color: var(--text-secondary); text-align: left;">날짜를 비워두면 직접 다시 켤 때까지 알고핑이 조용해져요.</div>
       </div>
-      <div class="save-status" id="pauseHint" style="color: var(--text-secondary); text-align: left;">날짜를 비워두면 직접 다시 켤 때까지 알고핑이 조용해져요.</div>
     </div>
   </div>
   </div>
 
   <div class="settings-col">
   <div class="settings">
-    <div class="settings-group">
-      <label class="group-label">기업 (미선택 시 전체)</label>
-      <div class="chip-list" id="companyChips"></div>
+    <button type="button" class="section-toggle" id="advancedToggle">
+      <span>⚙️ 고급 설정 (기업·태그·난이도·순서)</span>
+      <span class="chevron">▼</span>
+    </button>
+    <div class="advanced-body" id="advancedBody" hidden>
+      <div class="settings-group">
+        <label class="group-label">기업 (미선택 시 전체)</label>
+        <div class="chip-list" id="companyChips"></div>
+      </div>
+      <div class="settings-group">
+        <label class="group-label">알고리즘 태그 (미선택 시 전체)</label>
+        <div class="chip-list" id="tagChips"></div>
+      </div>
+      <div class="settings-group">
+        <label class="group-label">난이도 (미선택 시 전체)</label>
+        <div class="chip-list" id="levelChips"></div>
+      </div>
+      <div class="settings-group">
+        <label class="group-label" for="order">출제 순서</label>
+        <select id="order">
+          <option value="sequential">순차 (날짜 기반 로테이션)</option>
+          <option value="random">랜덤 (날짜+사용자 기반)</option>
+          <option value="unsolved-first">안 푼 문제 우선</option>
+        </select>
+      </div>
     </div>
-    <div class="settings-group">
-      <label class="group-label">알고리즘 태그 (미선택 시 전체)</label>
-      <div class="chip-list" id="tagChips"></div>
-    </div>
-    <div class="settings-group">
-      <label class="group-label">난이도 (미선택 시 전체)</label>
-      <div class="chip-list" id="levelChips"></div>
-    </div>
-    <div class="settings-group">
-      <label class="group-label" for="order">출제 순서</label>
-      <select id="order">
-        <option value="sequential">순차 (날짜 기반 로테이션)</option>
-        <option value="random">랜덤 (날짜+사용자 기반)</option>
-        <option value="unsolved-first">안 푼 문제 우선</option>
-      </select>
-    </div>
+    <p class="save-status" style="color: var(--text-secondary); text-align: left; margin-bottom: 12px;">
+      아무것도 선택하지 않으면 전체 문제 중에서 순서대로 골라드려요. 나중에 언제든 바꿀 수 있어요.
+    </p>
     <button class="save-btn" id="saveBtn">설정 저장</button>
     <div class="save-status" id="saveStatus"></div>
   </div>
@@ -125,6 +139,24 @@
       return `${y}-${m}-${day}`;
     }
     document.getElementById('pauseUntil').min = todayLocalDateString();
+
+    function setAdvancedOpen(open) {
+      document.getElementById('advancedBody').hidden = !open;
+      document.querySelector('#advancedToggle .chevron').textContent = open ? '▲' : '▼';
+    }
+
+    document.getElementById('advancedToggle').addEventListener('click', () => {
+      setAdvancedOpen(document.getElementById('advancedBody').hidden);
+    });
+
+    function setPauseSectionOpen(open) {
+      document.getElementById('pauseSectionBody').hidden = !open;
+      document.querySelector('#pauseSectionToggle .chevron').textContent = open ? '▲' : '▼';
+    }
+
+    document.getElementById('pauseSectionToggle').addEventListener('click', () => {
+      setPauseSectionOpen(document.getElementById('pauseSectionBody').hidden);
+    });
 
     let currentSettings = {
       companies: [], tags: [], levels: [], order: 'sequential',
@@ -178,6 +210,9 @@
       btn.textContent = paused.active ? '알림 다시 켜기' : '지금 알림 끄기';
       btn.classList.toggle('solved', paused.active);
       untilInput.value = paused.until || '';
+
+      // 접혀 있어도 지금 일시정지 중인지는 알 수 있도록 토글 라벨에 상태를 반영한다.
+      document.getElementById('pauseSectionToggleLabel').textContent = paused.active ? '⏸ 일시정지 중' : '⏸ 일시정지 설정';
     }
 
     async function loadMetaAndSettings() {

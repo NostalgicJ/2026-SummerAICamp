@@ -135,6 +135,7 @@ h1 .brand-accent {
 .company-badge {
   display: inline-block;
   background: var(--chip-bg);
+  border: 1px solid var(--border);
   color: var(--accent);
   font-size: 12px;
   font-weight: 600;
@@ -142,8 +143,37 @@ h1 .brand-accent {
   border-radius: 999px;
   margin-bottom: 10px;
 }
+.curation-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+/* 문제명 오른쪽에 기업 배지 + 큐레이션 문구를 나란히 붙여서, 배지·문구가 따로 줄을 차지해
+   정렬이 어긋나 보이던 것을 하나의 덩어리로 정리한다 */
+.name-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.name-row .name {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+.curation {
+  flex-shrink: 0;
+  text-align: right;
+}
+.curation .company-badge {
+  margin-bottom: 0;
+}
+.curation .curation-hint {
+  margin: 0 0 4px;
+}
 .name {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
   margin: 0 0 8px;
 }
@@ -157,6 +187,7 @@ h1 .brand-accent {
 }
 .meta span {
   background: var(--chip-bg);
+  border: 1px solid var(--border);
   padding: 3px 8px;
   border-radius: 8px;
 }
@@ -297,6 +328,36 @@ h1 .brand-accent {
 .settings-group {
   margin-bottom: 16px;
 }
+.section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0 0 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
+}
+.section-toggle .chevron {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+/* 카드 안에 딸린 부수적인 토글(예: 알림 스케줄 안의 일시정지)은 섹션 제목처럼 진하게 두지
+   않고, 위에 구분선과 여백을 줘서 바로 위 항목과 붙어 보이지 않게 한다 */
+.section-toggle--sub {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
 .group-label {
   display: block;
   font-size: 13px;
@@ -396,7 +457,8 @@ input[type="date"] {
 }
 .stat-tile {
   flex: 1;
-  background: var(--surface);
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 14px 8px;
   text-align: center;
@@ -467,6 +529,7 @@ input[type="date"] {
 .tag-bar-track {
   flex: 1;
   background: var(--chip-bg);
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 14px;
 }
@@ -500,6 +563,7 @@ input[type="date"] {
   height: 12px;
   border-radius: 3px;
   background: var(--chip-bg);
+  border: 1px solid var(--border);
 }
 .heatmap-cell.level-1 { background: color-mix(in srgb, var(--accent) 30%, var(--chip-bg)); }
 .heatmap-cell.level-2 { background: color-mix(in srgb, var(--accent) 55%, var(--chip-bg)); }
@@ -742,7 +806,7 @@ html[data-view="desktop"] .brand-icon {
   font-size: 30px;
 }
 html[data-view="desktop"] .name {
-  font-size: 26px;
+  font-size: 30px;
 }
 html[data-view="desktop"] .card,
 html[data-view="desktop"] .settings {
