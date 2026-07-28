@@ -1,0 +1,24 @@
+name: Send Daily Notifications
+
+# 15분마다 배포된 서버의 /api/send-daily를 호출한다.
+# 실제 발송 여부(요일/시간/일시정지/중복 방지)는 서버 쪽 로직이 판단하고,
+# 이 워크플로는 그저 "지금 확인해볼 시점"이라고 주기적으로 알려주는 역할만 한다.
+#
+# 사용 전 GitHub 저장소 Settings > Secrets and variables > Actions 에 등록해야 하는 값:
+#   APP_URL      - 배포된 서버 주소 (예: https://algoping.onrender.com)
+#   CRON_SECRET  - 서버의 CRON_SECRET 환경변수와 동일한 값
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {} # 필요할 때 수동으로도 실행해볼 수 있도록
+
+jobs:
+  send-daily:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call /api/send-daily
+        run: |
+          curl -sf -X POST "${{ secrets.APP_URL }}/api/send-daily" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -w "\nHTTP %{http_code}\n"
