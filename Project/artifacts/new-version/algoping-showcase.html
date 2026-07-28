@@ -172,7 +172,16 @@
   /* ---------- HERO ---------- */
   .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--line); }
 
-  .wordmark { display: inline-flex; align-items: center; gap: 18px; margin-bottom: 16px; }
+  .hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .wordmark { display: inline-flex; align-items: center; gap: 18px; }
   .wordmark .bell {
     width: 64px; height: 64px; border-radius: 50%;
     background: var(--lime); color: var(--ink);
@@ -194,11 +203,12 @@
   @media (max-width: 520px) { .hero .tagline { margin-left: 0; } }
 
   .hero .tags {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px;
+    display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px;
     font-family: inherit; font-weight: 500; font-size: 11px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--ink-faint);
   }
   .hero .tags .hi { color: var(--signal); }
+  @media (max-width: 640px) { .hero .tags { justify-content: flex-start; } }
 
   .hero h1.display {
     font-size: clamp(36px, 6.4vw, 84px);
@@ -527,16 +537,18 @@
 
 <div class="hero">
   <div class="wrap">
-    <div class="wordmark">
-      <span class="bell">🔔</span>
-      <span class="name">AlGo<b>Ping</b></span>
+    <div class="hero-top">
+      <div class="wordmark">
+        <span class="bell">🔔</span>
+        <span class="name">AlGo<b>Ping</b></span>
+      </div>
+      <div class="tags">
+        <span class="hi">Reference study</span>
+        <span>Code Squad 2026 Summer AI Camp</span>
+        <span>Personal project</span>
+      </div>
     </div>
     <span class="tagline"><b>Algorithm</b>이 Go하면, <b>Ping</b>이 온다</span>
-    <div class="tags">
-      <span class="hi">Reference study</span>
-      <span>Code Squad 2026 Summer AI Camp</span>
-      <span>Personal project</span>
-    </div>
     <h1 class="display">기업마다 다른 출제 경향,<br>무작위로<br><span class="accent">풀지 않기로 했다.</span></h1>
     <div class="hero-split">
       <p>목표 기업(네이버·카카오·쿠팡·토스·삼성 등) 출제 경향에 맞춘 오늘의 문제를 매일 정해진 시간에 푸시로 받아보는 PWA예요. 로그인 없이 링크 하나로 나만의 설정을 가질 수 있어요.</p>
