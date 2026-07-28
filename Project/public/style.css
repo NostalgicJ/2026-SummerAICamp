@@ -805,7 +805,9 @@ html[data-view="desktop"] .brand-icon {
   border-radius: 14px;
   font-size: 30px;
 }
-html[data-view="desktop"] .name {
+/* .name은 오늘의 문제 카드와 풀이 기록 목록 둘 다 쓰는 클래스라, .card로 범위를 좁혀서
+   풀이 기록의 문제명까지 커지지 않게 한다 */
+html[data-view="desktop"] .card .name {
   font-size: 30px;
 }
 html[data-view="desktop"] .card,
