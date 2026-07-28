@@ -44,6 +44,8 @@
     --signal: #1f5ef7;
     --stripe-a: #edeadd;
     --stripe-b: #e2decf;
+    --tint: rgba(27, 26, 23, 0.055);
+    --tint-strong: rgba(27, 26, 23, 0.09);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -59,6 +61,8 @@
       --signal: #6e9bff;
       --stripe-a: #211f1a;
       --stripe-b: #2a2822;
+      --tint: rgba(246, 244, 236, 0.07);
+      --tint-strong: rgba(246, 244, 236, 0.11);
     }
   }
 
@@ -74,6 +78,8 @@
     --signal: #6e9bff;
     --stripe-a: #211f1a;
     --stripe-b: #2a2822;
+    --tint: rgba(246, 244, 236, 0.07);
+    --tint-strong: rgba(246, 244, 236, 0.11);
   }
 
   :root[data-theme="light"] {
@@ -88,6 +94,8 @@
     --signal: #1f5ef7;
     --stripe-a: #edeadd;
     --stripe-b: #e2decf;
+    --tint: rgba(27, 26, 23, 0.055);
+    --tint-strong: rgba(27, 26, 23, 0.09);
   }
 
   * { box-sizing: border-box; }
@@ -162,47 +170,50 @@
   @media (max-width: 860px) { .topbar nav { display: none; } }
 
   /* ---------- HERO ---------- */
-  .hero { padding: 72px 0 56px; border-bottom: 1px solid var(--line); }
+  .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--line); }
 
-  .wordmark { display: inline-flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .wordmark { display: inline-flex; align-items: center; gap: 18px; margin-bottom: 16px; }
   .wordmark .bell {
-    width: 46px; height: 46px; border-radius: 50%;
+    width: 64px; height: 64px; border-radius: 50%;
     background: var(--lime); color: var(--ink);
     display: flex; align-items: center; justify-content: center;
-    font-size: 21px; transform: rotate(-6deg); flex-shrink: 0;
+    font-size: 30px; transform: rotate(-6deg); flex-shrink: 0;
   }
   .wordmark .name {
-    font-size: 20px; font-weight: 900; letter-spacing: -0.01em; text-transform: uppercase; color: var(--ink);
+    font-size: clamp(32px, 4vw, 42px); font-weight: 900; letter-spacing: -0.01em;
+    text-transform: uppercase; color: var(--ink); line-height: 1;
   }
   .wordmark .name b { color: var(--signal); font-weight: 900; }
 
+  .hero .tagline {
+    display: block;
+    font-size: 14px; font-weight: 600; color: var(--ink-soft);
+    margin: 0 0 36px 82px;
+  }
+  .hero .tagline b { color: var(--signal); font-weight: 700; }
+  @media (max-width: 520px) { .hero .tagline { margin-left: 0; } }
+
   .hero .tags {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px;
     font-family: inherit; font-weight: 500; font-size: 11px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--ink-faint);
   }
   .hero .tags .hi { color: var(--signal); }
 
   .hero h1.display {
-    font-size: clamp(38px, 7vw, 96px);
-    line-height: 0.9;
-    letter-spacing: -0.035em;
-    margin: 0 0 40px;
+    font-size: clamp(36px, 6.4vw, 84px);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    margin: 0 0 32px;
   }
   .hero h1.display .accent { color: var(--signal); }
 
-  .hero-split {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
-    max-width: 980px;
-    margin-bottom: 32px;
-  }
-  .hero-split p { margin: 0; font-size: 17px; line-height: 1.55; color: var(--ink-soft); }
+  .hero-split { max-width: 640px; margin-bottom: 32px; }
+  .hero-split p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
 
   .stat-row { display: flex; flex-wrap: wrap; gap: 10px; }
   .stat-chip {
-    background: transparent; border: 1px solid var(--line); border-radius: 0;
+    background: var(--tint); border: 1px solid var(--line); border-radius: 0;
     padding: 8px 14px; font-size: 12.5px; font-weight: 600; color: var(--ink-soft);
   }
   .stat-chip b { color: var(--signal); font-weight: 800; }
@@ -331,6 +342,7 @@
   .flow-note p { margin: 0; font-size: 14.5px; line-height: 1.75; text-wrap: pretty; color: var(--ink-soft); }
   .flow-note .pill {
     display: inline-block;
+    background: var(--tint);
     border: 1px solid var(--line);
     padding: 2px 8px;
     font-weight: 600;
@@ -378,23 +390,23 @@
   .device.is-light {
     background: #f6f4ec; color: #1b1a17; border: 1px solid rgba(27,26,23,.14);
     --d-bg:#f6f4ec; --d-surface:#f6f4ec; --d-text:#1b1a17; --d-sub:rgba(27,26,23,.65); --d-border:rgba(27,26,23,.18);
-    --d-chip:transparent; --d-accent:#1f5ef7; --d-key-bg:transparent; --d-key-border:#1b1a17; --d-key-label:#1f5ef7;
+    --d-chip:rgba(27,26,23,.055); --d-accent:#1f5ef7; --d-key-bg:transparent; --d-key-border:#1b1a17; --d-key-label:#1f5ef7;
     --d-succ-bg:#c6f24e; --d-succ-border:#c6f24e; --d-succ-text:#1b1a17;
   }
   .device.is-dark {
     background: #171612; color: #f6f4ec; border: 1px solid rgba(246,244,236,.16);
     --d-bg:#171612; --d-surface:#171612; --d-text:#f6f4ec; --d-sub:rgba(246,244,236,.65); --d-border:rgba(246,244,236,.18);
-    --d-chip:transparent; --d-accent:#6e9bff; --d-key-bg:transparent; --d-key-border:#f6f4ec; --d-key-label:#6e9bff;
+    --d-chip:rgba(246,244,236,.07); --d-accent:#6e9bff; --d-key-bg:transparent; --d-key-border:#f6f4ec; --d-key-label:#6e9bff;
     --d-succ-bg:#c6f24e; --d-succ-border:#c6f24e; --d-succ-text:#1b1a17;
   }
   .screen { display: none; }
   .screen.active { display: block; animation: fadeUp 0.26s var(--e, ease); }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-  .d-badge { display: inline-block; border: 1px solid var(--d-border); color: var(--d-accent); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; }
+  .d-badge { display: inline-block; background: var(--d-chip); border: 1px solid var(--d-border); color: var(--d-accent); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; }
   .d-title { font-size: 22px; font-weight: 900; letter-spacing: -0.01em; text-transform: uppercase; margin: 14px 0 10px; }
   .d-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .d-meta span { font-size: 11.5px; border: 1px solid var(--d-border); color: var(--d-sub); padding: 3px 9px; }
+  .d-meta span { font-size: 11.5px; background: var(--d-chip); border: 1px solid var(--d-border); color: var(--d-sub); padding: 3px 9px; }
   .d-key { border-left: 2px solid var(--d-key-border); padding: 4px 0 4px 16px; font-size: 14px; line-height: 1.55; margin-bottom: 18px; }
   .d-key b { color: var(--d-key-label); display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
   .d-steps { font-size: 14px; line-height: 1.5; color: var(--d-sub); padding-left: 20px; margin: 0 0 18px; }
@@ -414,7 +426,7 @@
   .d-group { margin-bottom: 20px; }
   .d-group-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--d-sub); margin-bottom: 10px; }
   .d-chipset { display: flex; gap: 6px; flex-wrap: wrap; }
-  .d-chip { font-size: 12.5px; padding: 7px 12px; border-radius: 0; border: 1px solid var(--d-border); background: transparent; color: var(--d-text); }
+  .d-chip { font-size: 12.5px; padding: 7px 12px; border-radius: 0; border: 1px solid var(--d-border); background: var(--d-chip); color: var(--d-text); }
   .d-chip.on { background: var(--lime); color: #1b1a17; border-color: transparent; }
   .d-field { font-size: 13.5px; color: var(--d-sub); margin-bottom: 12px; }
   .d-empty { text-align: center; padding: 40px 14px; color: var(--d-sub); font-size: 14px; line-height: 1.6; }
@@ -459,7 +471,7 @@
   section.band.alt .notif { background: var(--canvas-2); }
   .notif .av {
     width: 34px; height: 34px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center;
-    font-size: 15px; flex-shrink: 0; background: transparent;
+    font-size: 15px; flex-shrink: 0; background: var(--tint);
   }
   .notif.question { align-self: flex-start; }
   .notif.reply { align-self: flex-end; flex-direction: row-reverse; border-color: var(--signal); }
@@ -478,12 +490,12 @@
   .qa-pair.open .qa-reply-wrap { max-height: 400px; opacity: 1; margin-top: 8px; }
 
   /* ---------- phase tracker ---------- */
-  .phase-track { display: flex; flex-wrap: wrap; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .phase-track { display: flex; flex-wrap: wrap; gap: 8px; }
   .phase-pill {
-    font-size: 13px; font-weight: 600; padding: 10px 16px; background: var(--canvas); color: var(--ink-soft);
+    font-size: 13px; font-weight: 600; padding: 10px 16px;
+    background: var(--tint); border: 1px solid var(--line); color: var(--ink-soft);
   }
-  section.band.alt .phase-pill { background: var(--canvas-2); }
-  .phase-pill.done { background: var(--lime); color: #1b1a17; font-weight: 700; }
+  .phase-pill.done { background: var(--lime); border-color: transparent; color: #1b1a17; font-weight: 700; }
   .phase-pill.next { color: var(--ink-faint); }
 
   footer {
@@ -519,6 +531,7 @@
       <span class="bell">🔔</span>
       <span class="name">AlGo<b>Ping</b></span>
     </div>
+    <span class="tagline"><b>Algorithm</b>이 Go하면, <b>Ping</b>이 온다</span>
     <div class="tags">
       <span class="hi">Reference study</span>
       <span>Code Squad 2026 Summer AI Camp</span>
@@ -526,8 +539,7 @@
     </div>
     <h1 class="display">기업마다 다른 출제 경향,<br>무작위로<br><span class="accent">풀지 않기로 했다.</span></h1>
     <div class="hero-split">
-      <p>목표 기업(네이버·카카오·쿠팡·토스·삼성 등) 출제 경향에 맞춘 오늘의 문제를 매일 정해진 시간에 푸시로 받아보는 PWA. 로그인 없이 링크 하나로 나만의 설정을 갖는다.</p>
-      <p>이름은 <b style="color:var(--ink)">Algorithm</b>이 <b style="color:var(--signal)">Go</b>하면 <b style="color:var(--ink)">Ping</b>이 온다는 뜻 — 알고리즘이 판정해서 실행되면, 알림으로 도착한다.</p>
+      <p>목표 기업(네이버·카카오·쿠팡·토스·삼성 등) 출제 경향에 맞춘 오늘의 문제를 매일 정해진 시간에 푸시로 받아보는 PWA예요. 로그인 없이 링크 하나로 나만의 설정을 가질 수 있어요.</p>
     </div>
     <div class="stat-row">
       <span class="stat-chip"><b>38</b>문제 · 9개 기업군</span>
@@ -546,7 +558,7 @@
   <div class="wrap">
     <span class="eyebrow">n.001 · Intent</span>
     <h2 class="display">왜 만들었나</h2>
-    <p class="sub">코딩테스트는 기업마다 자주 나오는 유형과 평가 포인트가 다르다. 그런데 목표 없이 풀면 실제 시험에서 낯선 유형에 시간을 뺏긴다 — 그 문제 정의에서 출발했다.</p>
+    <p class="sub">코딩테스트는 기업마다 자주 나오는 유형과 평가 포인트가 달라요. 그런데 목표 없이 풀면 실제 시험에서 낯선 유형에 시간을 뺏기죠 — 그 고민에서 시작했어요.</p>
     <div class="intent-grid">
       <div class="intent-card problem reveal">
         <h3>풀지 못한 문제</h3>
@@ -566,7 +578,7 @@
       </div>
     </div>
     <div class="scope-note">
-      의도적으로 <b>범위 밖</b>에 둔 것도 있다 — 로그인/계정, 자동 채점, PR 자동 병합, 통계 대시보드는 지금 버전에서 다루지 않는다. 문제 원문은 스크래핑하거나 iframe으로 끌어오지 않고, <b>핵심 포인트 · 풀이 접근을 항상 직접 작성</b>해 저작권 문제를 피한다.
+      의도적으로 <b>범위 밖</b>에 둔 것도 있어요 — 로그인/계정, 자동 채점, PR 자동 병합, 통계 대시보드는 지금 버전에서 다루지 않아요. 문제 원문은 스크래핑하거나 iframe으로 끌어오지 않고, <b>핵심 포인트 · 풀이 접근을 항상 직접 작성</b>해서 저작권 문제를 피해요.
     </div>
   </div>
 </section>
@@ -575,10 +587,10 @@
   <div class="wrap">
     <span class="eyebrow">n.002 · System Flow</span>
     <h2 class="display">동작 흐름</h2>
-    <p class="sub">서버는 늘 깨어있지 않다. 15분마다 깨워져 "지금 보낼 사람"을 판정하고, 문제 제안은 사람이 검토해야만 실제로 반영된다.</p>
+    <p class="sub">서버는 늘 깨어있지 않아요. 15분마다 깨워져 "지금 보낼 사람"을 판정하고, 문제 제안은 사람이 검토해야만 실제로 반영돼요.</p>
 
     <div class="flow-label">① 매일 알림이 도착하기까지</div>
-    <p class="flow-hint">각 단계를 눌러보면 표시가 남는다.</p>
+    <p class="flow-hint">각 단계를 눌러보면 표시가 남아요.</p>
     <div class="flow-steps" data-flow-group>
       <div class="flow-step reveal">
         <span class="num">01</span>
@@ -635,7 +647,7 @@
   <div class="wrap">
     <span class="eyebrow">n.003 · Live Preview</span>
     <h2 class="display">실제 동작 화면</h2>
-    <p class="sub">실제 앱(로컬 실행 화면)에서 그대로 가져온 4개 탭. 스위치를 눌러 라이트/다크 팔레트가 실제로 어떻게 바뀌는지 확인할 수 있다 — 이 부분은 시행착오 끝에 다듬어졌다.</p>
+    <p class="sub">실제 앱(로컬 실행 화면)에서 그대로 가져온 4개 탭이에요. 스위치를 눌러보면 라이트/다크 팔레트가 실제로 어떻게 바뀌는지 볼 수 있어요 — 이 부분은 시행착오 끝에 다듬어졌어요.</p>
 
     <div class="sim-shell">
       <div class="sim-controls">
@@ -718,7 +730,7 @@
         </div>
       </div>
     </div>
-    <p class="sim-caption">실제 로컬 서버(localhost:3000)에서 캡처한 문구 · 배색을 그대로 재현했다.</p>
+    <p class="sim-caption">실제 로컬 서버(localhost:3000)에서 캡처한 문구 · 배색을 그대로 재현했어요.</p>
   </div>
 </section>
 
@@ -726,7 +738,7 @@
   <div class="wrap">
     <span class="eyebrow">n.004 · Trial &amp; Error</span>
     <h2 class="display">만들면서 저지른 실수들</h2>
-    <p class="sub">TODO 체크리스트에 실제로 남아있는 시행착오 4개. 숨기지 않고 그대로 옮겼다.</p>
+    <p class="sub">TODO 체크리스트에 실제로 남아있는 시행착오 4개예요. 숨기지 않고 그대로 옮겼어요.</p>
 
     <div class="timeline">
       <div class="t-item open reveal">
@@ -789,7 +801,7 @@
   <div class="wrap">
     <span class="eyebrow">n.005 · Group Feedback</span>
     <h2 class="display">발표하며 받은 질문들</h2>
-    <p class="sub">그룹 발표 때 나온 질문과 그 자리에서, 또는 다음 버전에서 답한 내용이다.</p>
+    <p class="sub">그룹 발표 때 나온 질문과, 그 자리에서 혹은 다음 버전에서 답한 내용이에요.</p>
 
     <div class="qa-stack">
       <div class="qa-pair open reveal">
