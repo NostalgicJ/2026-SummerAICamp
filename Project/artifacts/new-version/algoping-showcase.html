@@ -178,16 +178,17 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 44px;
   }
 
-  .wordmark { display: inline-flex; align-items: center; gap: 18px; }
+  .wordmark { display: inline-flex; align-items: center; gap: 22px; }
   .wordmark .bell {
-    width: 64px; height: 64px; border-radius: 50%;
+    width: 84px; height: 84px; border-radius: 50%;
     background: var(--lime); color: var(--ink);
     display: flex; align-items: center; justify-content: center;
-    font-size: 30px; transform: rotate(-6deg); flex-shrink: 0;
+    font-size: 40px; transform: rotate(-6deg); flex-shrink: 0;
   }
+  .wordmark-text { display: flex; flex-direction: column; gap: 8px; }
   .wordmark .name {
     font-size: clamp(32px, 4vw, 42px); font-weight: 900; letter-spacing: -0.01em;
     text-transform: uppercase; color: var(--ink); line-height: 1;
@@ -197,10 +198,9 @@
   .hero .tagline {
     display: block;
     font-size: 14px; font-weight: 600; color: var(--ink-soft);
-    margin: 0 0 36px 82px;
+    margin: 0;
   }
   .hero .tagline b { color: var(--signal); font-weight: 700; }
-  @media (max-width: 520px) { .hero .tagline { margin-left: 0; } }
 
   .hero .tags {
     display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px;
@@ -540,7 +540,10 @@
     <div class="hero-top">
       <div class="wordmark">
         <span class="bell">🔔</span>
-        <span class="name">AlGo<b>Ping</b></span>
+        <div class="wordmark-text">
+          <span class="name">AlGo<b>Ping</b></span>
+          <span class="tagline"><b>Algorithm</b>이 Go하면, <b>Ping</b>이 온다</span>
+        </div>
       </div>
       <div class="tags">
         <span class="hi">Reference study</span>
@@ -548,7 +551,6 @@
         <span>Personal project</span>
       </div>
     </div>
-    <span class="tagline"><b>Algorithm</b>이 Go하면, <b>Ping</b>이 온다</span>
     <h1 class="display">기업마다 다른 출제 경향,<br>무작위로<br><span class="accent">풀지 않기로 했다.</span></h1>
     <div class="hero-split">
       <p>목표 기업(네이버·카카오·쿠팡·토스·삼성 등) 출제 경향에 맞춘 오늘의 문제를 매일 정해진 시간에 푸시로 받아보는 PWA예요. 로그인 없이 링크 하나로 나만의 설정을 가질 수 있어요.</p>
