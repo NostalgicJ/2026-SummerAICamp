@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>풀이 기록 - AlGoPing</title>
+<meta name="theme-color" content="#6367ff" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="AlGoPing" />
+<link rel="stylesheet" href="style.css" />
+<script>document.documentElement.dataset.view = localStorage.getItem('algoping_view') || (matchMedia('(min-width: 700px)').matches ? 'desktop' : 'mobile');</script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🔔</div>
+        <h1>AlGo<span class="brand-accent">Ping</span></h1>
+        <div class="date">풀이 기록</div>
+      </div>
+
+      <nav class="topnav">
+        <a href="/">오늘의 문제</a>
+        <a href="/solved.html" class="active">풀이 기록</a>
+        <a href="/algorithm.html">알고리즘</a>
+        <a href="/cs.html">CS 개념</a>
+        <a href="/settings.html">설정</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="settings" id="statsCard">
+        <h2>📊 통계</h2>
+        <div class="stats-tiles" id="statTiles"></div>
+        <div class="settings-group" style="margin-bottom: 0;">
+          <label class="group-label">📅 최근 14주</label>
+          <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
+          <div class="heatmap-legend">
+            <span>적음</span>
+            <div class="heatmap-cell"></div>
+            <div class="heatmap-cell level-1"></div>
+            <div class="heatmap-cell level-2"></div>
+            <div class="heatmap-cell level-3"></div>
+            <div class="heatmap-cell level-4"></div>
+            <span>많음</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings">
+        <h2>📆 요일별 패턴</h2>
+        <div class="weekday-chart" id="weekdayChart"></div>
+      </div>
+
+      <div class="settings">
+        <h2>🏷 태그별 분포</h2>
+        <div class="tag-chart" id="tagChart"></div>
+      </div>
+
+      <div class="solved-count" id="solvedCount"></div>
+      <div id="solvedList">알고핑이 기록을 불러오는 중...</div>
+      <button class="text-btn" id="resetBtn">푼 문제 기록 전체 초기화</button>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const DAY_LABELS_SHORT = ['일', '월', '화', '수', '목', '금', '토'];
+
+    function heatLevel(count) {
+      if (count <= 0) return 0;
+      if (count === 1) return 1;
+      if (count === 2) return 2;
+      if (count === 3) return 3;
+      return 4;
+    }
+
+    function renderStatTiles(data) {
+      document.getElementById('statTiles').innerHTML = `
+        <div class="stat-tile">
+          <div class="stat-tile-value">🔥 ${data.streak.current}</div>
+          <div class="stat-tile-label">현재 연속(일)</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-value">🏆 ${data.streak.longest}</div>
+          <div class="stat-tile-label">최고 기록(일)</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-value">✅ ${data.totalSolved}</div>
+          <div class="stat-tile-label">총 풀이 수</div>
+        </div>
+      `;
+    }
+
+    function renderHeatmap(calendar) {
+      document.getElementById('heatmap').innerHTML = calendar.map((day) => {
+        const level = heatLevel(day.count);
+        return `<div class="heatmap-cell${level ? ' level-' + level : ''}" title="${escapeHtml(day.date)} · ${day.count}개"></div>`;
+      }).join('');
+    }
+
+    function renderWeekdayChart(byWeekday) {
+      const max = Math.max(1, ...byWeekday);
+      document.getElementById('weekdayChart').innerHTML = byWeekday.map((count, day) => `
+        <div class="weekday-bar-col">
+          <div class="weekday-bar-count">${count > 0 ? count : ''}</div>
+          <div class="weekday-bar" style="height:${Math.max(4, (count / max) * 100)}%" title="${DAY_LABELS_SHORT[day]}요일 ${count}개"></div>
+          <div class="weekday-bar-label">${DAY_LABELS_SHORT[day]}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderTagChart(byTag) {
+      const entries = Object.entries(byTag).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const container = document.getElementById('tagChart');
+      if (entries.length === 0) {
+        container.innerHTML = '<div class="empty">아직 풀이 기록이 없어요.</div>';
+        return;
+      }
+      const max = Math.max(...entries.map(([, count]) => count));
+      container.innerHTML = entries.map(([tag, count]) => `
+        <div class="tag-bar-row">
+          <div class="tag-bar-label" title="${escapeHtml(tag)}">${escapeHtml(tag)}</div>
+          <div class="tag-bar-track"><div class="tag-bar-fill" style="width:${(count / max) * 100}%"></div></div>
+          <div class="tag-bar-count">${count}</div>
+        </div>
+      `).join('');
+    }
+
+    async function loadStats() {
+      try {
+        const res = await fetch(`/api/stats?clientId=${clientId}`);
+        if (!res.ok) throw new Error('요청 실패');
+        const data = await res.json();
+        renderStatTiles(data);
+        renderHeatmap(data.calendar);
+        renderWeekdayChart(data.byWeekday);
+        renderTagChart(data.byTag);
+      } catch (err) {
+        document.getElementById('statsCard').innerHTML = '<div class="error">통계를 불러오지 못했습니다.</div>';
+      }
+    }
+
+    async function loadSolved() {
+      const listEl = document.getElementById('solvedList');
+      const countEl = document.getElementById('solvedCount');
+      try {
+        const res = await fetch(`/api/solved?clientId=${clientId}`);
+        if (!res.ok) throw new Error('요청 실패');
+        const data = await res.json();
+
+        countEl.textContent = `지금까지 알고핑과 함께 ${data.solved.length}개 풀었어요`;
+
+        if (data.solved.length === 0) {
+          listEl.innerHTML = '<div class="empty">아직 알고핑에서 푼 문제가 없어요.</div>';
+          return;
+        }
+
+        listEl.innerHTML = data.solved.map((p) => `
+          <div class="solved-item">
+            <div class="company-badge">${escapeHtml(p.company)}</div>
+            <div class="name">${escapeHtml(p.name)}</div>
+            <div class="meta">
+              <span>${escapeHtml(p.plat)}</span>
+              <span>난이도 ${escapeHtml(String(p.level))}</span>
+              <span>${escapeHtml(p.tags)}</span>
+            </div>
+            <div class="solved-item-actions">
+              <a href="${escapeHtml(p.url)}" target="_blank" rel="noopener">문제 다시 보기 →</a>
+              <button class="toggle-btn" data-target="detail-${escapeHtml(p.id)}">설명 보기 ▾</button>
+            </div>
+            <div class="solved-detail" id="detail-${escapeHtml(p.id)}" hidden>
+              <div class="key-point">
+                <span class="label">💡 핵심 포인트</span>
+                ${escapeHtml(p.keyPoint)}
+              </div>
+              <div class="approach">
+                <span class="label">🛠 어떻게 풀까</span>
+                <ol>${p.approach.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
+              </div>
+              <a class="link-btn secondary algo-view-btn" href="/algorithm.html?tags=${encodeURIComponent(p.tags)}">🧠 알고리즘 보기</a>
+            </div>
+          </div>
+        `).join('');
+
+        listEl.querySelectorAll('.toggle-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const detail = document.getElementById(btn.dataset.target);
+            detail.hidden = !detail.hidden;
+            btn.textContent = detail.hidden ? '설명 보기 ▾' : '설명 접기 ▴';
+          });
+        });
+      } catch (err) {
+        listEl.innerHTML = '<div class="error">풀이 기록을 불러오지 못했습니다.</div>';
+      }
+    }
+
+    document.getElementById('resetBtn').addEventListener('click', async () => {
+      if (!confirm('지금까지 체크한 풀이 기록을 전부 초기화할까요?')) return;
+      try {
+        const res = await fetch('/api/reset-progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientId }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '초기화에 실패했습니다.');
+        await Promise.all([loadSolved(), loadStats()]);
+      } catch (err) {
+        alert(err.message || '초기화에 실패했습니다.');
+      }
+    });
+
+    loadSolved();
+    loadStats();
+  </script>
+</body>
+</html>

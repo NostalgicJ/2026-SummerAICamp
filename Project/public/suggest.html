@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>문제 제안 - AlGoPing</title>
+<meta name="theme-color" content="#6367ff" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="AlGoPing" />
+<link rel="stylesheet" href="style.css" />
+<script>document.documentElement.dataset.view = localStorage.getItem('algoping_view') || (matchMedia('(min-width: 700px)').matches ? 'desktop' : 'mobile');</script>
+<style>
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field .hint { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+  .back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .pr-link {
+    display: block;
+    margin-top: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  /* 이 페이지는 사이드바가 없는 단독 폼이라, PC 보기에서도 app-shell 폭(1100px)이 아니라
+     읽기 편한 폭으로만 살짝 넓힌다 */
+  html[data-view="desktop"] body {
+    max-width: 640px;
+  }
+</style>
+</head>
+<body>
+  <div class="brand">
+    <div class="brand-icon" aria-hidden="true">🔔</div>
+    <h1>AlGo<span class="brand-accent">Ping</span></h1>
+    <div class="date">문제 제안</div>
+  </div>
+
+  <a class="back-link" href="/settings.html">← 설정으로 돌아가기</a>
+
+  <div class="settings" id="disabledNotice" hidden>
+    <p style="margin:0;">지금은 문제 제안 기능이 꺼져 있어요 (서버에 GITHUB_TOKEN이 설정되지 않았습니다). 관리자에게 문의해주세요.</p>
+  </div>
+
+  <div class="settings" id="formWrap">
+    <div class="field">
+      <label for="company">기업 (누구를 목표로 한 문제인가요?)</label>
+      <input type="text" id="company" placeholder="예: 카카오" />
+    </div>
+    <div class="field">
+      <label for="name">문제명</label>
+      <input type="text" id="name" placeholder="예: 오픈채팅방" />
+    </div>
+    <div class="field">
+      <label for="plat">플랫폼</label>
+      <input type="text" id="plat" placeholder="예: 프로그래머스, 리트코드" />
+    </div>
+    <div class="field">
+      <label for="level">난이도</label>
+      <select id="level">
+        <option value="1">1 (쉬움)</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 (어려움)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="tags">알고리즘 태그</label>
+      <input type="text" id="tags" placeholder="쉼표로 구분 (예: BFS,그래프)" />
+    </div>
+    <div class="field">
+      <label for="url">문제 링크</label>
+      <input type="url" id="url" placeholder="https://..." />
+    </div>
+    <div class="field">
+      <label for="keyPoint">핵심 포인트 (직접 작성 — 원문 그대로 복사하지 말아주세요)</label>
+      <textarea id="keyPoint" placeholder="이 문제를 푸는 데 가장 중요한 아이디어를 1~2문장으로"></textarea>
+    </div>
+    <div class="field">
+      <label for="approach">어떻게 풀까 (한 줄에 한 단계씩)</label>
+      <textarea id="approach" placeholder="1) ...&#10;2) ...&#10;3) ..." style="min-height:110px;"></textarea>
+      <div class="hint">줄바꿈으로 구분한 각 줄이 풀이 단계 하나가 됩니다.</div>
+    </div>
+
+    <button class="save-btn" id="submitBtn">제안 제출하기</button>
+    <div class="save-status" id="submitStatus"></div>
+    <a class="pr-link" id="prLink" href="#" target="_blank" rel="noopener" hidden>생성된 PR 보러 가기 →</a>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    async function checkEnabled() {
+      try {
+        const meta = await fetch('/api/meta').then((r) => r.json());
+        if (!meta.suggestEnabled) {
+          document.getElementById('disabledNotice').hidden = false;
+          document.getElementById('formWrap').style.opacity = '0.5';
+          document.getElementById('submitBtn').disabled = true;
+        }
+      } catch (err) {
+        // 메타 조회 실패는 무시하고 폼은 그대로 시도할 수 있게 둔다.
+      }
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('submitStatus');
+      const prLink = document.getElementById('prLink');
+      prLink.hidden = true;
+
+      const payload = {
+        company: document.getElementById('company').value.trim(),
+        name: document.getElementById('name').value.trim(),
+        plat: document.getElementById('plat').value.trim(),
+        level: Number(document.getElementById('level').value),
+        tags: document.getElementById('tags').value.trim(),
+        url: document.getElementById('url').value.trim(),
+        keyPoint: document.getElementById('keyPoint').value.trim(),
+        approach: document.getElementById('approach').value,
+      };
+
+      if (!payload.company || !payload.name || !payload.plat || !payload.url || !payload.keyPoint || !payload.approach.trim()) {
+        statusEl.textContent = '필수 항목을 모두 입력해주세요.';
+        statusEl.style.color = 'var(--danger)';
+        return;
+      }
+
+      document.getElementById('submitBtn').disabled = true;
+      statusEl.style.color = 'var(--text-secondary)';
+      statusEl.textContent = '제안을 제출하는 중...';
+
+      try {
+        const res = await fetch('/api/suggest-problem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '제출에 실패했습니다.');
+
+        statusEl.style.color = 'var(--success-border)';
+        statusEl.textContent = '✅ 제안이 접수됐어요! 검토 후 병합되면 문제 목록에 추가됩니다.';
+        prLink.href = data.prUrl;
+        prLink.hidden = false;
+      } catch (err) {
+        statusEl.style.color = 'var(--danger)';
+        statusEl.textContent = err.message;
+      } finally {
+        document.getElementById('submitBtn').disabled = false;
+      }
+    });
+
+    checkEnabled();
+  </script>
+</body>
+</html>

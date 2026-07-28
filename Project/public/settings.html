@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>설정 - AlGoPing</title>
+<meta name="theme-color" content="#6367ff" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="AlGoPing" />
+<link rel="stylesheet" href="style.css" />
+<script>document.documentElement.dataset.view = localStorage.getItem('algoping_view') || (matchMedia('(min-width: 700px)').matches ? 'desktop' : 'mobile');</script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🔔</div>
+        <h1>AlGo<span class="brand-accent">Ping</span></h1>
+        <div class="date">오늘의 문제 설정</div>
+      </div>
+
+      <nav class="topnav">
+        <a href="/">오늘의 문제</a>
+        <a href="/solved.html">풀이 기록</a>
+        <a href="/algorithm.html">알고리즘</a>
+        <a href="/cs.html">CS 개념</a>
+        <a href="/settings.html" class="active">설정</a>
+      </nav>
+    </aside>
+
+    <main class="main-content page-settings">
+  <div class="settings-col">
+  <div class="settings" style="margin-bottom: 20px;">
+    <h2>알림</h2>
+    <div class="settings-group">
+      <div class="save-status" id="pushStatus" style="color: var(--text-secondary); margin-bottom: 10px;">확인 중...</div>
+      <button class="save-btn" id="pushToggleBtn">알고핑으로 알림 켜기</button>
+    </div>
+    <div class="settings-group" style="margin-bottom: 0;">
+      <button class="action-btn" id="testPushBtn" style="width: 100%;" disabled>🔔 테스트 알림 보내기</button>
+    </div>
+  </div>
+
+  <div class="settings" style="margin-bottom: 20px;">
+    <h2>알림 스케줄</h2>
+    <div class="settings-group">
+      <label class="group-label" for="notifyTime">알림 시간</label>
+      <input type="time" id="notifyTime" />
+    </div>
+    <div class="settings-group">
+      <label class="group-label">알림 요일</label>
+      <div class="chip-list" id="dayChips"></div>
+    </div>
+    <div class="settings-group">
+      <label class="group-label" for="problemsPerDay">하루 발송 문제 수</label>
+      <select id="problemsPerDay">
+        <option value="1">1개</option>
+        <option value="2">2개</option>
+        <option value="3">3개</option>
+      </select>
+    </div>
+    <div class="settings-group" style="margin-bottom: 0;">
+      <label class="group-label">일시정지</label>
+      <div class="action-row" style="margin-top: 0;">
+        <button class="action-btn" id="pauseToggleBtn">지금 알림 끄기</button>
+        <input type="date" id="pauseUntil" />
+      </div>
+      <div class="save-status" id="pauseHint" style="color: var(--text-secondary); text-align: left;">날짜를 비워두면 직접 다시 켤 때까지 알고핑이 조용해져요.</div>
+    </div>
+  </div>
+  </div>
+
+  <div class="settings-col">
+  <div class="settings">
+    <div class="settings-group">
+      <label class="group-label">기업 (미선택 시 전체)</label>
+      <div class="chip-list" id="companyChips"></div>
+    </div>
+    <div class="settings-group">
+      <label class="group-label">알고리즘 태그 (미선택 시 전체)</label>
+      <div class="chip-list" id="tagChips"></div>
+    </div>
+    <div class="settings-group">
+      <label class="group-label">난이도 (미선택 시 전체)</label>
+      <div class="chip-list" id="levelChips"></div>
+    </div>
+    <div class="settings-group">
+      <label class="group-label" for="order">출제 순서</label>
+      <select id="order">
+        <option value="sequential">순차 (날짜 기반 로테이션)</option>
+        <option value="random">랜덤 (날짜+사용자 기반)</option>
+        <option value="unsolved-first">안 푼 문제 우선</option>
+      </select>
+    </div>
+    <button class="save-btn" id="saveBtn">설정 저장</button>
+    <div class="save-status" id="saveStatus"></div>
+  </div>
+
+  <div class="settings">
+    <h2>문제 제안</h2>
+    <p class="save-status" style="color: var(--text-secondary); text-align: left; margin-bottom: 12px;">
+      알고핑에 새로운 문제를 제안해보세요. 제출하면 GitHub에 자동으로 PR이 만들어지고, 저장소 관리자가 검토 후 병합하면 문제 목록에 추가됩니다.
+    </p>
+    <a class="link-btn secondary" style="width: 100%;" href="/suggest.html">📝 문제 제안하기</a>
+  </div>
+  </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+    const NUMERIC_FIELDS = ['levels'];
+
+    // toISOString()은 UTC 기준이라 자정 근처에서 하루가 밀릴 수 있어, 기기의 로컬 날짜로 직접 계산한다.
+    function todayLocalDateString() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+    document.getElementById('pauseUntil').min = todayLocalDateString();
+
+    let currentSettings = {
+      companies: [], tags: [], levels: [], order: 'sequential',
+      notifyTime: '09:00', notifyDays: [0, 1, 2, 3, 4, 5, 6], problemsPerDay: 1,
+      paused: { active: false, until: null },
+    };
+
+    function renderChips(containerId, values, selectedValues, field) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = values.map((v) => {
+        const isSelected = selectedValues.includes(v);
+        return `<button type="button" class="chip${isSelected ? ' selected' : ''}" data-field="${field}" data-value="${escapeHtml(String(v))}">${escapeHtml(String(v))}</button>`;
+      }).join('');
+
+      container.querySelectorAll('.chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const field = chip.dataset.field;
+          const rawValue = chip.dataset.value;
+          const value = NUMERIC_FIELDS.includes(field) ? Number(rawValue) : rawValue;
+          const list = currentSettings[field];
+          const idx = list.indexOf(value);
+          if (idx === -1) list.push(value);
+          else list.splice(idx, 1);
+          chip.classList.toggle('selected');
+        });
+      });
+    }
+
+    function renderDayChips() {
+      const container = document.getElementById('dayChips');
+      container.innerHTML = DAY_LABELS.map((label, day) => {
+        const isSelected = currentSettings.notifyDays.includes(day);
+        return `<button type="button" class="chip${isSelected ? ' selected' : ''}" data-day="${day}">${label}</button>`;
+      }).join('');
+
+      container.querySelectorAll('.chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const day = Number(chip.dataset.day);
+          const idx = currentSettings.notifyDays.indexOf(day);
+          if (idx === -1) currentSettings.notifyDays.push(day);
+          else currentSettings.notifyDays.splice(idx, 1);
+          chip.classList.toggle('selected');
+        });
+      });
+    }
+
+    function refreshPauseUI() {
+      const btn = document.getElementById('pauseToggleBtn');
+      const untilInput = document.getElementById('pauseUntil');
+      const paused = currentSettings.paused || { active: false, until: null };
+      btn.textContent = paused.active ? '알림 다시 켜기' : '지금 알림 끄기';
+      btn.classList.toggle('solved', paused.active);
+      untilInput.value = paused.until || '';
+    }
+
+    async function loadMetaAndSettings() {
+      const [meta, settings] = await Promise.all([
+        fetch('/api/meta').then((r) => r.json()),
+        fetch(`/api/settings?clientId=${clientId}`).then((r) => r.json()),
+      ]);
+
+      currentSettings = settings;
+
+      renderChips('companyChips', meta.companies, currentSettings.companies, 'companies');
+      renderChips('tagChips', meta.tags, currentSettings.tags, 'tags');
+      renderChips('levelChips', meta.levels, currentSettings.levels, 'levels');
+      renderDayChips();
+      document.getElementById('order').value = currentSettings.order || 'sequential';
+      document.getElementById('notifyTime').value = currentSettings.notifyTime || '09:00';
+      document.getElementById('problemsPerDay').value = String(currentSettings.problemsPerDay || 1);
+      refreshPauseUI();
+    }
+
+    document.getElementById('order').addEventListener('change', (e) => {
+      currentSettings.order = e.target.value;
+    });
+
+    document.getElementById('notifyTime').addEventListener('change', (e) => {
+      currentSettings.notifyTime = e.target.value || '09:00';
+    });
+
+    document.getElementById('problemsPerDay').addEventListener('change', (e) => {
+      currentSettings.problemsPerDay = Number(e.target.value);
+    });
+
+    document.getElementById('pauseToggleBtn').addEventListener('click', () => {
+      const paused = currentSettings.paused || { active: false, until: null };
+      const untilInput = document.getElementById('pauseUntil');
+      currentSettings.paused = paused.active
+        ? { active: false, until: null }
+        : { active: true, until: untilInput.value || null };
+      refreshPauseUI();
+    });
+
+    document.getElementById('pauseUntil').addEventListener('change', (e) => {
+      if (currentSettings.paused && currentSettings.paused.active) {
+        currentSettings.paused.until = e.target.value || null;
+      }
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('saveStatus');
+
+      if (currentSettings.notifyDays.length === 0) {
+        statusEl.textContent = '최소 하나의 요일을 선택해주세요.';
+        statusEl.style.color = 'var(--danger)';
+        return;
+      }
+      statusEl.style.color = 'var(--success-border)';
+
+      statusEl.textContent = '저장 중...';
+      try {
+        await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientId, settings: currentSettings }),
+        });
+        statusEl.textContent = '저장 완료! 오늘의 문제 페이지에서 바로 반영됩니다.';
+        setTimeout(() => { statusEl.textContent = ''; }, 2500);
+      } catch (err) {
+        statusEl.style.color = 'var(--danger)';
+        statusEl.textContent = '저장에 실패했습니다.';
+      }
+    });
+
+    loadMetaAndSettings();
+
+    async function refreshPushUI() {
+      const statusEl = document.getElementById('pushStatus');
+      const toggleBtn = document.getElementById('pushToggleBtn');
+      const testBtn = document.getElementById('testPushBtn');
+
+      const state = await getPushSubscriptionState();
+      if (state === 'unsupported') {
+        statusEl.textContent = '이 브라우저는 Web Push를 지원하지 않습니다.';
+        toggleBtn.disabled = true;
+        testBtn.disabled = true;
+        return;
+      }
+      if (state === 'subscribed') {
+        statusEl.textContent = '🔔 알림이 켜져 있어요.';
+        toggleBtn.textContent = '알림 끄기';
+        testBtn.disabled = false;
+      } else {
+        statusEl.textContent = '알림이 꺼져 있어요.';
+        toggleBtn.textContent = '알고핑으로 알림 켜기';
+        testBtn.disabled = true;
+      }
+    }
+
+    document.getElementById('pushToggleBtn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('pushStatus');
+      const state = await getPushSubscriptionState();
+      try {
+        if (state === 'subscribed') {
+          await unsubscribeFromPush();
+        } else {
+          statusEl.textContent = '알림 권한을 요청하는 중...';
+          await subscribeToPush();
+        }
+      } catch (err) {
+        statusEl.textContent = `알림 설정에 실패했습니다: ${err.message}`;
+      }
+      await refreshPushUI();
+    });
+
+    document.getElementById('testPushBtn').addEventListener('click', async () => {
+      const testBtn = document.getElementById('testPushBtn');
+      testBtn.disabled = true;
+      testBtn.textContent = '보내는 중...';
+      try {
+        const res = await fetch('/api/resend-today', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientId }),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || '발송 실패');
+        testBtn.textContent = '✅ 알고핑이 알림을 보냈어요!';
+        setTimeout(() => { testBtn.textContent = '🔔 테스트 알림 보내기'; testBtn.disabled = false; }, 2500);
+      } catch (err) {
+        testBtn.textContent = '발송 실패';
+        setTimeout(() => { testBtn.textContent = '🔔 테스트 알림 보내기'; testBtn.disabled = false; }, 2500);
+      }
+    });
+
+    refreshPushUI();
+  </script>
+</body>
+</html>

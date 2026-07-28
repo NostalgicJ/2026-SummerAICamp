@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>알고리즘 - AlGoPing</title>
+<meta name="theme-color" content="#6367ff" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="AlGoPing" />
+<link rel="stylesheet" href="style.css" />
+<script>document.documentElement.dataset.view = localStorage.getItem('algoping_view') || (matchMedia('(min-width: 700px)').matches ? 'desktop' : 'mobile');</script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🔔</div>
+        <h1>AlGo<span class="brand-accent">Ping</span></h1>
+        <div class="date">알고리즘 사전</div>
+      </div>
+
+      <nav class="topnav">
+        <a href="/">오늘의 문제</a>
+        <a href="/solved.html">풀이 기록</a>
+        <a href="/algorithm.html" class="active">알고리즘</a>
+        <a href="/cs.html">CS 개념</a>
+        <a href="/settings.html">설정</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="settings algo-picker">
+        <label class="group-label">🔎 궁금한 유형을 선택하면 아래에서 바로 볼 수 있어요</label>
+        <div class="chip-list" id="algoChips"></div>
+      </div>
+
+      <div id="algoList">불러오는 중...</div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // 칩은 여러 개를 동시에 선택할 수 있다 — 선택된 칩 = 열린 카드가 항상 일치하도록
+    // Set으로 상태를 추적한다. (예전엔 openCard만 있고 close가 없어서, 칩을 바꿔도
+    // 이전 카드가 계속 펼쳐진 채로 남아있는 버그가 있었다.)
+    const activeChipTags = new Set();
+
+    function openCard(tag, { scroll } = { scroll: true }) {
+      const card = document.getElementById(`algo-${tag}`);
+      if (!card) return;
+      const body = card.querySelector('.algo-card-body');
+      const chevron = card.querySelector('.chevron');
+      body.hidden = false;
+      chevron.textContent = '▲';
+      card.classList.add('highlighted');
+      if (scroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeCard(tag) {
+      const card = document.getElementById(`algo-${tag}`);
+      if (!card) return;
+      const body = card.querySelector('.algo-card-body');
+      const chevron = card.querySelector('.chevron');
+      body.hidden = true;
+      chevron.textContent = '▼';
+      card.classList.remove('highlighted');
+    }
+
+    function toggleCard(tag) {
+      const card = document.getElementById(`algo-${tag}`);
+      if (!card) return;
+      const willOpen = card.querySelector('.algo-card-body').hidden;
+      if (willOpen) openCard(tag, { scroll: false });
+      else closeCard(tag);
+
+      // 헤더를 직접 눌러 칩이 가리키던 카드를 닫으면, 그 칩의 선택 표시도 같이 풀어 상태를 맞춘다.
+      if (!willOpen && activeChipTags.has(tag)) {
+        activeChipTags.delete(tag);
+        const chip = document.querySelector(`#algoChips .chip[data-tag="${tag}"]`);
+        if (chip) chip.classList.remove('selected');
+      }
+    }
+
+    function renderChips(algorithms, selectedTags) {
+      const container = document.getElementById('algoChips');
+      container.innerHTML = algorithms.map((a) => {
+        const isSelected = selectedTags.includes(a.tag);
+        return `<button type="button" class="chip${isSelected ? ' selected' : ''}" data-tag="${escapeHtml(a.tag)}">${escapeHtml(a.tag)}</button>`;
+      }).join('');
+
+      container.querySelectorAll('.chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const tag = chip.dataset.tag;
+          if (activeChipTags.has(tag)) {
+            activeChipTags.delete(tag);
+            chip.classList.remove('selected');
+            closeCard(tag);
+          } else {
+            activeChipTags.add(tag);
+            chip.classList.add('selected');
+            openCard(tag);
+          }
+        });
+      });
+    }
+
+    function renderCards(algorithms, selectedTags) {
+      const listEl = document.getElementById('algoList');
+      listEl.innerHTML = algorithms.map((a) => {
+        const isOpen = selectedTags.includes(a.tag);
+        return `
+          <div class="algo-card${isOpen ? ' highlighted' : ''}" id="algo-${escapeHtml(a.tag)}">
+            <button class="algo-card-header" data-tag="${escapeHtml(a.tag)}">
+              <span>${escapeHtml(a.name)}</span>
+              <span class="chevron">${isOpen ? '▲' : '▼'}</span>
+            </button>
+            <div class="algo-card-body" ${isOpen ? '' : 'hidden'}>
+              ${a.image ? `<div class="algo-image-wrap">${a.image}</div>` : ''}
+              <p>${escapeHtml(a.description)}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      listEl.querySelectorAll('.algo-card-header').forEach((btn) => {
+        btn.addEventListener('click', () => toggleCard(btn.dataset.tag));
+      });
+    }
+
+    async function init() {
+      const params = new URLSearchParams(location.search);
+      const selectedTags = (params.get('tags') || '').split(',').map((t) => t.trim()).filter(Boolean);
+
+      try {
+        const res = await fetch('/api/algorithms');
+        if (!res.ok) throw new Error('요청 실패');
+        const data = await res.json();
+
+        renderChips(data.algorithms, selectedTags);
+        renderCards(data.algorithms, selectedTags);
+
+        if (selectedTags.length > 0) {
+          selectedTags.forEach((t) => activeChipTags.add(t));
+          openCard(selectedTags[0]);
+        }
+      } catch (err) {
+        document.getElementById('algoList').innerHTML = '<div class="error">알고리즘 목록을 불러오지 못했습니다.</div>';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

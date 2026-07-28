@@ -3,116 +3,137 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>코딩테스트 데일리</title>
-<style>
-  :root { color-scheme: light dark; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 24px 16px 48px;
-    background: #f5f5f7;
-    color: #1c1c1e;
-  }
-  h1 {
-    font-size: 20px;
-    margin-bottom: 4px;
-  }
-  .date {
-    color: #6e6e73;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-  .card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
-  .company-badge {
-    display: inline-block;
-    background: #eef0ff;
-    color: #4340c9;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 999px;
-    margin-bottom: 10px;
-  }
-  .name {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 8px;
-  }
-  .meta {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-size: 13px;
-    color: #6e6e73;
-    margin-bottom: 16px;
-  }
-  .meta span {
-    background: #f0f0f2;
-    padding: 3px 8px;
-    border-radius: 8px;
-  }
-  .exp {
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  .link-btn {
-    display: inline-block;
-    background: #1c1c1e;
-    color: #fff;
-    text-decoration: none;
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
-  }
-  .error {
-    color: #d70015;
-  }
-</style>
+<title>AlGoPing</title>
+<meta name="theme-color" content="#6367ff" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="AlGoPing" />
+<link rel="stylesheet" href="style.css" />
+<script>document.documentElement.dataset.view = localStorage.getItem('algoping_view') || (matchMedia('(min-width: 700px)').matches ? 'desktop' : 'mobile');</script>
 </head>
 <body>
-  <h1>코딩테스트 데일리</h1>
-  <div class="date" id="date"></div>
-  <div class="card" id="card">불러오는 중...</div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🔔</div>
+        <h1>AlGo<span class="brand-accent">Ping</span></h1>
+        <div class="date" id="date"></div>
+      </div>
 
+      <nav class="topnav">
+        <a href="/" class="active">오늘의 문제</a>
+        <a href="/solved.html">풀이 기록</a>
+        <a href="/algorithm.html">알고리즘</a>
+        <a href="/cs.html">CS 개념</a>
+        <a href="/settings.html">설정</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="offline-banner" id="offlineBanner" hidden>📡 오프라인 상태예요 — 마지막으로 받아온 문제를 보여드릴게요.</div>
+      <div class="card" id="card">알고핑이 오늘의 문제를 고르고 있어요...</div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
   <script>
+    let currentProblem = null;
+
+    function renderCard(data) {
+      const p = data.problem;
+      currentProblem = p;
+
+      document.getElementById('date').textContent = data.date;
+      document.getElementById('card').innerHTML = `
+        <div class="company-badge">${escapeHtml(p.company)}</div>
+        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="meta">
+          <span>${escapeHtml(p.plat)}</span>
+          <span>난이도 ${escapeHtml(String(p.level))}</span>
+          <span>${escapeHtml(p.tags)}</span>
+          <span>⏱ ${estimateTime(p.level)}</span>
+        </div>
+        <div class="key-point">
+          <span class="label">💡 핵심 포인트</span>
+          ${escapeHtml(p.keyPoint)}
+        </div>
+        <div class="approach">
+          <span class="label">🛠 어떻게 풀까</span>
+          <ol>${p.approach.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
+        </div>
+        <div class="link-row">
+          <a class="link-btn" href="${escapeHtml(p.url)}" target="_blank" rel="noopener">문제 풀러 가기 →</a>
+          <a class="link-btn secondary" href="/algorithm.html?tags=${encodeURIComponent(p.tags)}">🧠 알고리즘 보기</a>
+        </div>
+        <div class="action-row">
+          <button class="action-btn" id="skipBtn">🔄 건너뛰기</button>
+          <button class="action-btn${data.solved ? ' solved' : ''}" id="solvedBtn" ${data.solved ? 'disabled' : ''}>
+            ${data.solved ? '✅ 풀었어요' : '✅ 풀었음 체크'}
+          </button>
+        </div>
+      `;
+
+      document.getElementById('skipBtn').addEventListener('click', skipToday);
+      document.getElementById('solvedBtn').addEventListener('click', markSolved);
+    }
+
     async function loadToday() {
       const cardEl = document.getElementById('card');
-      const dateEl = document.getElementById('date');
+      const offlineBanner = document.getElementById('offlineBanner');
       try {
-        const res = await fetch('/api/today');
+        const res = await fetch(`/api/today?clientId=${clientId}`);
         if (!res.ok) throw new Error('요청 실패');
+        offlineBanner.hidden = !res.headers.get('X-From-Cache');
         const data = await res.json();
-        const p = data.problem;
-
-        dateEl.textContent = data.date;
-        cardEl.innerHTML = `
-          <div class="company-badge">${escapeHtml(p.company)}</div>
-          <div class="name">${escapeHtml(p.name)}</div>
-          <div class="meta">
-            <span>${escapeHtml(p.plat)}</span>
-            <span>난이도 ${escapeHtml(String(p.level))}</span>
-            <span>${escapeHtml(p.tags)}</span>
-          </div>
-          <div class="exp">${escapeHtml(p.exp)}</div>
-          <a class="link-btn" href="${p.url}" target="_blank" rel="noopener">문제 풀러 가기 →</a>
-        `;
+        renderCard(data);
       } catch (err) {
-        cardEl.innerHTML = '<div class="error">오늘의 문제를 불러오지 못했습니다.</div>';
+        cardEl.innerHTML = '<div class="error">오늘의 문제를 불러오지 못했습니다. (오프라인이고 저장된 데이터도 없어요)</div>';
       }
     }
 
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+    async function skipToday() {
+      const skipBtn = document.getElementById('skipBtn');
+      skipBtn.disabled = true;
+      skipBtn.textContent = '건너뛰는 중...';
+      try {
+        const res = await fetch('/api/skip-today', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientId }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '건너뛰기에 실패했습니다.');
+        renderCard(data);
+      } catch (err) {
+        skipBtn.disabled = false;
+        skipBtn.textContent = err.message || '건너뛰기 실패';
+        setTimeout(() => { skipBtn.textContent = '🔄 건너뛰기'; }, 2500);
+      }
+    }
+
+    async function markSolved() {
+      if (!currentProblem) return;
+      const solvedBtn = document.getElementById('solvedBtn');
+      solvedBtn.disabled = true;
+      solvedBtn.textContent = '저장 중...';
+      try {
+        const res = await fetch('/api/mark-solved', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientId, problemId: currentProblem.id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '저장에 실패했습니다.');
+        solvedBtn.classList.add('solved');
+        solvedBtn.textContent = '✅ 풀었어요';
+      } catch (err) {
+        solvedBtn.disabled = false;
+        solvedBtn.textContent = err.message || '✅ 풀었음 체크';
+        setTimeout(() => { solvedBtn.textContent = '✅ 풀었음 체크'; }, 2500);
+      }
     }
 
     loadToday();

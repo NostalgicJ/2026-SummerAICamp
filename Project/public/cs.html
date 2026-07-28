@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CS 개념 - AlGoPing</title>
+<meta name="theme-color" content="#6367ff" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="AlGoPing" />
+<link rel="stylesheet" href="style.css" />
+<script>document.documentElement.dataset.view = localStorage.getItem('algoping_view') || (matchMedia('(min-width: 700px)').matches ? 'desktop' : 'mobile');</script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🔔</div>
+        <h1>AlGo<span class="brand-accent">Ping</span></h1>
+        <div class="date">CS 개념 사전</div>
+      </div>
+
+      <nav class="topnav">
+        <a href="/">오늘의 문제</a>
+        <a href="/solved.html">풀이 기록</a>
+        <a href="/algorithm.html">알고리즘</a>
+        <a href="/cs.html" class="active">CS 개념</a>
+        <a href="/settings.html">설정</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="settings algo-picker">
+        <label class="group-label">🔎 궁금한 개념을 선택하면 아래에서 바로 볼 수 있어요</label>
+        <div class="chip-list" id="csChips"></div>
+      </div>
+
+      <div id="csList">불러오는 중...</div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // 칩은 여러 개를 동시에 선택할 수 있다 — algorithm.html과 동일한 규칙.
+    const activeChipKeys = new Set();
+
+    function openCard(key, { scroll } = { scroll: true }) {
+      const card = document.getElementById(`cs-${key}`);
+      if (!card) return;
+      const body = card.querySelector('.algo-card-body');
+      const chevron = card.querySelector('.chevron');
+      body.hidden = false;
+      chevron.textContent = '▲';
+      card.classList.add('highlighted');
+      if (scroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeCard(key) {
+      const card = document.getElementById(`cs-${key}`);
+      if (!card) return;
+      const body = card.querySelector('.algo-card-body');
+      const chevron = card.querySelector('.chevron');
+      body.hidden = true;
+      chevron.textContent = '▼';
+      card.classList.remove('highlighted');
+    }
+
+    function toggleCard(key) {
+      const card = document.getElementById(`cs-${key}`);
+      if (!card) return;
+      const willOpen = card.querySelector('.algo-card-body').hidden;
+      if (willOpen) openCard(key, { scroll: false });
+      else closeCard(key);
+
+      if (!willOpen && activeChipKeys.has(key)) {
+        activeChipKeys.delete(key);
+        const chip = document.querySelector(`#csChips .chip[data-key="${key}"]`);
+        if (chip) chip.classList.remove('selected');
+      }
+    }
+
+    function renderChips(concepts) {
+      const container = document.getElementById('csChips');
+      container.innerHTML = concepts.map(
+        (c) => `<button type="button" class="chip" data-key="${escapeHtml(c.key)}">${escapeHtml(c.name)}</button>`
+      ).join('');
+
+      container.querySelectorAll('.chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const key = chip.dataset.key;
+          if (activeChipKeys.has(key)) {
+            activeChipKeys.delete(key);
+            chip.classList.remove('selected');
+            closeCard(key);
+          } else {
+            activeChipKeys.add(key);
+            chip.classList.add('selected');
+            openCard(key);
+          }
+        });
+      });
+    }
+
+    function renderCards(concepts) {
+      const listEl = document.getElementById('csList');
+      listEl.innerHTML = concepts.map((c) => `
+        <div class="algo-card" id="cs-${escapeHtml(c.key)}">
+          <button class="algo-card-header" data-key="${escapeHtml(c.key)}">
+            <span>${escapeHtml(c.name)}</span>
+            <span class="chevron">▼</span>
+          </button>
+          <div class="algo-card-body" hidden>
+            <p>${escapeHtml(c.description)}</p>
+          </div>
+        </div>
+      `).join('');
+
+      listEl.querySelectorAll('.algo-card-header').forEach((btn) => {
+        btn.addEventListener('click', () => toggleCard(btn.dataset.key));
+      });
+    }
+
+    async function init() {
+      try {
+        const res = await fetch('/api/cs-concepts');
+        if (!res.ok) throw new Error('요청 실패');
+        const data = await res.json();
+        renderChips(data.concepts);
+        renderCards(data.concepts);
+      } catch (err) {
+        document.getElementById('csList').innerHTML = '<div class="error">CS 개념 목록을 불러오지 못했습니다.</div>';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
