@@ -131,9 +131,10 @@
 - [x] `POST /api/suggest-problem` 구현 — 필수 필드/URL 형식/난이도(1~5) 서버 유효성 검사 포함
 - [x] `github-suggest.js`: 기준 브랜치 SHA 조회 → 새 브랜치 생성 → `Project/data/problems.json` 조회 후 새 문제 추가해 커밋 → PR 생성 (id 중복 시 자동으로 `-2`, `-3`... 접미사)
 - [x] `GET /api/meta`에 `suggestEnabled` 플래그 추가 — `GITHUB_TOKEN` 미설정 시 프론트에서 폼을 흐리게 비활성화하고 안내 문구 표시(정상 동작, 서버가 없는 게 아니라 "아직 설정 안 됨" 상태를 그대로 보여줌)
-- [ ] 저장소 범위 제한 Fine-grained PAT 발급 및 `GITHUB_TOKEN` 환경변수 설정 — 사용자가 직접 진행 예정(토큰은 채팅으로 공유하지 않음, `.env.example`에 안내 추가)
+- [x] 저장소 범위 제한 Fine-grained PAT 발급 및 `GITHUB_TOKEN` 환경변수 설정 — 사용자가 직접 발급/설정 완료(토큰 값은 채팅에 공유되지 않음)
+- [x] `server.js`에 `dotenv` 연동 (`require('dotenv').config()`를 최상단에 추가) — `.env` 파일 또는 셸 `export` 어느 쪽으로 설정해도 서버가 인식하도록 보강
 - [x] **검증(토큰 없이 가능한 범위)**: curl로 필수 필드 누락/잘못된 URL/난이도 범위 초과 각각의 유효성 검사 에러 확인, 토큰 미설정 시 503 + 명확한 에러 메시지 확인, 브라우저에서 설정→문제 제안 이동, 폼이 비활성화 상태로 뜨는 것과 강제 제출 시 에러가 화면에 표시되는 것까지 확인
-- [ ] **미검증(사용자의 PAT 필요)**: 실제 GitHub 브랜치 생성 → 커밋 → PR 생성까지의 전체 흐름은 진짜 토큰이 있어야 확인 가능 — `GITHUB_TOKEN` 설정 후 재검증 필요
+- [x] **검증(토큰 설정 후 종단 테스트, 2026-07-28)**: `GITHUB_TOKEN` 설정 후 서버 재시작 → `GET /api/meta`에서 `suggestEnabled: true` 확인 → `POST /api/suggest-problem`으로 테스트 문제 1건 제출 → 실제 브랜치 생성·커밋·PR([`NostalgicJ/2026-SummerAICamp#1`](https://github.com/NostalgicJ/2026-SummerAICamp/pull/1)) 생성까지 전체 흐름 정상 동작 확인. 확인 후 테스트 PR은 닫음
 
 ## Phase 8 — 배포 및 운영
 - [ ] Render Web Service 배포
