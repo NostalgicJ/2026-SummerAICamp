@@ -606,5 +606,18 @@
       "모든 노드를 다 처리할 때까지 반복합니다.",
       "모든 노드의 최단 거리 중 하나라도 무한대로 남아있으면 -1(도달 불가), 아니면 최단 거리들의 최댓값을 반환합니다."
     ]
+  },
+  {
+    "id": "테스트-테스트-github-token-연동-확인용-문제",
+    "company": "테스트",
+    "name": "[테스트] GITHUB_TOKEN 연동 확인용 문제",
+    "plat": "프로그래머스",
+    "level": 1,
+    "tags": "테스트",
+    "url": "https://school.programmers.co.kr/learn/challenges",
+    "keyPoint": "이 PR은 GITHUB_TOKEN 연동 종단 테스트를 위해 자동 생성되었습니다. 확인 후 닫아주세요.",
+    "approach": [
+      "연동 테스트용 항목입니다."
+    ]
   }
 ]
