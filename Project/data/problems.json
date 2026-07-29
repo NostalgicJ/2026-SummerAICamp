@@ -2,6 +2,7 @@
   {
     "id": "kakao-open-chat",
     "company": "카카오",
+    "source": "기출",
     "name": "오픈채팅방",
     "plat": "프로그래머스",
     "level": 2,
@@ -18,6 +19,7 @@
   {
     "id": "kakao-failure-rate",
     "company": "카카오",
+    "source": "기출",
     "name": "실패율",
     "plat": "프로그래머스",
     "level": 1,
@@ -34,6 +36,7 @@
   {
     "id": "kakao-candidate-key",
     "company": "카카오",
+    "source": "기출",
     "name": "후보키",
     "plat": "프로그래머스",
     "level": 2,
@@ -50,6 +53,7 @@
   {
     "id": "kakao-cache",
     "company": "카카오",
+    "source": "기출",
     "name": "캐시",
     "plat": "프로그래머스",
     "level": 2,
@@ -66,6 +70,7 @@
   {
     "id": "kakao-paren-convert",
     "company": "카카오",
+    "source": "기출",
     "name": "괄호 변환",
     "plat": "프로그래머스",
     "level": 2,
@@ -82,6 +87,7 @@
   {
     "id": "kakao-block-move",
     "company": "카카오",
+    "source": "기출",
     "name": "블록 이동하기",
     "plat": "프로그래머스",
     "level": 3,
@@ -98,6 +104,7 @@
   {
     "id": "samsung-network",
     "company": "삼성",
+    "source": "기출",
     "name": "네트워크",
     "plat": "프로그래머스",
     "level": 2,
@@ -114,6 +121,7 @@
   {
     "id": "samsung-travel-route",
     "company": "삼성",
+    "source": "기출",
     "name": "여행경로",
     "plat": "프로그래머스",
     "level": 3,
@@ -130,6 +138,7 @@
   {
     "id": "samsung-word-transform",
     "company": "삼성",
+    "source": "기출",
     "name": "단어 변환",
     "plat": "프로그래머스",
     "level": 3,
@@ -146,6 +155,7 @@
   {
     "id": "samsung-farthest-node",
     "company": "삼성",
+    "source": "기출",
     "name": "가장 먼 노드",
     "plat": "프로그래머스",
     "level": 2,
@@ -162,6 +172,7 @@
   {
     "id": "samsung-joystick",
     "company": "삼성",
+    "source": "기출",
     "name": "조이스틱",
     "plat": "프로그래머스",
     "level": 2,
@@ -178,6 +189,7 @@
   {
     "id": "naver-shortest-path-map",
     "company": "네이버",
+    "source": "기출",
     "name": "게임 맵 최단거리",
     "plat": "프로그래머스",
     "level": 2,
@@ -194,6 +206,7 @@
   {
     "id": "naver-island-connect",
     "company": "네이버",
+    "source": "기출",
     "name": "섬 연결하기",
     "plat": "프로그래머스",
     "level": 3,
@@ -210,6 +223,7 @@
   {
     "id": "naver-represent-n",
     "company": "네이버",
+    "source": "기출",
     "name": "N으로 표현",
     "plat": "프로그래머스",
     "level": 3,
@@ -226,6 +240,7 @@
   {
     "id": "naver-triangle",
     "company": "네이버",
+    "source": "기출",
     "name": "정수 삼각형",
     "plat": "프로그래머스",
     "level": 1,
@@ -242,6 +257,7 @@
   {
     "id": "coupang-bridge-truck",
     "company": "쿠팡",
+    "source": "기출",
     "name": "다리를 지나는 트럭",
     "plat": "프로그래머스",
     "level": 2,
@@ -258,6 +274,7 @@
   {
     "id": "coupang-feature-dev",
     "company": "쿠팡",
+    "source": "기출",
     "name": "기능개발",
     "plat": "프로그래머스",
     "level": 2,
@@ -274,6 +291,7 @@
   {
     "id": "coupang-process",
     "company": "쿠팡",
+    "source": "기출",
     "name": "프로세스",
     "plat": "프로그래머스",
     "level": 2,
@@ -290,6 +308,7 @@
   {
     "id": "baemin-largest-number",
     "company": "배민",
+    "source": "기출",
     "name": "큰 수 만들기",
     "plat": "프로그래머스",
     "level": 3,
@@ -306,6 +325,7 @@
   {
     "id": "baemin-camera",
     "company": "배민",
+    "source": "기출",
     "name": "단속카메라",
     "plat": "프로그래머스",
     "level": 3,
@@ -322,6 +342,7 @@
   {
     "id": "baemin-tiling",
     "company": "배민",
+    "source": "기출",
     "name": "2 x n 타일링",
     "plat": "프로그래머스",
     "level": 1,
@@ -338,6 +359,7 @@
   {
     "id": "daangn-valid-paren",
     "company": "당근",
+    "source": "기출",
     "name": "올바른 괄호",
     "plat": "프로그래머스",
     "level": 1,
@@ -354,6 +376,7 @@
   {
     "id": "daangn-remove-pairs",
     "company": "당근",
+    "source": "기출",
     "name": "짝지어 제거하기",
     "plat": "프로그래머스",
     "level": 2,
@@ -370,6 +393,7 @@
   {
     "id": "daangn-completion",
     "company": "당근",
+    "source": "기출",
     "name": "완주하지 못한 선수",
     "plat": "프로그래머스",
     "level": 1,
@@ -386,6 +410,7 @@
   {
     "id": "toss-phone-list",
     "company": "토스",
+    "source": "기출",
     "name": "전화번호 목록",
     "plat": "프로그래머스",
     "level": 2,
@@ -402,6 +427,7 @@
   {
     "id": "toss-disguise",
     "company": "토스",
+    "source": "기출",
     "name": "의상",
     "plat": "프로그래머스",
     "level": 2,
@@ -418,6 +444,7 @@
   {
     "id": "toss-best-album",
     "company": "토스",
+    "source": "기출",
     "name": "베스트앨범",
     "plat": "프로그래머스",
     "level": 2,
@@ -434,6 +461,7 @@
   {
     "id": "hyundai-dart",
     "company": "현대",
+    "source": "기출",
     "name": "다트 게임",
     "plat": "프로그래머스",
     "level": 1,
@@ -450,6 +478,7 @@
   {
     "id": "sk-song",
     "company": "SK",
+    "source": "기출",
     "name": "방금그곡",
     "plat": "프로그래머스",
     "level": 2,
@@ -466,6 +495,7 @@
   {
     "id": "kakao-valid-paren-lc",
     "company": "카카오",
+    "source": "기출",
     "name": "Valid Parentheses",
     "plat": "리트코드",
     "level": 1,
@@ -482,6 +512,7 @@
   {
     "id": "samsung-num-islands-lc",
     "company": "삼성",
+    "source": "기출",
     "name": "Number of Islands",
     "plat": "리트코드",
     "level": 2,
@@ -498,6 +529,7 @@
   {
     "id": "naver-course-schedule-lc",
     "company": "네이버",
+    "source": "기출",
     "name": "Course Schedule",
     "plat": "리트코드",
     "level": 3,
@@ -514,6 +546,7 @@
   {
     "id": "coupang-coin-change-lc",
     "company": "쿠팡",
+    "source": "기출",
     "name": "Coin Change",
     "plat": "리트코드",
     "level": 2,
@@ -530,6 +563,7 @@
   {
     "id": "baemin-merge-intervals-lc",
     "company": "배민",
+    "source": "기출",
     "name": "Merge Intervals",
     "plat": "리트코드",
     "level": 2,
@@ -546,6 +580,7 @@
   {
     "id": "daangn-longest-substring-lc",
     "company": "당근",
+    "source": "기출",
     "name": "Longest Substring Without Repeating Characters",
     "plat": "리트코드",
     "level": 2,
@@ -562,6 +597,7 @@
   {
     "id": "toss-kth-largest-lc",
     "company": "토스",
+    "source": "기출",
     "name": "Kth Largest Element in an Array",
     "plat": "리트코드",
     "level": 2,
@@ -578,6 +614,7 @@
   {
     "id": "hyundai-climbing-stairs-lc",
     "company": "현대",
+    "source": "기출",
     "name": "Climbing Stairs",
     "plat": "리트코드",
     "level": 1,
@@ -594,6 +631,7 @@
   {
     "id": "sk-network-delay-lc",
     "company": "SK",
+    "source": "기출",
     "name": "Network Delay Time",
     "plat": "리트코드",
     "level": 3,
