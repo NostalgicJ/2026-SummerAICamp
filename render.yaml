@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: algoping
+    runtime: node
+    rootDir: Project
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_REPO
+        value: NostalgicJ/2026-SummerAICamp
+      - key: GITHUB_BASE_BRANCH
+        value: main
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
