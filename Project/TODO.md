@@ -164,9 +164,12 @@
 - [x] **문서화**: PRD §17.6에 밸런싱 결과 표 + 중복 이슈 기록, 관련 6개 `trends/*.md`에 "추가 매칭" 섹션 추가
 
 ## Phase 8 — 배포 및 운영
-- [ ] Render Web Service 배포
-- [ ] Neon Postgres 연결 (환경변수 `DATABASE_URL`)
-- [ ] 크론 서비스(GitHub Actions/cron-job.org) 운영 환경 등록
+- [x] **배포 전 발견한 버그 수정**: `data/vapid.json`(웹 푸시 키)이 로컬 파일에만 저장되고 있었는데, Render 등 배포 환경은 재시작 시 파일시스템이 초기화될 수 있어 배포될 때마다 키가 바뀌어 기존 사용자 구독이 전부 무효화되는 문제 발견. `vapid.js`가 `VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` 환경변수를 우선 사용하도록 수정(없으면 기존처럼 로컬 파일 생성/재사용, 로컬 개발 영향 없음 확인)
+- [x] `render.yaml` 블루프린트 작성(저장소 루트) — Render에서 "New > Blueprint"로 이 저장소를 연결하면 rootDir(`Project`)/빌드·시작 커맨드/필요한 환경변수 목록이 자동 인식되어 수동 설정 단계를 줄임
+- [x] `.gitignore`의 `.env.*` 와일드카드가 `.env.example`까지 계속 무시하고 있었던 것 발견 — `!.env.example` 예외 규칙 추가로 실제로 커밋되게 수정(그동안 한 번도 git에 올라간 적 없었음)
+- [ ] Render Web Service 배포 — 사용자가 Render 계정 생성 후 Blueprint로 연결, 대시보드에서 `sync: false`로 표시된 시크릿(`DATABASE_URL`/`CRON_SECRET`/`GITHUB_TOKEN`/`VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`) 값 입력 필요
+- [ ] Neon Postgres 연결 (환경변수 `DATABASE_URL`) — 사용자가 Neon 계정 생성 후 발급받은 연결 문자열을 Render 환경변수에 입력. 스키마는 `storage.js`가 `CREATE TABLE IF NOT EXISTS`로 최초 연결 시 자동 생성하므로 별도 마이그레이션 불필요
+- [ ] 크론 서비스(GitHub Actions) 운영 환경 등록 — 워크플로(`.github/workflows/send-daily.yml`)는 이미 스캐폴딩되어 있음. 저장소 Settings > Secrets and variables > Actions에 `APP_URL`(배포된 주소)과 `CRON_SECRET`(Render에 설정한 값과 동일)만 등록하면 됨
 - [ ] 시크릿/PAT 등 환경변수 정리 및 보안 점검
 - [ ] **검증**: 배포 환경에서 전체 사용자 흐름(설정→알림→상호작용→제안) 종단 테스트
 
