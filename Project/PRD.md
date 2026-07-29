@@ -56,7 +56,7 @@
 - 이미 오늘 발송된 사용자에게는 중복 발송하지 않음
 
 ### 6.2 문제 범위 및 출제 로직
-- 기업 필터(다중 선택, 미선택 시 전체)
+- 기업 필터(다중 선택, 미선택 시 전체) — 각 기업 칩에 보유 문제 수를 `기업명 (N)` 형태로 함께 표시(`GET /api/meta`의 `companyCounts`를 매 요청마다 `problems.json`에서 다시 집계해 반환하므로 문제 추가/삭제가 그대로 반영됨, 2026-07-28)
 - 알고리즘 태그 필터(다중 선택)
 - 난이도 필터(다중 선택)
 - 출제 순서: 순차적(날짜 기반 로테이션) / 랜덤(날짜+사용자 시드 기반 결정론적 랜덤) / 안 푼 문제 우선
@@ -132,15 +132,15 @@
 | keyPoint | 이 문제를 푸는 데 가장 중요한 핵심 아이디어를 1~2문장으로 직접 작성 (원본 문제 본문을 복제하지 않음, 저작권 문제 회피) |
 | approach | 실제로 어떻게 풀어나가는지를 순서가 있는 단계별 문장 배열로 직접 작성 |
 
-### 9.2 문제 후보 (`data/problem-candidates.json`, §17 파이프라인 산출물, 검수 전)
-9.1과 같은 기본 필드에 더해 검수에 필요한 필드가 추가된다: `source`(`"기출"` | `"ai-generated"`), `problemStatement`, `constraints`, `ioExamples`(입출력 예시+설명), `referenceSolution`(Python 코드), `multipleValidAnswers`(정답 유일성 여부), `commonWrongAnswer`(흔한 오답 코드+실패 사례), `companySpecificPoints`, `reviewStatus`(자동 실행 검증 여부+사람 검수 여부), `generatedAt`. 사람 검수를 통과하면 9.1 스키마에 맞게 수동으로 `problems.json`에 옮긴다(이때 `problemStatement`/`constraints`/`ioExamples`/`referenceSolution` 등 검수용 필드는 가져오지 않고 9.1의 필드만 남긴다).
-
 ### 9.1a CS 개념 (`data/cs-concepts.json`, git 관리)
 | 필드 | 설명 |
 |---|---|
 | key | 고유 식별자 (slug) |
 | name | 개념명 |
 | description | 자체 작성한 설명(3~4문장) |
+
+### 9.1b 문제 후보 (`data/problem-candidates.json`, §17 파이프라인 산출물, 검수 전)
+9.1과 같은 기본 필드에 더해 검수에 필요한 필드가 추가된다: `source`(`"기출"` | `"ai-generated"`), `problemStatement`, `constraints`, `ioExamples`(입출력 예시+설명), `referenceSolution`(Python 코드), `multipleValidAnswers`(정답 유일성 여부), `commonWrongAnswer`(흔한 오답 코드+실패 사례), `companySpecificPoints`, `reviewStatus`(자동 실행 검증 여부+사람 검수 여부), `generatedAt`. 사람 검수를 통과하면 9.1 스키마에 맞게 수동으로 `problems.json`에 옮긴다(이때 `problemStatement`/`constraints`/`ioExamples`/`referenceSolution` 등 검수용 필드는 가져오지 않고 9.1의 필드만 남긴다).
 
 ### 9.2 구독자 (Postgres `subscribers` 테이블 / 파일 폴백)
 | 필드 | 설명 |
@@ -162,7 +162,7 @@
 ## 11. API 요약
 | Method | Path | 설명 |
 |---|---|---|
-| GET | /api/meta | 기업/태그/난이도 목록, 제안 기능 활성화 여부 |
+| GET | /api/meta | 기업/태그/난이도 목록, 기업별 문제 보유 수(`companyCounts`), 제안 기능 활성화 여부 |
 | GET | /api/algorithms(?tags=) | 알고리즘 태그별 자체 작성 설명 + 인라인 SVG 다이어그램(전체 또는 특정 태그만) — "알고리즘" 탭용 |
 | GET | /api/cs-concepts | CS 개념별 자체 작성 설명 — "CS 개념" 탭용 |
 | GET | /api/settings | 사용자 설정/진행 상태 조회(없으면 기본값 생성) |
