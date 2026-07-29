@@ -23,3 +23,8 @@
 
 ## 2026-07-28 갱신: 기존 문제 재분류 결과 (WebFetch로 재검증)
 `data/problems.json`의 기존 "토스" 라벨 4개(전화번호 목록, 의상, 베스트앨범, Kth Largest Element in an Array) 전부 특정 기업 기출 태그 없이 일반 "코딩테스트 연습" 분류(해시 등)만 존재함을 확인 — 전부 `source`를 `"기출"` → `"경향문제"`로 수정.
+
+### 추가 매칭 (2026-07-29, 기업별 문제 수 밸런싱)
+회사별 보유 문제 수 격차를 줄이기 위해 2건 추가 매칭(정확한 계산·정렬 활용, 금융 도메인 시계열 데이터 처리 성향 반영):
+- 예산 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/12982 (정렬/그리디, 레벨1)
+- 주식가격 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/42584 (스택/큐/시뮬레이션, 레벨2)

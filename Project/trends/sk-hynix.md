@@ -35,3 +35,9 @@
 ### 기존 문제 재분류 결과 (WebFetch로 재검증)
 - 방금그곡: 페이지 상단에 "2018 KAKAO BLIND RECRUITMENT" 태그가 확인됨 — 이는 SK가 아니라 카카오의 실제 기출임. `source`를 `"기출"` → `"경향문제"`로 수정
 - Network Delay Time (리트코드): 한국 기업과 무관한 해외 플랫폼이라 원래도 `"경향문제"`
+
+### 추가 매칭 (2026-07-29, 기업별 문제 수 밸런싱)
+회사별 보유 문제 수 격차를 줄이기 위해 3건 추가 매칭:
+- 모음사전 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/84512 (완전탐색/구현, 레벨2)
+- 메뉴 리뉴얼 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/72411 (완전탐색/조합, 레벨2, 실제로는 2021 KAKAO BLIND RECRUITMENT 기출이지만 SK 경향과 매칭되어 경향문제로 등록)
+- 괄호 회전하기 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/76502 (스택/구현, 레벨1)

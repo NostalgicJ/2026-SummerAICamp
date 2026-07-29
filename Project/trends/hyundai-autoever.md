@@ -33,3 +33,9 @@
 ### 기존 문제 재분류 결과 (WebFetch로 재검증)
 - 다트 게임: 페이지 상단에 "2018 KAKAO BLIND RECRUITMENT" 태그가 확인됨 — 이는 현대가 아니라 카카오의 실제 기출임. `source`를 `"기출"` → `"경향문제"`로 수정
 - Climbing Stairs (리트코드): 한국 기업과 무관한 해외 플랫폼이라 원래도 `"경향문제"`
+
+### 추가 매칭 (2026-07-29, 기업별 문제 수 밸런싱)
+회사별 보유 문제 수 격차를 줄이기 위해 3건 추가 매칭:
+- 숫자 문자열과 영단어 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/81301 (문자열/구현, 레벨1)
+- 카카오프렌즈 컬러링북 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/1829 (그래프/BFS/DFS, 레벨2)
+- 튜플 / 프로그래머스 / https://school.programmers.co.kr/learn/courses/30/lessons/64065 (구현/해시/문자열, 레벨2, 실제로는 2019 카카오 겨울 인턴십 기출이지만 현대오토에버 경향과 매칭되어 경향문제로 등록)
