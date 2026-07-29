@@ -164,11 +164,12 @@
       paused: { active: false, until: null },
     };
 
-    function renderChips(containerId, values, selectedValues, field) {
+    function renderChips(containerId, values, selectedValues, field, labelFn) {
       const container = document.getElementById(containerId);
+      const toLabel = labelFn || ((v) => String(v));
       container.innerHTML = values.map((v) => {
         const isSelected = selectedValues.includes(v);
-        return `<button type="button" class="chip${isSelected ? ' selected' : ''}" data-field="${field}" data-value="${escapeHtml(String(v))}">${escapeHtml(String(v))}</button>`;
+        return `<button type="button" class="chip${isSelected ? ' selected' : ''}" data-field="${field}" data-value="${escapeHtml(String(v))}">${escapeHtml(toLabel(v))}</button>`;
       }).join('');
 
       container.querySelectorAll('.chip').forEach((chip) => {
@@ -223,7 +224,7 @@
 
       currentSettings = settings;
 
-      renderChips('companyChips', meta.companies, currentSettings.companies, 'companies');
+      renderChips('companyChips', meta.companies, currentSettings.companies, 'companies', (v) => `${v} (${meta.companyCounts[v] ?? 0})`);
       renderChips('tagChips', meta.tags, currentSettings.tags, 'tags');
       renderChips('levelChips', meta.levels, currentSettings.levels, 'levels');
       renderDayChips();

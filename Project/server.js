@@ -146,10 +146,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/meta', (req, res) => {
   const problems = loadProblems();
   const companies = [...new Set(problems.map((p) => p.company))].sort();
+  const companyCounts = {};
+  problems.forEach((p) => { companyCounts[p.company] = (companyCounts[p.company] || 0) + 1; });
   const tagSet = new Set();
   problems.forEach((p) => p.tags.split(',').forEach((t) => tagSet.add(t.trim())));
   const levels = [...new Set(problems.map((p) => p.level))].sort((a, b) => a - b);
-  res.json({ companies, tags: [...tagSet].sort(), levels, suggestEnabled: githubSuggest.isConfigured() });
+  res.json({ companies, companyCounts, tags: [...tagSet].sort(), levels, suggestEnabled: githubSuggest.isConfigured() });
 });
 
 app.post('/api/suggest-problem', async (req, res) => {
