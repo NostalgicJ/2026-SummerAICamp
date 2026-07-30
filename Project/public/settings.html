@@ -49,7 +49,11 @@
     <h2>알림 스케줄</h2>
     <div class="settings-group">
       <label class="group-label">알림 시간</label>
-      <input type="time" id="notifyTime" />
+      <div class="time-select-row">
+        <select id="notifyHour"></select>
+        <span class="time-sep">:</span>
+        <select id="notifyMinute"></select>
+      </div>
     </div>
     <div class="settings-group">
       <label class="group-label">알림 요일</label>
@@ -140,6 +144,10 @@
     }
     document.getElementById('pauseUntil').min = todayLocalDateString();
 
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    document.getElementById('notifyHour').innerHTML = Array.from({ length: 24 }, (_, h) => `<option value="${pad2(h)}">${pad2(h)}시</option>`).join('');
+    document.getElementById('notifyMinute').innerHTML = Array.from({ length: 60 }, (_, m) => `<option value="${pad2(m)}">${pad2(m)}분</option>`).join('');
+
     function setAdvancedOpen(open) {
       document.getElementById('advancedBody').hidden = !open;
       document.querySelector('#advancedToggle .chevron').textContent = open ? '▲' : '▼';
@@ -229,7 +237,9 @@
       renderChips('levelChips', meta.levels, currentSettings.levels, 'levels');
       renderDayChips();
       document.getElementById('order').value = currentSettings.order || 'sequential';
-      document.getElementById('notifyTime').value = currentSettings.notifyTime || '09:00';
+      const [notifyHourVal, notifyMinuteVal] = (currentSettings.notifyTime || '09:00').split(':');
+      document.getElementById('notifyHour').value = notifyHourVal;
+      document.getElementById('notifyMinute').value = notifyMinuteVal;
       document.getElementById('problemsPerDay').value = String(currentSettings.problemsPerDay || 1);
       refreshPauseUI();
     }
@@ -238,9 +248,13 @@
       currentSettings.order = e.target.value;
     });
 
-    document.getElementById('notifyTime').addEventListener('change', (e) => {
-      currentSettings.notifyTime = e.target.value || '09:00';
-    });
+    function updateNotifyTime() {
+      const h = document.getElementById('notifyHour').value;
+      const m = document.getElementById('notifyMinute').value;
+      currentSettings.notifyTime = `${h}:${m}`;
+    }
+    document.getElementById('notifyHour').addEventListener('change', updateNotifyTime);
+    document.getElementById('notifyMinute').addEventListener('change', updateNotifyTime);
 
     document.getElementById('problemsPerDay').addEventListener('change', (e) => {
       currentSettings.problemsPerDay = Number(e.target.value);
