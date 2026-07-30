@@ -260,10 +260,13 @@ h1 .brand-accent {
   gap: 8px;
   margin-top: 12px;
 }
-.action-row input[type="date"] {
+.action-row .date-input-wrap {
+  position: relative;
   flex: 1;
-  width: auto;
   min-width: 0;
+}
+.action-row .date-input-wrap input[type="date"] {
+  width: 100%;
   padding: 11px 14px;
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -274,8 +277,26 @@ h1 .brand-accent {
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  .action-row input[type="date"] {
+  .action-row .date-input-wrap input[type="date"] {
     color-scheme: dark;
+  }
+}
+.date-placeholder {
+  display: none;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 14px;
+  pointer-events: none;
+}
+/* -webkit-touch-callout는 iOS(WebKit)에서만 지원되는 기능이라, 이 블록은 사실상
+   "iOS 브라우저에서만" 적용된다. 데스크톱 크롬은 빈 date input에 자체 연-월-일
+   표시가 이미 있어 겹쳐 보이지만, iOS는 빈 칸일 때 아무 표시도 없어 겹치지 않는다. */
+@supports (-webkit-touch-callout: none) {
+  .date-placeholder {
+    display: block;
   }
 }
 .action-btn {
