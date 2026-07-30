@@ -75,11 +75,7 @@
       <div class="settings-group" style="margin-top: 14px; margin-bottom: 0;">
         <div class="action-row" style="margin-top: 0;">
           <button class="action-btn" id="pauseToggleBtn">지금 알림 끄기</button>
-          <div class="date-select-row">
-            <select id="pauseYear"></select>
-            <select id="pauseMonth"></select>
-            <select id="pauseDay"></select>
-          </div>
+          <input type="date" id="pauseUntil" />
         </div>
         <div class="save-status" id="pauseHint" style="color: var(--text-secondary); text-align: left;">날짜를 비워두면 직접 다시 켤 때까지 알고핑이 조용해져요.</div>
       </div>
@@ -142,38 +138,15 @@
     document.getElementById('notifyHour').innerHTML = Array.from({ length: 24 }, (_, h) => `<option value="${pad2(h)}">${pad2(h)}시</option>`).join('');
     document.getElementById('notifyMinute').innerHTML = Array.from({ length: 12 }, (_, i) => pad2(i * 5)).map((m) => `<option value="${m}">${m}분</option>`).join('');
 
-    const pauseYearNow = new Date().getFullYear();
-    document.getElementById('pauseYear').innerHTML = '<option value="">선택 안함</option>' +
-      [pauseYearNow, pauseYearNow + 1].map((y) => `<option value="${y}">${y}년</option>`).join('');
-    document.getElementById('pauseMonth').innerHTML = Array.from({ length: 12 }, (_, i) => i + 1).map((m) => `<option value="${pad2(m)}">${m}월</option>`).join('');
-
-    function refreshPauseDayOptions() {
-      const year = document.getElementById('pauseYear').value;
-      const month = document.getElementById('pauseMonth').value;
-      const daySelect = document.getElementById('pauseDay');
-      const prevDay = daySelect.value;
-      const daysInMonth = (year && month) ? new Date(Number(year), Number(month), 0).getDate() : 31;
-      daySelect.innerHTML = Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => `<option value="${pad2(d)}">${d}일</option>`).join('');
-      if (prevDay && Number(prevDay) <= daysInMonth) daySelect.value = prevDay;
+    // toISOString()은 UTC 기준이라 자정 근처에서 하루가 밀릴 수 있어, 기기의 로컬 날짜로 직접 계산한다.
+    function todayLocalDateString() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
     }
-    refreshPauseDayOptions();
-    document.getElementById('pauseYear').addEventListener('change', refreshPauseDayOptions);
-    document.getElementById('pauseMonth').addEventListener('change', refreshPauseDayOptions);
-
-    function getPauseUntilValue() {
-      const y = document.getElementById('pauseYear').value;
-      if (!y) return null;
-      const m = document.getElementById('pauseMonth').value;
-      const d = document.getElementById('pauseDay').value;
-      return `${y}-${m}-${d}`;
-    }
-    function setPauseUntilValue(value) {
-      const [y, m, d] = (value || '').split('-');
-      document.getElementById('pauseYear').value = y || '';
-      if (m) document.getElementById('pauseMonth').value = m;
-      refreshPauseDayOptions();
-      if (d) document.getElementById('pauseDay').value = d;
-    }
+    document.getElementById('pauseUntil').min = todayLocalDateString();
 
     function setAdvancedOpen(open) {
       document.getElementById('advancedBody').hidden = !open;
@@ -244,7 +217,7 @@
       const paused = currentSettings.paused || { active: false, until: null };
       btn.textContent = paused.active ? '알림 다시 켜기' : '지금 알림 끄기';
       btn.classList.toggle('solved', paused.active);
-      setPauseUntilValue(paused.until);
+      document.getElementById('pauseUntil').value = paused.until || '';
 
       // 접혀 있어도 지금 일시정지 중인지는 알 수 있도록 토글 라벨에 상태를 반영한다.
       document.getElementById('pauseSectionToggleLabel').textContent = paused.active ? '⏸ 일시정지 중' : '⏸ 일시정지 설정';
@@ -290,20 +263,18 @@
 
     document.getElementById('pauseToggleBtn').addEventListener('click', () => {
       const paused = currentSettings.paused || { active: false, until: null };
+      const untilInput = document.getElementById('pauseUntil');
       currentSettings.paused = paused.active
         ? { active: false, until: null }
-        : { active: true, until: getPauseUntilValue() };
+        : { active: true, until: untilInput.value || null };
       refreshPauseUI();
     });
 
-    function handlePauseUntilChange() {
+    document.getElementById('pauseUntil').addEventListener('change', (e) => {
       if (currentSettings.paused && currentSettings.paused.active) {
-        currentSettings.paused.until = getPauseUntilValue();
+        currentSettings.paused.until = e.target.value || null;
       }
-    }
-    document.getElementById('pauseYear').addEventListener('change', handlePauseUntilChange);
-    document.getElementById('pauseMonth').addEventListener('change', handlePauseUntilChange);
-    document.getElementById('pauseDay').addEventListener('change', handlePauseUntilChange);
+    });
 
     document.getElementById('saveBtn').addEventListener('click', async () => {
       const statusEl = document.getElementById('saveStatus');

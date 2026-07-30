@@ -256,23 +256,31 @@ h1 .brand-accent {
 }
 .action-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
 }
-.action-row .date-select-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
-}
-.date-select-row select {
+.action-row input[type="date"] {
   flex: 1;
   width: auto;
   min-width: 0;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  .action-row input[type="date"] {
+    color-scheme: dark;
+  }
 }
 .action-btn {
   flex: 1;
+  min-width: 0;
   padding: 10px;
   border-radius: 12px;
   border: 1px solid var(--border);
