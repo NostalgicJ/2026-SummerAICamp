@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AlGoPing — 프로젝트 소개</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f5fa; --surface: #ffffff; --ink: #1c1b2e; --ink-soft: #5a5872;
+    --border: #e5e2f0; --accent: #6367ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14162b; --surface: #1c1e3d; --ink: #f2f2f7; --ink-soft: #9aa3d9; --border: #3a4080; --accent: #6e8cfb; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+    display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px;
+  }
+  .card { max-width: 560px; width: 100%; }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .brand .bell { font-size: 28px; }
+  .brand .name { font-size: 24px; font-weight: 800; }
+  .brand .name b { color: var(--accent); }
+  p.lede { color: var(--ink-soft); font-size: 15px; line-height: 1.6; margin: 0 0 28px; }
+  .links { display: flex; flex-direction: column; gap: 14px; }
+  a.link {
+    display: block; background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px 20px; text-decoration: none; color: inherit; transition: border-color .15s ease, transform .15s ease;
+  }
+  a.link:hover { border-color: var(--accent); transform: translateY(-2px); }
+  a.link .title { font-weight: 700; font-size: 15.5px; margin-bottom: 4px; }
+  a.link .desc { color: var(--ink-soft); font-size: 13.5px; }
+  footer { margin-top: 28px; font-size: 12.5px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><span class="bell">🔔</span><span class="name">AlGo<b>Ping</b></span></div>
+    <p class="lede">기업별 코딩테스트 출제 경향에 맞춘 오늘의 문제 푸시 알림 PWA를 소개하는 페이지 두 버전.</p>
+    <div class="links">
+      <a class="link" href="Project/artifacts/old-version/algoping-showcase.html">
+        <div class="title">기존 버전</div>
+        <div class="desc">인디고·라벤더 톤 — 실제 앱 색감을 그대로 가져온 버전</div>
+      </a>
+      <a class="link" href="Project/artifacts/new-version/algoping-showcase.html">
+        <div class="title">새 디자인 버전</div>
+        <div class="desc">애시드 옐로우 디자인 언어(베이지+라임+시그널블루) 전체 적용 버전</div>
+      </a>
+    </div>
+    <footer>2026 Summer AI Camp · 개인 프로젝트 소개 페이지</footer>
+  </div>
+</body>
+</html>
