@@ -292,7 +292,7 @@ app.post('/api/resend-today', async (req, res) => {
   const problem = computeTodayProblem(problems, subscriber, clientId, date);
 
   const payload = JSON.stringify({
-    title: 'AlGoPing 오늘의 문제 도착!',
+    title: '오늘의 문제 도착!',
     body: `${problem.name} · ${problem.company} · 난이도 ${problem.level}`,
     url: '/',
   });
@@ -371,7 +371,7 @@ app.post('/api/send-daily', async (req, res) => {
     const picked = pickDailyProblems(pool, settings.order, clientId, today, subscriber.solvedIds, skipOffset, count);
 
     const payload = JSON.stringify({
-      title: 'AlGoPing 오늘의 문제 도착!',
+      title: '오늘의 문제 도착!',
       body: picked.length === 1
         ? `${picked[0].name} · ${picked[0].company} · 난이도 ${picked[0].level}`
         : picked.map((p) => p.name).join(', '),
