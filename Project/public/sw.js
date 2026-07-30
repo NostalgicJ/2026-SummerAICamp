@@ -74,10 +74,10 @@ self.addEventListener('push', (event) => {
   try {
     data = event.data ? event.data.json() : {};
   } catch (err) {
-    data = { title: '🔔 알고핑', body: event.data ? event.data.text() : '' };
+    data = { title: 'AlGoPing 오늘의 문제 도착!', body: event.data ? event.data.text() : '' };
   }
 
-  const title = data.title || '🔔 알고핑 · 오늘의 문제가 도착했어요';
+  const title = data.title || 'AlGoPing 오늘의 문제 도착!';
   const options = {
     body: data.body || '알고핑에서 확인해보세요.',
     icon: '/icons/icon-192.png',
