@@ -75,7 +75,10 @@
       <div class="settings-group" style="margin-top: 14px; margin-bottom: 0;">
         <div class="action-row" style="margin-top: 0;">
           <button class="action-btn" id="pauseToggleBtn">지금 알림 끄기</button>
-          <input type="date" id="pauseUntil" />
+          <div class="date-input-wrap">
+            <input type="date" id="pauseUntil" />
+            <span class="date-placeholder" id="pauseUntilPlaceholder">날짜 선택</span>
+          </div>
         </div>
         <div class="save-status" id="pauseHint" style="color: var(--text-secondary); text-align: left;">날짜를 비워두면 직접 다시 켤 때까지 알고핑이 조용해져요.</div>
       </div>
@@ -212,6 +215,11 @@
       });
     }
 
+    function updatePauseUntilPlaceholder() {
+      const hasValue = !!document.getElementById('pauseUntil').value;
+      document.getElementById('pauseUntilPlaceholder').hidden = hasValue;
+    }
+
     function refreshPauseUI() {
       const btn = document.getElementById('pauseToggleBtn');
       const untilInput = document.getElementById('pauseUntil');
@@ -219,6 +227,7 @@
       btn.textContent = paused.active ? '알림 다시 켜기' : '지금 알림 끄기';
       btn.classList.toggle('solved', paused.active);
       untilInput.value = paused.until || '';
+      updatePauseUntilPlaceholder();
 
       // 접혀 있어도 지금 일시정지 중인지는 알 수 있도록 토글 라벨에 상태를 반영한다.
       document.getElementById('pauseSectionToggleLabel').textContent = paused.active ? '⏸ 일시정지 중' : '⏸ 일시정지 설정';
@@ -272,6 +281,7 @@
     });
 
     document.getElementById('pauseUntil').addEventListener('change', (e) => {
+      updatePauseUntilPlaceholder();
       if (currentSettings.paused && currentSettings.paused.active) {
         currentSettings.paused.until = e.target.value || null;
       }
