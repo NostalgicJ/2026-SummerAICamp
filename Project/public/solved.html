@@ -39,6 +39,7 @@
         <div class="settings-group" style="margin-bottom: 0;">
           <label class="group-label">📅 최근 14주</label>
           <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
+          <div class="heatmap-tooltip" id="heatmapTooltip" hidden></div>
           <div class="heatmap-legend">
             <span>적음</span>
             <div class="heatmap-cell"></div>
@@ -102,9 +103,35 @@
     function renderHeatmap(calendar) {
       document.getElementById('heatmap').innerHTML = calendar.map((day) => {
         const level = heatLevel(day.count);
-        return `<div class="heatmap-cell${level ? ' level-' + level : ''}" title="${escapeHtml(day.date)} · ${day.count}개"></div>`;
+        return `<div class="heatmap-cell${level ? ' level-' + level : ''}" data-date="${escapeHtml(day.date)}" data-count="${day.count}"></div>`;
       }).join('');
     }
+
+    function showHeatmapTooltip(cell) {
+      const tooltip = document.getElementById('heatmapTooltip');
+      tooltip.textContent = `${cell.dataset.date} · ${cell.dataset.count}개`;
+      const rect = cell.getBoundingClientRect();
+      tooltip.style.left = `${rect.left + rect.width / 2}px`;
+      tooltip.style.top = `${rect.top - 6}px`;
+      tooltip.hidden = false;
+    }
+    function hideHeatmapTooltip() {
+      document.getElementById('heatmapTooltip').hidden = true;
+    }
+    const heatmapEl = document.getElementById('heatmap');
+    heatmapEl.addEventListener('mouseover', (e) => {
+      const cell = e.target.closest('.heatmap-cell');
+      if (cell) showHeatmapTooltip(cell);
+    });
+    heatmapEl.addEventListener('mouseout', (e) => {
+      if (e.target.closest('.heatmap-cell')) hideHeatmapTooltip();
+    });
+    heatmapEl.addEventListener('touchstart', (e) => {
+      const cell = e.target.closest('.heatmap-cell');
+      if (cell) showHeatmapTooltip(cell);
+    }, { passive: true });
+    heatmapEl.addEventListener('touchend', hideHeatmapTooltip);
+    heatmapEl.addEventListener('touchcancel', hideHeatmapTooltip);
 
     function renderWeekdayChart(byWeekday) {
       const max = Math.max(1, ...byWeekday);
