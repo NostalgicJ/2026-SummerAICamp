@@ -183,12 +183,13 @@
         if (!res.ok) throw new Error('요청 실패');
         const data = await res.json();
 
-        countEl.textContent = `지금까지 알고핑과 함께 ${data.solved.length}개 풀었어요`;
-
         if (data.solved.length === 0) {
-          listEl.innerHTML = '<div class="empty">아직 알고핑에서 푼 문제가 없어요.</div>';
+          countEl.textContent = '아직 푼 문제가 없어요';
+          listEl.innerHTML = '';
           return;
         }
+
+        countEl.textContent = `지금까지 알고핑과 함께 ${data.solved.length}개 풀었어요`;
 
         listEl.innerHTML = data.solved.map((p) => `
           <div class="solved-item">

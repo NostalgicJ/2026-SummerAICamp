@@ -436,6 +436,13 @@ h1 .brand-accent {
   flex-wrap: wrap;
   gap: 6px;
 }
+#dayChips .chip {
+  flex: 1;
+  min-width: 36px;
+  text-align: center;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 .chip {
   font-family: inherit;
   font-size: 13px;
