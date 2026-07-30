@@ -1,0 +1,22 @@
+name: Deploy to Render on push
+
+# Render의 GitHub 연동 웹훅이 등록되지 않아 push해도 자동배포가 안 걸리는 문제를
+# 우회하기 위한 워크플로. main에 push될 때마다 Render의 Deploy Hook URL을 직접 호출한다.
+#
+# 사용 전 GitHub 저장소 Settings > Secrets and variables > Actions 에 등록해야 하는 값:
+#   RENDER_DEPLOY_HOOK - Render 대시보드 > 서비스 > Settings > Deploy Hook에서 복사한 URL
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        run: |
+          curl -sf -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" \
+            -w "\nHTTP %{http_code}\n"
