@@ -181,6 +181,9 @@
 - [x] **파비콘 링크 태그 단순화**: `sizes="32x32"` 힌트를 제거하고 `type="image/png"`를 명시(일부 브라우저가 과도하게 구체적인 sizes 힌트에서 파비콘을 안 쓰는 경우가 있어 방어적으로 수정) — 6개 페이지 전체 적용
 - [x] **파비콘 최종 진단**: 서버 응답(200, 올바른 content-type), CDN 캐시 여부(`cf-cache-status: DYNAMIC`, 캐시 안 됨), HTML `<link>` 태그 전부 정상 확인. 자동화 브라우저 환경은 파비콘 요청 자체를 안 해서 재현 불가했으나, 사용자가 사파리에서는 정상 표시됨을 확인 — 크롬에서만 안 보인 것은 그 컴퓨터의 크롬 파비콘 캐시 문제(서버/코드 이슈 아님)로 결론
 - [x] **설정 페이지 "알림 시간" 버그 2건 수정**: (1) `<label for="notifyTime">`이 텍스트 자체를 클릭 가능하게 만들어서 `for` 속성 제거. (2) iOS Safari의 네이티브 `<input type="time">` 픽커가 CSS `width`/`box-sizing`을 따르지 않고 패널을 넘어가는 문제 — CSS로는 해결 안 돼서(로컬 크롬에서는 재현조차 안 됨) `<input type="time">`을 시/분 `<select>` 두 개로 완전히 교체. `currentSettings.notifyTime`은 그대로 `"HH:MM"` 문자열로 유지해 서버/저장 로직은 변경 없음. 로컬에서 값 변경 시 `currentSettings.notifyTime`이 정확히 갱신되는 것을 JS로 직접 확인
+- [x] **알림 시간 분 단위를 5분 단위로 변경**: 분 select 옵션을 60개(00~59) → 12개(00,05,...,55)로 축소. 기존에 저장된 값이 5분 단위가 아닐 경우 가장 가까운 5분 단위로 반올림(최대 55분으로 clamp)해서 표시 및 `currentSettings.notifyTime`에도 반영 — 반올림 로직(7→05, 58→55, 2→00, 33→35) JS로 직접 검증
+- [x] **Render 자동배포 미작동 근본 원인 진단**: `gh api repos/.../hooks`로 GitHub 저장소에 Render 웹훅이 전혀 등록되지 않은 것을 확인 — Render 대시보드 UI는 "Auto-Deploy: On Commit"으로 정상 표시되지만 실제 트리거 통로가 없는 상태였음(배포 로그의 "we don't have access to your repo" 메시지와 일치). Render의 GitHub 연동을 우회하기 위해 `.github/workflows/deploy-on-push.yml` 신규 작성 — `main` push 시 Render의 Deploy Hook URL을 직접 호출. 저장소 Secrets에 `RENDER_DEPLOY_HOOK` 등록 필요(사용자 진행 예정)
+- [x] **일시정지 날짜 필드 빈 상태 개선**: `<input type="date">`는 커스텀 placeholder를 안정적으로 지원하지 않아, 값이 없을 때 "날짜 선택" 텍스트를 오버레이로 보여주는 `<span class="date-placeholder">`를 추가하고 값 유무에 따라 JS로 표시/숨김 토글. 값 설정 시 정확히 숨겨지는 것을 JS로 직접 확인
 
 ## Phase 9+ — 향후 로드맵 (Optional)
 - [x] ~~통계 대시보드 (스트릭, 기업/태그별 풀이 현황)~~ — Phase 6에 앞당겨 구현 완료 (2026-07-27)
