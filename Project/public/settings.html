@@ -146,7 +146,7 @@
 
     function pad2(n) { return String(n).padStart(2, '0'); }
     document.getElementById('notifyHour').innerHTML = Array.from({ length: 24 }, (_, h) => `<option value="${pad2(h)}">${pad2(h)}시</option>`).join('');
-    document.getElementById('notifyMinute').innerHTML = Array.from({ length: 60 }, (_, m) => `<option value="${pad2(m)}">${pad2(m)}분</option>`).join('');
+    document.getElementById('notifyMinute').innerHTML = Array.from({ length: 12 }, (_, i) => pad2(i * 5)).map((m) => `<option value="${m}">${m}분</option>`).join('');
 
     function setAdvancedOpen(open) {
       document.getElementById('advancedBody').hidden = !open;
@@ -237,9 +237,11 @@
       renderChips('levelChips', meta.levels, currentSettings.levels, 'levels');
       renderDayChips();
       document.getElementById('order').value = currentSettings.order || 'sequential';
-      const [notifyHourVal, notifyMinuteVal] = (currentSettings.notifyTime || '09:00').split(':');
+      const [notifyHourVal, rawMinuteVal] = (currentSettings.notifyTime || '09:00').split(':');
+      const notifyMinuteVal = pad2(Math.min(55, Math.round(Number(rawMinuteVal) / 5) * 5));
       document.getElementById('notifyHour').value = notifyHourVal;
       document.getElementById('notifyMinute').value = notifyMinuteVal;
+      currentSettings.notifyTime = `${notifyHourVal}:${notifyMinuteVal}`;
       document.getElementById('problemsPerDay').value = String(currentSettings.problemsPerDay || 1);
       refreshPauseUI();
     }
