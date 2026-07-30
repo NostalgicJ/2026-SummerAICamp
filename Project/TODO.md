@@ -174,6 +174,13 @@
 - [x] **크론 서비스 등록 완료**: 저장소 Settings > Secrets and variables > Actions에 `APP_URL`(`https://algoping.onrender.com`)과 `CRON_SECRET` 등록 완료, 워크플로 경로 수정 후 정상 인식
 - [x] **검증(종단 테스트)**: 배포된 서버에서 `/`(200), `/api/meta`(companyCounts 등 정상), `/api/today`(200), `/api/settings` POST+GET 라운드트립(정상 저장/조회) 확인. `CRON_SECRET` 인증 정상 동작(값 불일치 시 401, 일치 시 200) 확인. `gh workflow run`으로 GitHub Actions → Render 배포 서버 실제 호출까지 성공(`HTTP 200`, `{"sent":0,"skipped":2}`) 확인 — 크론 자동화 전체 흐름 검증 완료
 - [ ] 시크릿/PAT 등 환경변수 최종 정리 및 보안 점검 (선택 — 이미 GITHUB_TOKEN은 저장소 범위 제한 Fine-grained PAT 사용 중)
+- [x] **(배포 중 발견) Render GitHub 연동 권한 문제**: 배포 로그에 "It looks like we don't have access to your repo"가 뜸 — `git push`해도 자동 배포가 안 걸리고 Manual Deploy를 매번 눌러야 했음. 사용자에게 Render 대시보드에서 GitHub 연결을 재인증하도록 안내(재발급 전까지는 push 후 수동 배포 필요)
+
+## Phase 8.5 — 배포 후 UI 버그 수정 (2026-07-30)
+- [x] **아이콘 중앙정렬·배경색 수정**: `public/icons/icon.svg`가 이모지를 텍스트 baseline(`y="75"`)으로 배치해 시각적으로 안 맞았던 것을 `dominant-baseline="central"`로 교체해 정확히 중앙 정렬. 배경색도 진한 보라(`#6367ff`)에서 사이트 태그 배경색과 같은 연한 라벤더(`#eeeafb`)로 변경. 헤드리스 Chrome으로 512×512 마스터 이미지를 렌더링한 뒤 `sips`로 192/180/32px 버전과 `favicon.ico`까지 전부 재생성
+- [x] **파비콘 링크 태그 단순화**: `sizes="32x32"` 힌트를 제거하고 `type="image/png"`를 명시(일부 브라우저가 과도하게 구체적인 sizes 힌트에서 파비콘을 안 쓰는 경우가 있어 방어적으로 수정) — 6개 페이지 전체 적용
+- [x] **파비콘 최종 진단**: 서버 응답(200, 올바른 content-type), CDN 캐시 여부(`cf-cache-status: DYNAMIC`, 캐시 안 됨), HTML `<link>` 태그 전부 정상 확인. 자동화 브라우저 환경은 파비콘 요청 자체를 안 해서 재현 불가했으나, 사용자가 사파리에서는 정상 표시됨을 확인 — 크롬에서만 안 보인 것은 그 컴퓨터의 크롬 파비콘 캐시 문제(서버/코드 이슈 아님)로 결론
+- [x] **설정 페이지 "알림 시간" 버그 2건 수정**: (1) `<label for="notifyTime">`이 텍스트 자체를 클릭 가능하게 만들어서 `for` 속성 제거. (2) iOS Safari의 네이티브 `<input type="time">` 픽커가 CSS `width`/`box-sizing`을 따르지 않고 패널을 넘어가는 문제 — CSS로는 해결 안 돼서(로컬 크롬에서는 재현조차 안 됨) `<input type="time">`을 시/분 `<select>` 두 개로 완전히 교체. `currentSettings.notifyTime`은 그대로 `"HH:MM"` 문자열로 유지해 서버/저장 로직은 변경 없음. 로컬에서 값 변경 시 `currentSettings.notifyTime`이 정확히 갱신되는 것을 JS로 직접 확인
 
 ## Phase 9+ — 향후 로드맵 (Optional)
 - [x] ~~통계 대시보드 (스트릭, 기업/태그별 풀이 현황)~~ — Phase 6에 앞당겨 구현 완료 (2026-07-27)
