@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlGoPing — 프로젝트 쇼케이스</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --accent:#6367ff;
@@ -26,8 +27,8 @@
   --chip-bg:#eeeafb;
   --radius:14px;
   --mono:'JetBrains Mono', ui-monospace, monospace;
-  --disp:'Space Grotesk', sans-serif;
-  --body:'Inter', sans-serif;
+  --disp:'Pretendard Variable', 'Pretendard', sans-serif;
+  --body:'Pretendard Variable', 'Pretendard', sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root{
@@ -86,7 +87,8 @@ a{color:var(--accent);}
 }
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);
+  font-family:var(--body);
+  font-weight:500;
   font-size:12px;
   color:var(--accent);
   background:var(--chip-bg);
@@ -98,6 +100,7 @@ a{color:var(--accent);}
 .hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--add-mark);box-shadow:0 0 0 3px color-mix(in srgb, var(--add-mark) 25%, transparent);}
 .hero h1{
   font-family:var(--disp);
+  font-weight:700;
   font-size:clamp(40px,7vw,68px);
   line-height:1.02;
   margin:0 0 18px;
@@ -111,6 +114,13 @@ a{color:var(--accent);}
   max-width:620px;
   margin:0 0 30px;
 }
+.hero p.lede b.hl{
+  font-weight:600;
+  color:var(--accent);
+  background:var(--chip-bg);
+  padding:1px 8px;
+  border-radius:6px;
+}
 .hero p.lede code{
   font-family:var(--mono);
   background:var(--chip-bg);
@@ -118,7 +128,14 @@ a{color:var(--accent);}
   border-radius:6px;
   font-size:0.88em;
 }
-.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.prev-link{
+  font-size:13.5px;
+  color:var(--ink-soft);
+  margin:0 0 36px;
+}
+.prev-link a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;}
+.prev-link a:hover{color:var(--accent);}
 .btn{
   font-family:var(--body);
   font-weight:600;
@@ -147,19 +164,21 @@ a{color:var(--accent);}
 
 .statline{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(120px,1fr));
-  gap:0;
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
+  grid-template-columns:repeat(auto-fit, minmax(130px,1fr));
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
 }
 .statline div{
-  padding:16px 4px 16px 0;
-  border-right:1px solid var(--border);
+  padding:16px 14px;
+  background:var(--surface);
 }
-.statline div:last-child{border-right:none;}
 .statline b{
   display:block;
   font-family:var(--disp);
+  font-weight:700;
   font-size:22px;
   color:var(--accent);
 }
@@ -182,11 +201,12 @@ section{padding:64px 0;border-top:1px solid var(--border);}
 }
 h2{
   font-family:var(--disp);
+  font-weight:700;
   font-size:clamp(26px,4vw,36px);
   letter-spacing:-0.01em;
   margin:0 0 22px;
 }
-h3{font-family:var(--disp);font-size:19px;margin:0 0 8px;}
+h3{font-family:var(--disp);font-weight:600;font-size:19px;margin:0 0 8px;}
 p{color:var(--ink);}
 .muted{color:var(--ink-soft);}
 
@@ -217,7 +237,7 @@ p{color:var(--ink);}
 .problem-card .verdict{
   margin-top:10px;
   font-size:12px;
-  font-family:var(--mono);
+  font-family:var(--body);
   font-weight:600;
 }
 .verdict.confirmed{color:var(--add-mark);}
@@ -245,7 +265,8 @@ p{color:var(--ink);}
   display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;
 }
 .tab-pill{
-  font-family:var(--mono);
+  font-family:var(--body);
+  font-weight:500;
   font-size:12.5px;
   background:var(--chip-bg);
   border:1px solid var(--border);
@@ -261,8 +282,8 @@ p{color:var(--ink);}
   border:1px solid var(--border);
   border-radius:var(--radius);
   overflow:hidden;
-  font-family:var(--mono);
-  font-size:13.5px;
+  font-family:var(--body);
+  font-size:14px;
 }
 .diff-head{
   display:flex;justify-content:space-between;align-items:center;
@@ -270,6 +291,7 @@ p{color:var(--ink);}
   border-bottom:1px solid var(--border);
   color:var(--ink-soft);
   font-size:12px;
+  font-family:var(--mono);
 }
 .diff-why{
   padding:16px 18px;
@@ -287,11 +309,13 @@ p{color:var(--ink);}
 }
 .diff-line:last-child{border-bottom:none;}
 .diff-line .mark{width:14px;flex-shrink:0;font-weight:700;}
+.diff-line .txt{flex:1;min-width:0;}
 .diff-line.add{background:var(--add-bg);color:var(--add-ink);}
 .diff-line.add .mark{color:var(--add-mark);}
 .diff-line.rm{background:var(--rm-bg);color:var(--rm-ink);}
 .diff-line.rm .mark{color:var(--rm-mark);}
-.diff-line .txt b{font-family:var(--body);}
+.diff-line .txt b{font-weight:700;}
+.diff-line .txt code{font-family:var(--mono);background:color-mix(in srgb, currentColor 12%, transparent);padding:1px 5px;border-radius:4px;font-size:0.92em;}
 
 /* ---------- trial & error ---------- */
 .te-item{
@@ -303,7 +327,8 @@ p{color:var(--ink);}
 }
 .te-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap;}
 .te-phase{
-  font-family:var(--mono);
+  font-family:var(--body);
+  font-weight:500;
   font-size:11.5px;
   color:var(--ink-soft);
   background:var(--chip-bg);
@@ -319,7 +344,8 @@ p{color:var(--ink);}
 }
 .te-flow .step{display:flex;gap:10px;}
 .te-flow .step .k{
-  font-family:var(--mono);
+  font-family:var(--body);
+  font-weight:600;
   font-size:11px;
   color:white;
   background:var(--accent2);
@@ -330,13 +356,12 @@ p{color:var(--ink);}
   margin-top:2px;
 }
 .te-flow .step.fix .k{background:var(--add-mark);}
-.te-flow .step p{margin:0;color:var(--ink-soft);}
+.te-flow .step p{margin:0;color:var(--ink-soft);flex:1;min-width:0;}
 .te-quote{
   margin-top:14px;
   padding:12px 14px;
   border-left:3px solid var(--accent3);
   font-size:14px;
-  font-style:italic;
   color:var(--ink-soft);
 }
 
@@ -353,6 +378,7 @@ p{color:var(--ink);}
 }
 .reflect-card .n{
   font-family:var(--disp);
+  font-weight:700;
   font-size:26px;
   color:var(--accent3);
   margin-bottom:6px;
@@ -368,25 +394,25 @@ p{color:var(--ink);}
   background:var(--surface);
 }
 .phase-row{
-  display:flex;gap:14px;
+  display:flex;flex-wrap:wrap;gap:4px 14px;
   padding:10px 18px;
   border-bottom:1px solid color-mix(in srgb, var(--border) 70%, transparent);
   align-items:baseline;
 }
 .phase-row:last-child{border-bottom:none;}
-.phase-row .id{color:var(--ink-soft);width:78px;flex-shrink:0;}
-.phase-row .st{width:16px;flex-shrink:0;}
+.phase-row .id{color:var(--ink-soft);width:64px;flex-shrink:0;}
+.phase-row .st{width:14px;flex-shrink:0;}
 .phase-row.done .st{color:var(--add-mark);}
 .phase-row.partial .st{color:#c99a1f;}
 .phase-row .name{font-family:var(--body);font-size:14px;}
-.phase-row .note{font-family:var(--body);font-size:12.5px;color:var(--ink-soft);}
+.phase-row .note{font-family:var(--body);font-size:12.5px;color:var(--ink-soft);flex-basis:100%;margin-left:78px;}
 
 footer{
   padding:40px 0 60px;
   text-align:center;
   color:var(--ink-soft);
   font-size:13px;
-  font-family:var(--mono);
+  font-family:var(--body);
 }
 footer a{color:var(--ink-soft);text-decoration:underline;}
 </style>
@@ -406,13 +432,17 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
     <div class="hero-badge"><span class="dot"></span> 실서비스 배포 완료 · algoping.onrender.com</div>
     <h1><span class="bell">🔔</span>AlGo<span class="ping">Ping</span></h1>
     <p class="lede">
-      목표 기업의 코딩테스트 출제 경향에 맞춘 <code>오늘의 문제</code>를 매일 정해진 시간에 푸시로 받는 PWA입니다.
+      목표 기업의 코딩테스트 출제 경향에 맞춘 <b class="hl">오늘의 문제</b>를 매일 정해진 시간에 푸시로 받는 PWA입니다.
       로그인 없이 링크 하나로 나만의 설정을 가질 수 있고, 알림이 오면 그 자리에서 바로 풀면 됩니다.
     </p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://algoping.onrender.com" target="_blank" rel="noopener">지금 체험하기 →</a>
       <a class="btn btn-ghost" href="#trial">시행착오 보러가기</a>
     </div>
+    <p class="prev-link">
+      1주차에 만든 초기 소개 페이지가 궁금하다면 →
+      <a href="https://nostalgicj.github.io/2026-SummerAICamp/" target="_blank" rel="noopener">nostalgicj.github.io/2026-SummerAICamp</a>
+    </p>
     <div class="statline">
       <div><b>56</b><span>등록 문제 (기출 6 · 경향문제 50)</span></div>
       <div><b>9</b><span>목표 기업군</span></div>
@@ -635,7 +665,8 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
 </div>
 
 <footer>
-  AlGoPing · algoping.onrender.com · 2026 Summer AI Camp 개인 프로젝트 · 2026-07-31 기준
+  AlGoPing · algoping.onrender.com · 2026 Summer AI Camp 개인 프로젝트 · 2026-07-31 기준<br>
+  <a href="https://nostalgicj.github.io/2026-SummerAICamp/" target="_blank" rel="noopener">1주차 초기 소개 페이지 →</a>
 </footer>
 
 </body>
