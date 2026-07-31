@@ -64,7 +64,7 @@ img,svg{max-width:100%;}
 .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
 a{color:var(--accent);}
 
-/* ---------- top log strip (중앙 정렬) ---------- */
+/* ---------- top log strip ---------- */
 .logstrip{
   font-family:var(--mono);
   font-size:12px;
@@ -100,6 +100,7 @@ a{color:var(--accent);}
   margin-bottom:22px;
 }
 .hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--add-mark);box-shadow:0 0 0 3px color-mix(in srgb, var(--add-mark) 25%, transparent);}
+
 .hero h1{
   font-family:var(--disp);
   font-weight:700;
@@ -109,7 +110,7 @@ a{color:var(--accent);}
   letter-spacing:-0.02em;
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:12px;
 }
 .hero h1 .bell{
   display:inline-block;
@@ -119,7 +120,11 @@ a{color:var(--accent);}
 .hero h1 .bell:hover{
   transform: rotate(15deg) scale(1.15);
 }
+.hero h1 .title-text{
+  display:inline-block;
+}
 .hero h1 .ping{color:var(--accent);}
+
 .hero p.lede{
   font-size:19px;
   color:var(--ink-soft);
@@ -230,9 +235,14 @@ p{color:var(--ink);}
 /* ---------- intent ---------- */
 .problem-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap:14px;
   margin:26px 0 8px;
+}
+@media (max-width: 600px){
+  .problem-grid{
+    grid-template-columns: 1fr;
+  }
 }
 .problem-card{
   background:var(--surface);
@@ -240,6 +250,9 @@ p{color:var(--ink);}
   border-radius:var(--radius);
   padding:18px 18px 16px;
   transition:all 0.25s ease;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
 }
 .problem-card:hover{
   transform:translateY(-4px);
@@ -258,7 +271,7 @@ p{color:var(--ink);}
 }
 .problem-card p{font-size:14px;color:var(--ink-soft);margin:0;}
 .problem-card .verdict{
-  margin-top:10px;
+  margin-top:12px;
   font-size:12px;
   font-family:var(--body);
   font-weight:600;
@@ -275,14 +288,27 @@ p{color:var(--ink);}
 }
 .target-box ul{margin:10px 0 0;padding-left:20px;}
 .target-box li{margin-bottom:6px;font-size:14.5px;}
-.target-box li.out{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--border);}
+.target-box li.out{color:var(--ink-soft);}
+.target-box li.out .strike{text-decoration:line-through;text-decoration-color:var(--border);}
 
-/* ---------- try it ---------- */
+/* ---------- try it (수정: 버튼 오른쪽 정렬) ---------- */
 .try-card{
   background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, var(--surface)), var(--surface));
   border:1px solid var(--border);
   border-radius:18px;
   padding:34px;
+}
+.try-head-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.try-btn-wrapper{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:10px;
 }
 .tabs-row{
   display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;
@@ -365,8 +391,21 @@ p{color:var(--ink);}
   border-color:var(--accent);
   box-shadow:0 4px 12px rgba(0,0,0,0.03);
 }
-.te-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;}
-.te-head h3{margin:8px 0 0;display:flex;align-items:center;gap:8px;}
+.te-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.te-head h3{
+  margin:0;
+  line-height:1.4;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:18px;
+}
 .te-head h3::after{
   content:'▼';
   font-size:11px;
@@ -390,9 +429,10 @@ p{color:var(--ink);}
   font-size:11.5px;
   color:var(--ink-soft);
   background:var(--chip-bg);
-  padding:3px 9px;
+  padding:4px 10px;
   border-radius:6px;
   white-space:nowrap;
+  line-height:1.2;
 }
 .te-flow{
   display:flex;flex-direction:column;gap:6px;
@@ -447,7 +487,7 @@ p{color:var(--ink);}
   margin-bottom:6px;
 }
 
-/* ---------- now/status ---------- */
+/* ---------- now/status (수정: 한 줄 처리 및 공간 가변 확장) ---------- */
 .phase-filter{
   display:flex;gap:8px;margin-bottom:12px;
 }
@@ -477,22 +517,25 @@ p{color:var(--ink);}
   background:var(--surface);
 }
 .phase-row{
-  display:flex;flex-wrap:wrap;gap:4px 14px;
-  padding:10px 18px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:11px 18px;
   border-bottom:1px solid color-mix(in srgb, var(--border) 70%, transparent);
-  align-items:baseline;
   transition:background 0.2s;
+  white-space:nowrap;
+  overflow-x:auto; /* 줄바꿈 대신 깔끔한 가로 스크롤 허용 */
 }
 .phase-row:hover{
   background:color-mix(in srgb, var(--accent) 4%, transparent);
 }
 .phase-row:last-child{border-bottom:none;}
-.phase-row .id{color:var(--ink-soft);width:64px;flex-shrink:0;}
-.phase-row .st{width:14px;flex-shrink:0;}
+.phase-row .id{color:var(--ink-soft);width:80px;flex-shrink:0;} /* phase 7.5 등 폭 확장 */
+.phase-row .st{width:16px;flex-shrink:0;}
 .phase-row.done .st{color:var(--add-mark);}
 .phase-row.partial .st{color:#c99a1f;}
-.phase-row .name{font-family:var(--body);font-size:14px;}
-.phase-row .note{font-family:var(--body);font-size:12.5px;color:var(--ink-soft);flex-basis:100%;margin-left:78px;}
+.phase-row .name{font-family:var(--body);font-size:14px;flex-shrink:0;}
+.phase-row .note{font-family:var(--body);font-size:12.5px;color:var(--ink-soft);margin-left:auto;}
 
 /* ---------- 인터랙션용 스크롤 효과 및 키프레임 ---------- */
 .reveal{
@@ -521,19 +564,22 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
 </head>
 <body>
 
-<!-- 상단 스트립 (중앙 정렬) -->
+<!-- 상단 스트립 -->
 <div class="logstrip">
   <span><b>repo</b> 2026-SummerAICamp / Project</span>
   <span><b>status</b> deployed · Render + Neon Postgres</span>
-  <span><b>build</b> Phase 0 → Phase 9 · 2026-07-23 → 2026-07-31</span>
+  <span><b>build</b> Phase 0 → Phase 9 · 2026-07-20 → 2026-07-31</span>
 </div>
 
 <div class="wrap">
 
-  <!-- HERO (AlGoPing 붙여쓰기 수정 완료) -->
+  <!-- HERO -->
   <section class="hero" style="border:none;padding-top:64px;">
     <div class="hero-badge"><span class="dot"></span> 실서비스 배포 완료 · algoping.onrender.com</div>
-    <h1><span class="bell">🔔</span>AlGo<span class="ping">Ping</span></h1>
+    <h1>
+      <span class="bell">🔔</span>
+      <span class="title-text">AlGo<span class="ping">Ping</span></span>
+    </h1>
     <p class="lede">
       목표 기업의 코딩테스트 출제 경향에 맞춘 <b class="hl">오늘의 문제</b>를 매일 정해진 시간에 푸시로 받는 PWA입니다.
       로그인 없이 링크 하나로 나만의 설정을 가질 수 있고, 알림이 오면 그 자리에서 바로 풀면 됩니다.
@@ -570,23 +616,31 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
     </p>
     <div class="problem-grid">
       <div class="problem-card">
-        <span class="letter">A</span>
-        <p>"오늘 뭘 풀지" 정하는 것 자체가 부담이라 실행을 미루게 된다</p>
+        <div>
+          <span class="letter">A</span>
+          <p>"오늘 뭘 풀지" 정하는 것 자체가 부담이라 실행을 미루게 된다</p>
+        </div>
         <div class="verdict confirmed">✓ 강하게 확인 — 3명 모두 문제 고르는 데만 20분~2시간을 썼다</div>
       </div>
       <div class="problem-card">
-        <span class="letter">B</span>
-        <p>알림이 오면 그 순간 바로 반응해서 문제를 풀기 시작한다</p>
+        <div>
+          <span class="letter">B</span>
+          <p>알림이 오면 그 순간 바로 반응해서 문제를 풀기 시작한다</p>
+        </div>
         <div class="verdict partial">△ 부분 기각 — 확인은 해도 착수는 미루는 경우가 흔했다</div>
       </div>
       <div class="problem-card">
-        <span class="letter">C</span>
-        <p>목표 기업에 맞춘 문제가 아무 문제나 푸는 것보다 유의미하게 느껴진다</p>
+        <div>
+          <span class="letter">C</span>
+          <p>목표 기업에 맞춘 문제가 아무 문제나 푸는 것보다 유의미하게 느껴진다</p>
+        </div>
         <div class="verdict confirmed">✓ 강하게 확인</div>
       </div>
       <div class="problem-card">
-        <span class="letter">D</span>
-        <p>스트릭·통계 같은 시각적 기록이 꾸준함에 동기부여가 된다</p>
+        <div>
+          <span class="letter">D</span>
+          <p>스트릭·통계 같은 시각적 기록이 꾸준함에 동기부여가 된다</p>
+        </div>
         <div class="verdict partial">△ 조건부 확인 — 감정 기복이 큰 날엔 이마저 무시됐다</div>
       </div>
     </div>
@@ -597,12 +651,12 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
         <li><b>주 사용자</b> — 알고리즘 기초 실력은 있지만 결정 피로·완벽주의 때문에 꾸준한 실행이 어려운 코딩테스트 준비생 (나이·학력·직군을 가리지 않음을 인터뷰로 확인)</li>
         <li><b>확장 사용자</b> — 같은 목적으로 취업을 준비하는 지인·커뮤니티. 로그인 없이 링크만으로 각자 독립적인 설정 가능</li>
         <li><b>이런 순간에</b> — 여러 기업을 동시에 준비할 때 경향별로 연습량을 배분하고 싶을 때, 매일 정해진 시간에 문제를 놓치지 않고 받아보고 싶을 때</li>
-        <li class="out"><b>범위 밖</b> — 알고리즘 기초 개념을 처음 배우는 완전 초보자 (학습 콘텐츠가 아니라 "이미 할 수 있는 사람의 꾸준함"을 돕는 도구예요)</li>
+        <li class="out"><span class="strike"><b>범위 밖</b> — 알고리즘 기초 개념을 처음 배우는 완전 초보자</span> (학습 콘텐츠가 아니라 "이미 할 수 있는 사람의 꾸준함"을 돕는 도구예요)</li>
       </ul>
     </div>
   </section>
 
-  <!-- 2. TRY IT -->
+  <!-- 2. TRY IT (수정: 버튼 우측 정렬) -->
   <section id="try" class="reveal">
     <div class="section-tag">02 · TRY IT</div>
     <h2>직접 써보기</h2>
@@ -612,7 +666,9 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
         로그인 없이 접속하면 바로 오늘의 문제가 떠요. 설정 탭에서 알림을 켜면 원하는 시간·요일에 목표 기업
         문제를 푸시로 받아볼 수 있어요.
       </p>
-      <a class="btn btn-primary" href="https://algoping.onrender.com" target="_blank" rel="noopener" style="margin-top:10px;">지금 열어보기 →</a>
+      <div class="try-btn-wrapper">
+        <a class="btn btn-primary" href="https://algoping.onrender.com" target="_blank" rel="noopener">지금 열어보기 →</a>
+      </div>
       <div class="tabs-row">
         <span class="tab-pill"><b>01</b> 오늘의 문제</span>
         <span class="tab-pill"><b>02</b> 풀이 기록 · 통계</span>
@@ -623,7 +679,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
     </div>
   </section>
 
-  <!-- 3. DIFF week1 -> week2 -->
+  <!-- 3. DIFF week1 -> week2 (수정: - 요소 보충 추가) -->
   <section id="diff" class="reveal">
     <div class="section-tag">03 · 1주차 → 2주차</div>
     <h2>무엇이, 왜 바뀌었나</h2>
@@ -647,6 +703,8 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
       <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>페르소나 인터뷰 기반 UX 개선</b> — 큐레이션 근거 문구, 스트릭 0일 문구 완화, 고급 설정 기본 접기</span></div>
       <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>실배포 완료</b> — Render + Neon Postgres + GitHub Actions 크론</span></div>
       <div class="diff-line rm"><span class="mark">−</span><span class="txt">회사별 문제를 <b>AI가 직접 창작</b>하던 방식 (레퍼런스 솔루션·오답 코드 포함, 7건 전량 폐기)</span></div>
+      <div class="diff-line rm"><span class="mark">−</span><span class="txt"><b>푸시 알림 시간·대상 로컬 판단 방식</b> (서버 스케줄러가 판단하여 자동 발송하는 크론 구조로 개편)</span></div>
+      <div class="diff-line rm"><span class="mark">−</span><span class="txt"><b>임시 3페이지 구성 레이아웃</b> (5개 탭 직관적 구조로 전면 확장)</span></div>
       <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>실존 문제 매칭 방식으로 전면 전환</b> — 프로그래머스·리트코드 등에서 경향에 맞는 실제 문제를 매칭해 총 56개로 확장, 9개 기업 6~7개씩 균등화</span></div>
     </div>
   </section>
@@ -654,7 +712,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
   <!-- 4. TRIAL & ERROR -->
   <section id="trial" class="reveal">
     <div class="section-tag">04 · TRIAL &amp; ERROR</div>
-    <h2>만들면서 저지른 실수들 (클릭해서 열기/접기)</h2>
+    <h2>만들면서 저지른 실수들</h2>
 
     <div class="te-item open">
       <div class="te-head">
@@ -754,7 +812,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
     </div>
   </section>
 
-  <!-- 6. NOW -->
+  <!-- 6. NOW (수정: 줄바꿈 없이 한 줄로 깔끔하게 정렬) -->
   <section id="now" class="reveal">
     <div class="section-tag">06 · NOW</div>
     <h2>지금 여기까지 왔다</h2>
