@@ -64,7 +64,7 @@ img,svg{max-width:100%;}
 .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
 a{color:var(--accent);}
 
-/* ---------- top log strip ---------- */
+/* ---------- top log strip (중앙 정렬) ---------- */
 .logstrip{
   font-family:var(--mono);
   font-size:12px;
@@ -73,6 +73,8 @@ a{color:var(--accent);}
   border-bottom:1px solid var(--border);
   padding:10px 24px;
   display:flex;
+  justify-content:center;
+  align-items:center;
   gap:18px;
   overflow-x:auto;
   white-space:nowrap;
@@ -102,11 +104,21 @@ a{color:var(--accent);}
   font-family:var(--disp);
   font-weight:700;
   font-size:clamp(40px,7vw,68px);
-  line-height:1.02;
+  line-height:1.05;
   margin:0 0 18px;
   letter-spacing:-0.02em;
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
-.hero h1 .bell{font-size:0.65em;vertical-align:-0.05em;}
+.hero h1 .bell{
+  display:inline-block;
+  transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor:pointer;
+}
+.hero h1 .bell:hover{
+  transform: rotate(15deg) scale(1.15);
+}
 .hero h1 .ping{color:var(--accent);}
 .hero p.lede{
   font-size:19px;
@@ -147,20 +159,21 @@ a{color:var(--accent);}
   display:inline-flex;
   align-items:center;
   gap:8px;
-  transition:transform .15s ease, box-shadow .15s ease;
+  transition:all .2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor:pointer;
 }
 .btn-primary{
   background:var(--accent);
   color:white;
   box-shadow:0 8px 20px -8px color-mix(in srgb, var(--accent) 70%, transparent);
 }
-.btn-primary:hover{transform:translateY(-2px);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 24px -6px color-mix(in srgb, var(--accent) 80%, transparent);}
 .btn-ghost{
   background:transparent;
   color:var(--ink);
   border-color:var(--border);
 }
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);}
 
 .statline{
   display:grid;
@@ -174,6 +187,10 @@ a{color:var(--accent);}
 .statline div{
   padding:16px 14px;
   background:var(--surface);
+  transition:background 0.2s;
+}
+.statline div:hover{
+  background:color-mix(in srgb, var(--accent) 5%, var(--surface));
 }
 .statline b{
   display:block;
@@ -222,6 +239,12 @@ p{color:var(--ink);}
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:18px 18px 16px;
+  transition:all 0.25s ease;
+}
+.problem-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 24px -10px rgba(0,0,0,0.08);
+  border-color:var(--accent2);
 }
 .problem-card .letter{
   font-family:var(--mono);
@@ -273,8 +296,15 @@ p{color:var(--ink);}
   padding:7px 13px;
   border-radius:999px;
   color:var(--ink);
+  cursor:pointer;
+  transition:all 0.2s;
 }
-.tab-pill b{color:var(--accent);}
+.tab-pill:hover{
+  background:var(--accent);
+  color:white;
+}
+.tab-pill b{color:var(--accent);transition:color 0.2s;}
+.tab-pill:hover b{color:white;}
 
 /* ---------- diff ---------- */
 .diff-shell{
@@ -306,6 +336,10 @@ p{color:var(--ink);}
   display:flex;
   gap:12px;
   border-bottom:1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  transition:background 0.15s;
+}
+.diff-line:hover{
+  background:color-mix(in srgb, var(--accent) 8%, transparent);
 }
 .diff-line:last-child{border-bottom:none;}
 .diff-line .mark{width:14px;flex-shrink:0;font-weight:700;}
@@ -324,8 +358,32 @@ p{color:var(--ink);}
   border-radius:var(--radius);
   padding:22px 24px;
   margin-bottom:16px;
+  cursor:pointer;
+  transition:border-color 0.2s, box-shadow 0.2s;
 }
-.te-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap;}
+.te-item:hover{
+  border-color:var(--accent);
+  box-shadow:0 4px 12px rgba(0,0,0,0.03);
+}
+.te-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;}
+.te-head h3{margin:8px 0 0;display:flex;align-items:center;gap:8px;}
+.te-head h3::after{
+  content:'▼';
+  font-size:11px;
+  color:var(--ink-soft);
+  transition:transform 0.3s;
+}
+.te-item.open .te-head h3::after{
+  transform:rotate(180deg);
+}
+.te-body{
+  display:none;
+  margin-top:14px;
+  animation:fadeIn 0.3s forwards;
+}
+.te-item.open .te-body{
+  display:block;
+}
 .te-phase{
   font-family:var(--body);
   font-weight:500;
@@ -336,7 +394,6 @@ p{color:var(--ink);}
   border-radius:6px;
   white-space:nowrap;
 }
-.te-item h3{margin-top:8px;}
 .te-flow{
   display:flex;flex-direction:column;gap:6px;
   margin-top:12px;
@@ -363,6 +420,7 @@ p{color:var(--ink);}
   border-left:3px solid var(--accent3);
   font-size:14px;
   color:var(--ink-soft);
+  background:color-mix(in srgb, var(--accent3) 8%, transparent);
 }
 
 /* ---------- reflection ---------- */
@@ -375,6 +433,11 @@ p{color:var(--ink);}
   border-radius:var(--radius);
   padding:20px;
   background:var(--surface);
+  transition:all 0.25s ease;
+}
+.reflect-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--accent);
 }
 .reflect-card .n{
   font-family:var(--disp);
@@ -385,6 +448,26 @@ p{color:var(--ink);}
 }
 
 /* ---------- now/status ---------- */
+.phase-filter{
+  display:flex;gap:8px;margin-bottom:12px;
+}
+.filter-btn{
+  font-family:var(--mono);
+  font-size:12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--ink-soft);
+  padding:5px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.filter-btn.active{
+  background:var(--accent);
+  color:white;
+  border-color:var(--accent);
+}
+
 .phase-log{
   font-family:var(--mono);
   font-size:13px;
@@ -398,6 +481,10 @@ p{color:var(--ink);}
   padding:10px 18px;
   border-bottom:1px solid color-mix(in srgb, var(--border) 70%, transparent);
   align-items:baseline;
+  transition:background 0.2s;
+}
+.phase-row:hover{
+  background:color-mix(in srgb, var(--accent) 4%, transparent);
 }
 .phase-row:last-child{border-bottom:none;}
 .phase-row .id{color:var(--ink-soft);width:64px;flex-shrink:0;}
@@ -406,6 +493,21 @@ p{color:var(--ink);}
 .phase-row.partial .st{color:#c99a1f;}
 .phase-row .name{font-family:var(--body);font-size:14px;}
 .phase-row .note{font-family:var(--body);font-size:12.5px;color:var(--ink-soft);flex-basis:100%;margin-left:78px;}
+
+/* ---------- 인터랙션용 스크롤 효과 및 키프레임 ---------- */
+.reveal{
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.active{
+  opacity: 1;
+  transform: translateY(0);
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-5px);}
+  to{opacity:1;transform:translateY(0);}
+}
 
 footer{
   padding:40px 0 60px;
@@ -419,6 +521,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
 </head>
 <body>
 
+<!-- 상단 스트립 (중앙 정렬) -->
 <div class="logstrip">
   <span><b>repo</b> 2026-SummerAICamp / Project</span>
   <span><b>status</b> deployed · Render + Neon Postgres</span>
@@ -427,7 +530,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
 
 <div class="wrap">
 
-  <!-- HERO -->
+  <!-- HERO (AlGoPing 붙여쓰기 수정 완료) -->
   <section class="hero" style="border:none;padding-top:64px;">
     <div class="hero-badge"><span class="dot"></span> 실서비스 배포 완료 · algoping.onrender.com</div>
     <h1><span class="bell">🔔</span>AlGo<span class="ping">Ping</span></h1>
@@ -443,17 +546,17 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
       1주차에 만든 초기 소개 페이지가 궁금하다면 →
       <a href="https://nostalgicj.github.io/2026-SummerAICamp/" target="_blank" rel="noopener">nostalgicj.github.io/2026-SummerAICamp</a>
     </p>
-    <div class="statline">
-      <div><b>56</b><span>등록 문제 (기출 6 · 경향문제 50)</span></div>
-      <div><b>9</b><span>목표 기업군</span></div>
+    <div class="statline reveal">
+      <div><b class="count-up" data-target="56">0</b><span>등록 문제 (기출 6 · 경향문제 50)</span></div>
+      <div><b class="count-up" data-target="9">0</b><span>목표 기업군</span></div>
       <div><b>26+15</b><span>알고리즘 · CS 개념</span></div>
-      <div><b>5</b><span>탭 구성</span></div>
+      <div><b class="count-up" data-target="5">0</b><span>탭 구성</span></div>
       <div><b>0원</b><span>인프라 비용</span></div>
     </div>
   </section>
 
   <!-- 1. INTENT -->
-  <section id="intent">
+  <section id="intent" class="reveal">
     <div class="section-tag">01 · WHY</div>
     <h2>왜 만들었나</h2>
     <p>
@@ -500,7 +603,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
   </section>
 
   <!-- 2. TRY IT -->
-  <section id="try">
+  <section id="try" class="reveal">
     <div class="section-tag">02 · TRY IT</div>
     <h2>직접 써보기</h2>
     <div class="try-card">
@@ -521,7 +624,7 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
   </section>
 
   <!-- 3. DIFF week1 -> week2 -->
-  <section id="diff">
+  <section id="diff" class="reveal">
     <div class="section-tag">03 · 1주차 → 2주차</div>
     <h2>무엇이, 왜 바뀌었나</h2>
     <p class="muted" style="margin-bottom:24px;">
@@ -549,19 +652,21 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
   </section>
 
   <!-- 4. TRIAL & ERROR -->
-  <section id="trial">
+  <section id="trial" class="reveal">
     <div class="section-tag">04 · TRIAL &amp; ERROR</div>
-    <h2>만들면서 저지른 실수들</h2>
+    <h2>만들면서 저지른 실수들 (클릭해서 열기/접기)</h2>
 
-    <div class="te-item">
+    <div class="te-item open">
       <div class="te-head">
         <h3>백준 위주로 초안을 짰다가, 서비스 종료를 뒤늦게 알았다</h3>
         <span class="te-phase">Phase 1 · 1주차</span>
       </div>
-      <div class="te-flow">
-        <div class="step"><span class="k">초안</span><p>백준 23개 + 프로그래머스 6개로 첫 문제 데이터셋을 구성했어요.</p></div>
-        <div class="step"><span class="k">발견</span><p>백준이 2026-04-28부로 서비스를 종료한 것을 확인했어요.</p></div>
-        <div class="step fix"><span class="k">조치</span><p>23개 전부 프로그래머스의 살아있는 문제로 교체하고, "링크는 실접속 확인 후에만 등록"이라는 원칙을 세웠어요.</p></div>
+      <div class="te-body">
+        <div class="te-flow">
+          <div class="step"><span class="k">초안</span><p>백준 23개 + 프로그래머스 6개로 첫 문제 데이터셋을 구성했어요.</p></div>
+          <div class="step"><span class="k">발견</span><p>백준이 2026-04-28부로 서비스를 종료한 것을 확인했어요.</p></div>
+          <div class="step fix"><span class="k">조치</span><p>23개 전부 프로그래머스의 살아있는 문제로 교체하고, "링크는 실접속 확인 후에만 등록"이라는 원칙을 세웠어요.</p></div>
+        </div>
       </div>
     </div>
 
@@ -570,12 +675,14 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
         <h3>기업 라벨이 전부 틀렸다는 걸 재검증 과정에서 발견했다</h3>
         <span class="te-phase">Phase 7.5b · 2주차</span>
       </div>
-      <div class="te-flow">
-        <div class="step"><span class="k">초안</span><p>회사별 경향에 맞는 오리지널 문제를 AI가 직접 창작하고, 기존 38개 문제엔 "이 회사 스타일"이라는 라벨을 붙여뒀어요.</p></div>
-        <div class="step"><span class="k">발견</span><p>라벨을 실제 출처와 대조 재검증하던 중, "다트 게임"(현대 라벨)은 사실 카카오 2018 기출이고 "조이스틱"(삼성 라벨)은 네덜란드 NWERC 2010 문제였다는 걸 발견했어요. 라벨이 실제 출처와 무관하게 스타일만 보고 붙여진 것이었죠.</p></div>
-        <div class="step fix"><span class="k">조치</span><p>AI 창작 방식 자체를 폐기(생성 문제 7건 삭제)하고, "실제 존재하는 문제를 경향에 맞춰 매칭 추천"하는 파이프라인으로 전면 전환했어요.</p></div>
+      <div class="te-body">
+        <div class="te-flow">
+          <div class="step"><span class="k">초안</span><p>회사별 경향에 맞는 오리지널 문제를 AI가 직접 창작하고, 기존 38개 문제엔 "이 회사 스타일"이라는 라벨을 붙여뒀어요.</p></div>
+          <div class="step"><span class="k">발견</span><p>라벨을 실제 출처와 대조 재검증하던 중, "다트 게임"(현대 라벨)은 사실 카카오 2018 기출이고 "조이스틱"(삼성 라벨)은 네덜란드 NWERC 2010 문제였다는 걸 발견했어요. 라벨이 실제 출처와 무관하게 스타일만 보고 붙여진 것이었죠.</p></div>
+          <div class="step fix"><span class="k">조치</span><p>AI 창작 방식 자체를 폐기(생성 문제 7건 삭제)하고, "실제 존재하는 문제를 경향에 맞춰 매칭 추천"하는 파이프라인으로 전면 전환했어요.</p></div>
+        </div>
+        <div class="te-quote">"겉보기엔 그럴듯한 라벨도, 근거를 다시 확인하지 않으면 틀린 채로 남는다는 걸 배웠어요."</div>
       </div>
-      <div class="te-quote">"겉보기엔 그럴듯한 라벨도, 근거를 다시 확인하지 않으면 틀린 채로 남는다는 걸 배웠어요."</div>
     </div>
 
     <div class="te-item">
@@ -583,14 +690,16 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
         <h3>일시정지 날짜 필드, 다섯 번을 고치고서야 진짜 원인을 찾았다</h3>
         <span class="te-phase">Phase 8.5 · 2주차</span>
       </div>
-      <div class="te-flow">
-        <div class="step"><span class="k">1차</span><p>iOS에서 날짜 필드가 패널 밖으로 튀어나온다는 피드백 → 안내 텍스트를 겹쳐 추가했지만 해결 안 됨.</p></div>
-        <div class="step"><span class="k">2차</span><p>select 3개(년/월/일)로 통째로 교체했으나 "너무 못생겼다"는 피드백으로 되돌림.</p></div>
-        <div class="step fix"><span class="k">3차</span><p>진짜 원인은 날짜 필드가 아니라 옆 버튼에 <code>min-width</code>가 빠져있던 flex 레이아웃 버그였다는 걸 발견해 수정.</p></div>
-        <div class="step"><span class="k">4차</span><p>iOS 전용 placeholder를 추가했지만 실기기에서 여전히 튀어나옴.</p></div>
-        <div class="step fix"><span class="k">5차</span><p>iOS 네이티브 date picker가 페이지 CSS 폭 자체를 무시하는 문제로 결론 — 세로 배치로 전환하고, 뒤늦게 발견한 CSS 캐스케이드 버그까지 고친 뒤 <code>overflow:hidden</code> 안전장치를 추가.</p></div>
+      <div class="te-body">
+        <div class="te-flow">
+          <div class="step"><span class="k">1차</span><p>iOS에서 날짜 필드가 패널 밖으로 튀어나온다는 피드백 → 안내 텍스트를 겹쳐 추가했지만 해결 안 됨.</p></div>
+          <div class="step"><span class="k">2차</span><p>select 3개(년/월/일)로 통째로 교체했으나 "너무 못생겼다"는 피드백으로 되돌림.</p></div>
+          <div class="step fix"><span class="k">3차</span><p>진짜 원인은 날짜 필드가 아니라 옆 버튼에 <code>min-width</code>가 빠져있던 flex 레이아웃 버그였다는 걸 발견해 수정.</p></div>
+          <div class="step"><span class="k">4차</span><p>iOS 전용 placeholder를 추가했지만 실기기에서 여전히 튀어나옴.</p></div>
+          <div class="step fix"><span class="k">5차</span><p>iOS 네이티브 date picker가 페이지 CSS 폭 자체를 무시하는 문제로 결론 — 세로 배치로 전환하고, 뒤늦게 발견한 CSS 캐스케이드 버그까지 고친 뒤 <code>overflow:hidden</code> 안전장치를 추가.</p></div>
+        </div>
+        <div class="te-quote">"같은 버그가 반복되는 것처럼 보여도, 매번 원인은 달랐어요. 증상만 보고 고치면 다음 라운드에서 또 만나게 되더라고요."</div>
       </div>
-      <div class="te-quote">"같은 버그가 반복되는 것처럼 보여도, 매번 원인은 달랐어요. 증상만 보고 고치면 다음 라운드에서 또 만나게 되더라고요."</div>
     </div>
 
     <div class="te-item">
@@ -598,9 +707,11 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
         <h3>배포 직전에 발견한, 조용히 모든 구독을 날릴 뻔한 버그</h3>
         <span class="te-phase">Phase 8 · 2주차</span>
       </div>
-      <div class="te-flow">
-        <div class="step"><span class="k">문제</span><p>Web Push용 VAPID 키가 로컬 파일에만 저장되고 있었어요. Render 같은 배포 환경은 재시작 시 파일시스템이 초기화될 수 있어서, 배포할 때마다 키가 바뀌고 기존 사용자 구독이 전부 무효화될 뻔했어요.</p></div>
-        <div class="step fix"><span class="k">조치</span><p>환경변수(<code>VAPID_PUBLIC_KEY</code>/<code>VAPID_PRIVATE_KEY</code>)를 우선 사용하도록 고치고, 없을 때만 로컬 파일로 폴백하게 만들었어요.</p></div>
+      <div class="te-body">
+        <div class="te-flow">
+          <div class="step"><span class="k">문제</span><p>Web Push용 VAPID 키가 로컬 파일에만 저장되고 있었어요. Render 같은 배포 환경은 재시작 시 파일시스템이 초기화될 수 있어서, 배포할 때마다 키가 바뀌고 기존 사용자 구독이 전부 무효화될 뻔했어요.</p></div>
+          <div class="step fix"><span class="k">조치</span><p>환경변수(<code>VAPID_PUBLIC_KEY</code>/<code>VAPID_PRIVATE_KEY</code>)를 우선 사용하도록 고치고, 없을 때만 로컬 파일로 폴백하게 만들었어요.</p></div>
+        </div>
       </div>
     </div>
 
@@ -609,16 +720,18 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
         <h3>"we don't have access to your repo" — Render 자동배포가 안 걸린 이유</h3>
         <span class="te-phase">Phase 8.5 · 2주차</span>
       </div>
-      <div class="te-flow">
-        <div class="step"><span class="k">증상</span><p>Render 대시보드는 "Auto-Deploy: On Commit"으로 정상 표시되는데, push를 해도 배포가 자동으로 안 걸리고 매번 수동 배포를 눌러야 했어요.</p></div>
-        <div class="step"><span class="k">발견</span><p>GitHub 저장소에 Render 웹훅 자체가 등록돼 있지 않았어요 — 대시보드 표시와 실제 연동 상태가 어긋나 있었던 거죠.</p></div>
-        <div class="step fix"><span class="k">조치</span><p>Render의 GitHub 연동에 의존하는 대신, <code>main</code> push 시 Render Deploy Hook URL을 직접 호출하는 GitHub Actions 워크플로를 새로 만들어 우회했어요.</p></div>
+      <div class="te-body">
+        <div class="te-flow">
+          <div class="step"><span class="k">증상</span><p>Render 대시보드는 "Auto-Deploy: On Commit"으로 정상 표시되는데, push를 해도 배포가 자동으로 안 걸리고 매번 수동 배포를 눌러야 했어요.</p></div>
+          <div class="step"><span class="k">발견</span><p>GitHub 저장소에 Render 웹훅 자체가 등록돼 있지 않았어요 — 대시보드 표시와 실제 연동 상태가 어긋나 있었던 거죠.</p></div>
+          <div class="step fix"><span class="k">조치</span><p>Render의 GitHub 연동에 의존하는 대신, <code>main</code> push 시 Render Deploy Hook URL을 직접 호출하는 GitHub Actions 워크플로를 새로 만들어 우회했어요.</p></div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 5. LEARNED -->
-  <section id="learned">
+  <section id="learned" class="reveal">
     <div class="section-tag">05 · LEARNED</div>
     <h2>배운 점</h2>
     <div class="reflect-grid">
@@ -642,9 +755,16 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
   </section>
 
   <!-- 6. NOW -->
-  <section id="now">
+  <section id="now" class="reveal">
     <div class="section-tag">06 · NOW</div>
     <h2>지금 여기까지 왔다</h2>
+    
+    <div class="phase-filter">
+      <button class="filter-btn active" data-filter="all">전체보기</button>
+      <button class="filter-btn" data-filter="done">완료 (✓)</button>
+      <button class="filter-btn" data-filter="partial">진행 예정 (△)</button>
+    </div>
+
     <div class="phase-log">
       <div class="phase-row done"><span class="id">phase 0</span><span class="st">✓</span><span class="name">프로젝트 셋업</span></div>
       <div class="phase-row done"><span class="id">phase 1</span><span class="st">✓</span><span class="name">핵심 MVP — 오늘의 문제 조회</span></div>
@@ -668,6 +788,76 @@ footer a{color:var(--ink-soft);text-decoration:underline;}
   AlGoPing · algoping.onrender.com · 2026 Summer AI Camp 개인 프로젝트 · 2026-07-31 기준<br>
   <a href="https://nostalgicj.github.io/2026-SummerAICamp/" target="_blank" rel="noopener">1주차 초기 소개 페이지 →</a>
 </footer>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // 1. 시행착오 아코디언 토글
+  document.querySelectorAll(".te-item").forEach(item => {
+    item.addEventListener("click", () => {
+      item.classList.toggle("open");
+    });
+  });
+
+  // 2. NOW 페이즈 상태 필터링
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  const phaseRows = document.querySelectorAll(".phase-row");
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filterBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const filter = btn.dataset.filter;
+      phaseRows.forEach(row => {
+        if (filter === "all") {
+          row.style.display = "flex";
+        } else if (filter === "done" && row.classList.contains("done")) {
+          row.style.display = "flex";
+        } else if (filter === "partial" && row.classList.contains("partial")) {
+          row.style.display = "flex";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+  });
+
+  // 3. 스크롤 인터랙션 & 카운팅 애니메이션 (Intersection Observer)
+  const reveals = document.querySelectorAll(".reveal");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+        
+        // 상단 스탯 카운팅
+        const counters = entry.target.querySelectorAll(".count-up");
+        counters.forEach(counter => {
+          const target = +counter.getAttribute("data-target");
+          let count = 0;
+          const speed = 25;
+          const updateCount = () => {
+            const inc = Math.ceil(target / speed);
+            if (count < target) {
+              count += inc;
+              if(count > target) count = target;
+              counter.innerText = count;
+              setTimeout(updateCount, 40);
+            } else {
+              counter.innerText = target;
+            }
+          };
+          updateCount();
+        });
+
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+});
+</script>
 
 </body>
 </html>
