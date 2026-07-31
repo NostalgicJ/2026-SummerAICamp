@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlGoPing — 프로젝트 쇼케이스</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#6367ff;
+  --accent2:#8494ff;
+  --accent3:#c9beff;
+  --pink:#ffdbfd;
+  --bg:#f6f5fa;
+  --surface:#ffffff;
+  --ink:#1c1d2e;
+  --ink-soft:#565873;
+  --border:#e3e1ef;
+  --add-bg:#e8fbf0;
+  --add-ink:#0f7a3d;
+  --add-mark:#22a35a;
+  --rm-bg:#fdeef0;
+  --rm-ink:#b31f3c;
+  --rm-mark:#e0426a;
+  --chip-bg:#eeeafb;
+  --radius:14px;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --disp:'Space Grotesk', sans-serif;
+  --body:'Inter', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --accent:#8892ff;
+    --accent2:#a3aeff;
+    --accent3:#636ccb;
+    --pink:#e2a9e6;
+    --bg:#14152a;
+    --surface:#1c1e3d;
+    --ink:#eef0ff;
+    --ink-soft:#a9acd6;
+    --border:#33355e;
+    --add-bg:#0f2a1e;
+    --add-ink:#5fe0a0;
+    --add-mark:#3fbd82;
+    --rm-bg:#2e1620;
+    --rm-ink:#ff9bb0;
+    --rm-mark:#e0426a;
+    --chip-bg:#2a2e5c;
+  }
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{max-width:100%;}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px;}
+a{color:var(--accent);}
+
+/* ---------- top log strip ---------- */
+.logstrip{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--ink-soft);
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:10px 24px;
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+.logstrip span{opacity:.8;}
+.logstrip b{color:var(--accent);font-weight:600;}
+
+/* ---------- hero ---------- */
+.hero{
+  padding:72px 0 48px;
+  position:relative;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--accent);
+  background:var(--chip-bg);
+  border:1px solid var(--border);
+  padding:5px 12px;
+  border-radius:999px;
+  margin-bottom:22px;
+}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--add-mark);box-shadow:0 0 0 3px color-mix(in srgb, var(--add-mark) 25%, transparent);}
+.hero h1{
+  font-family:var(--disp);
+  font-size:clamp(40px,7vw,68px);
+  line-height:1.02;
+  margin:0 0 18px;
+  letter-spacing:-0.02em;
+}
+.hero h1 .bell{font-size:0.65em;vertical-align:-0.05em;}
+.hero h1 .ping{color:var(--accent);}
+.hero p.lede{
+  font-size:19px;
+  color:var(--ink-soft);
+  max-width:620px;
+  margin:0 0 30px;
+}
+.hero p.lede code{
+  font-family:var(--mono);
+  background:var(--chip-bg);
+  padding:1px 6px;
+  border-radius:6px;
+  font-size:0.88em;
+}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+.btn{
+  font-family:var(--body);
+  font-weight:600;
+  font-size:15px;
+  padding:13px 24px;
+  border-radius:11px;
+  border:1px solid transparent;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.btn-primary{
+  background:var(--accent);
+  color:white;
+  box-shadow:0 8px 20px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-ghost{
+  background:transparent;
+  color:var(--ink);
+  border-color:var(--border);
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+.statline{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(120px,1fr));
+  gap:0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.statline div{
+  padding:16px 4px 16px 0;
+  border-right:1px solid var(--border);
+}
+.statline div:last-child{border-right:none;}
+.statline b{
+  display:block;
+  font-family:var(--disp);
+  font-size:22px;
+  color:var(--accent);
+}
+.statline span{font-size:12.5px;color:var(--ink-soft);}
+
+/* ---------- section shell ---------- */
+section{padding:64px 0;border-top:1px solid var(--border);}
+.section-tag{
+  font-family:var(--mono);
+  font-size:12.5px;
+  color:var(--accent);
+  letter-spacing:.02em;
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-tag::before{
+  content:"";
+  width:16px;height:1px;
+  background:var(--accent);
+}
+h2{
+  font-family:var(--disp);
+  font-size:clamp(26px,4vw,36px);
+  letter-spacing:-0.01em;
+  margin:0 0 22px;
+}
+h3{font-family:var(--disp);font-size:19px;margin:0 0 8px;}
+p{color:var(--ink);}
+.muted{color:var(--ink-soft);}
+
+/* ---------- intent ---------- */
+.problem-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+  gap:14px;
+  margin:26px 0 8px;
+}
+.problem-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 18px 16px;
+}
+.problem-card .letter{
+  font-family:var(--mono);
+  font-size:12px;
+  color:white;
+  background:var(--accent);
+  width:22px;height:22px;
+  border-radius:6px;
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-bottom:10px;
+}
+.problem-card p{font-size:14px;color:var(--ink-soft);margin:0;}
+.problem-card .verdict{
+  margin-top:10px;
+  font-size:12px;
+  font-family:var(--mono);
+  font-weight:600;
+}
+.verdict.confirmed{color:var(--add-mark);}
+.verdict.partial{color:#c99a1f;}
+
+.target-box{
+  margin-top:26px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 22px;
+}
+.target-box ul{margin:10px 0 0;padding-left:20px;}
+.target-box li{margin-bottom:6px;font-size:14.5px;}
+.target-box li.out{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--border);}
+
+/* ---------- try it ---------- */
+.try-card{
+  background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, var(--surface)), var(--surface));
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:34px;
+}
+.tabs-row{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;
+}
+.tab-pill{
+  font-family:var(--mono);
+  font-size:12.5px;
+  background:var(--chip-bg);
+  border:1px solid var(--border);
+  padding:7px 13px;
+  border-radius:999px;
+  color:var(--ink);
+}
+.tab-pill b{color:var(--accent);}
+
+/* ---------- diff ---------- */
+.diff-shell{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  font-family:var(--mono);
+  font-size:13.5px;
+}
+.diff-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 18px;
+  border-bottom:1px solid var(--border);
+  color:var(--ink-soft);
+  font-size:12px;
+}
+.diff-why{
+  padding:16px 18px;
+  border-bottom:1px solid var(--border);
+  font-family:var(--body);
+  font-size:14.5px;
+  color:var(--ink-soft);
+  background:color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.diff-line{
+  padding:7px 18px;
+  display:flex;
+  gap:12px;
+  border-bottom:1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+.diff-line:last-child{border-bottom:none;}
+.diff-line .mark{width:14px;flex-shrink:0;font-weight:700;}
+.diff-line.add{background:var(--add-bg);color:var(--add-ink);}
+.diff-line.add .mark{color:var(--add-mark);}
+.diff-line.rm{background:var(--rm-bg);color:var(--rm-ink);}
+.diff-line.rm .mark{color:var(--rm-mark);}
+.diff-line .txt b{font-family:var(--body);}
+
+/* ---------- trial & error ---------- */
+.te-item{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  margin-bottom:16px;
+}
+.te-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap;}
+.te-phase{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--ink-soft);
+  background:var(--chip-bg);
+  padding:3px 9px;
+  border-radius:6px;
+  white-space:nowrap;
+}
+.te-item h3{margin-top:8px;}
+.te-flow{
+  display:flex;flex-direction:column;gap:6px;
+  margin-top:12px;
+  font-size:14.5px;
+}
+.te-flow .step{display:flex;gap:10px;}
+.te-flow .step .k{
+  font-family:var(--mono);
+  font-size:11px;
+  color:white;
+  background:var(--accent2);
+  padding:2px 8px;
+  border-radius:5px;
+  height:fit-content;
+  white-space:nowrap;
+  margin-top:2px;
+}
+.te-flow .step.fix .k{background:var(--add-mark);}
+.te-flow .step p{margin:0;color:var(--ink-soft);}
+.te-quote{
+  margin-top:14px;
+  padding:12px 14px;
+  border-left:3px solid var(--accent3);
+  font-size:14px;
+  font-style:italic;
+  color:var(--ink-soft);
+}
+
+/* ---------- reflection ---------- */
+.reflect-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;
+}
+@media (max-width:640px){.reflect-grid{grid-template-columns:1fr;}}
+.reflect-card{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  background:var(--surface);
+}
+.reflect-card .n{
+  font-family:var(--disp);
+  font-size:26px;
+  color:var(--accent3);
+  margin-bottom:6px;
+}
+
+/* ---------- now/status ---------- */
+.phase-log{
+  font-family:var(--mono);
+  font-size:13px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--surface);
+}
+.phase-row{
+  display:flex;gap:14px;
+  padding:10px 18px;
+  border-bottom:1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  align-items:baseline;
+}
+.phase-row:last-child{border-bottom:none;}
+.phase-row .id{color:var(--ink-soft);width:78px;flex-shrink:0;}
+.phase-row .st{width:16px;flex-shrink:0;}
+.phase-row.done .st{color:var(--add-mark);}
+.phase-row.partial .st{color:#c99a1f;}
+.phase-row .name{font-family:var(--body);font-size:14px;}
+.phase-row .note{font-family:var(--body);font-size:12.5px;color:var(--ink-soft);}
+
+footer{
+  padding:40px 0 60px;
+  text-align:center;
+  color:var(--ink-soft);
+  font-size:13px;
+  font-family:var(--mono);
+}
+footer a{color:var(--ink-soft);text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="logstrip">
+  <span><b>repo</b> 2026-SummerAICamp / Project</span>
+  <span><b>status</b> deployed · Render + Neon Postgres</span>
+  <span><b>build</b> Phase 0 → Phase 9 · 2026-07-23 → 2026-07-31</span>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="border:none;padding-top:64px;">
+    <div class="hero-badge"><span class="dot"></span> 실서비스 배포 완료 · algoping.onrender.com</div>
+    <h1><span class="bell">🔔</span>AlGo<span class="ping">Ping</span></h1>
+    <p class="lede">
+      목표 기업의 코딩테스트 출제 경향에 맞춘 <code>오늘의 문제</code>를 매일 정해진 시간에 푸시로 받는 PWA입니다.
+      로그인 없이 링크 하나로 나만의 설정을 가질 수 있고, 알림이 오면 그 자리에서 바로 풀면 됩니다.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://algoping.onrender.com" target="_blank" rel="noopener">지금 체험하기 →</a>
+      <a class="btn btn-ghost" href="#trial">시행착오 보러가기</a>
+    </div>
+    <div class="statline">
+      <div><b>56</b><span>등록 문제 (기출 6 · 경향문제 50)</span></div>
+      <div><b>9</b><span>목표 기업군</span></div>
+      <div><b>26+15</b><span>알고리즘 · CS 개념</span></div>
+      <div><b>5</b><span>탭 구성</span></div>
+      <div><b>0원</b><span>인프라 비용</span></div>
+    </div>
+  </section>
+
+  <!-- 1. INTENT -->
+  <section id="intent">
+    <div class="section-tag">01 · WHY</div>
+    <h2>왜 만들었나</h2>
+    <p>
+      코딩테스트는 기업마다 자주 나오는 유형과 평가 포인트가 달라요. 그런데 목표 없이 무작위로 문제를 풀면
+      실제 시험에서 낯선 유형에 시간을 뺏기게 되죠. "매일 한 문제씩 꾸준히 푼다"는 계획은 세우기는 쉬워도
+      지키기 어렵고, 기존 코딩테스트 연습 서비스들은 개인화된 알림도 기업별 문제 선별도 해주지 않았어요.
+    </p>
+    <p class="muted">
+      막연한 감으로 시작하지 않으려고, 가상 페르소나 3명(서버 개발자 지망 26세, AI 연구소 지망 대학원생 26세,
+      산업단지 엔지니어 지망 31세)을 대상으로 인터뷰를 진행해 아래 4가지 가정을 검증했어요.
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <span class="letter">A</span>
+        <p>"오늘 뭘 풀지" 정하는 것 자체가 부담이라 실행을 미루게 된다</p>
+        <div class="verdict confirmed">✓ 강하게 확인 — 3명 모두 문제 고르는 데만 20분~2시간을 썼다</div>
+      </div>
+      <div class="problem-card">
+        <span class="letter">B</span>
+        <p>알림이 오면 그 순간 바로 반응해서 문제를 풀기 시작한다</p>
+        <div class="verdict partial">△ 부분 기각 — 확인은 해도 착수는 미루는 경우가 흔했다</div>
+      </div>
+      <div class="problem-card">
+        <span class="letter">C</span>
+        <p>목표 기업에 맞춘 문제가 아무 문제나 푸는 것보다 유의미하게 느껴진다</p>
+        <div class="verdict confirmed">✓ 강하게 확인</div>
+      </div>
+      <div class="problem-card">
+        <span class="letter">D</span>
+        <p>스트릭·통계 같은 시각적 기록이 꾸준함에 동기부여가 된다</p>
+        <div class="verdict partial">△ 조건부 확인 — 감정 기복이 큰 날엔 이마저 무시됐다</div>
+      </div>
+    </div>
+
+    <div class="target-box">
+      <h3>누구에게, 어떤 경우에 쓸모있나</h3>
+      <ul>
+        <li><b>주 사용자</b> — 알고리즘 기초 실력은 있지만 결정 피로·완벽주의 때문에 꾸준한 실행이 어려운 코딩테스트 준비생 (나이·학력·직군을 가리지 않음을 인터뷰로 확인)</li>
+        <li><b>확장 사용자</b> — 같은 목적으로 취업을 준비하는 지인·커뮤니티. 로그인 없이 링크만으로 각자 독립적인 설정 가능</li>
+        <li><b>이런 순간에</b> — 여러 기업을 동시에 준비할 때 경향별로 연습량을 배분하고 싶을 때, 매일 정해진 시간에 문제를 놓치지 않고 받아보고 싶을 때</li>
+        <li class="out"><b>범위 밖</b> — 알고리즘 기초 개념을 처음 배우는 완전 초보자 (학습 콘텐츠가 아니라 "이미 할 수 있는 사람의 꾸준함"을 돕는 도구예요)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2. TRY IT -->
+  <section id="try">
+    <div class="section-tag">02 · TRY IT</div>
+    <h2>직접 써보기</h2>
+    <div class="try-card">
+      <h3 style="font-size:22px;">🔔 algoping.onrender.com</h3>
+      <p class="muted" style="max-width:520px;">
+        로그인 없이 접속하면 바로 오늘의 문제가 떠요. 설정 탭에서 알림을 켜면 원하는 시간·요일에 목표 기업
+        문제를 푸시로 받아볼 수 있어요.
+      </p>
+      <a class="btn btn-primary" href="https://algoping.onrender.com" target="_blank" rel="noopener" style="margin-top:10px;">지금 열어보기 →</a>
+      <div class="tabs-row">
+        <span class="tab-pill"><b>01</b> 오늘의 문제</span>
+        <span class="tab-pill"><b>02</b> 풀이 기록 · 통계</span>
+        <span class="tab-pill"><b>03</b> 알고리즘 사전</span>
+        <span class="tab-pill"><b>04</b> CS 개념 사전</span>
+        <span class="tab-pill"><b>05</b> 설정</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. DIFF week1 -> week2 -->
+  <section id="diff">
+    <div class="section-tag">03 · 1주차 → 2주차</div>
+    <h2>무엇이, 왜 바뀌었나</h2>
+    <p class="muted" style="margin-bottom:24px;">
+      1주차의 목표는 "MVP가 실제로 동작하는가"였다면, 2주차의 목표는 "이게 정말 매일 쓸 수 있는 서비스인가"로
+      바뀌었어요. 그래서 알림이 사람 손 없이도 스스로 울려야 했고(자동화), 문제가 정말 신뢰할 수 있는 것이어야
+      했고(경향 조사 파이프라인 전면 전환), 실제 사용자 반응을 반영해야 했어요(페르소나 인터뷰).
+    </p>
+    <div class="diff-shell">
+      <div class="diff-head">
+        <span>week1-mvp.diff → week2-final.diff</span>
+        <span>Phase 0-5 → Phase 6-9</span>
+      </div>
+      <div class="diff-why">1주차: 오늘의 문제를 보여주고, 개인 설정을 저장하고, 다크모드까지 갖춘 3페이지 MVP를 완성했어요.</div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>알림 스케줄 자동화</b> — 요일·시간·일시정지 설정 + GitHub Actions가 15분마다 발송 대상을 판정</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>알고리즘 사전 탭 신설</b> — 26종 태그를 자체 설명 + 인라인 SVG 다이어그램으로 정리 (4번째 탭)</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>CS 개념 사전 탭 신설</b> — OS·네트워크·DB·설계 15개 개념 정리 (5번째 탭)</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>통계 대시보드</b> — 스트릭, 잔디밭 히트맵, 요일·태그별 분포 (원래 향후 로드맵이었는데 앞당김)</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>문제 제안 → GitHub PR 자동화</b> — 폼 제출 시 브랜치·커밋·PR까지 자동 생성, 병합은 항상 사람이</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>PC/모바일 레이아웃 강제 전환</b> + 첫 방문 온보딩 코치마크</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>페르소나 인터뷰 기반 UX 개선</b> — 큐레이션 근거 문구, 스트릭 0일 문구 완화, 고급 설정 기본 접기</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>실배포 완료</b> — Render + Neon Postgres + GitHub Actions 크론</span></div>
+      <div class="diff-line rm"><span class="mark">−</span><span class="txt">회사별 문제를 <b>AI가 직접 창작</b>하던 방식 (레퍼런스 솔루션·오답 코드 포함, 7건 전량 폐기)</span></div>
+      <div class="diff-line add"><span class="mark">+</span><span class="txt"><b>실존 문제 매칭 방식으로 전면 전환</b> — 프로그래머스·리트코드 등에서 경향에 맞는 실제 문제를 매칭해 총 56개로 확장, 9개 기업 6~7개씩 균등화</span></div>
+    </div>
+  </section>
+
+  <!-- 4. TRIAL & ERROR -->
+  <section id="trial">
+    <div class="section-tag">04 · TRIAL &amp; ERROR</div>
+    <h2>만들면서 저지른 실수들</h2>
+
+    <div class="te-item">
+      <div class="te-head">
+        <h3>백준 위주로 초안을 짰다가, 서비스 종료를 뒤늦게 알았다</h3>
+        <span class="te-phase">Phase 1 · 1주차</span>
+      </div>
+      <div class="te-flow">
+        <div class="step"><span class="k">초안</span><p>백준 23개 + 프로그래머스 6개로 첫 문제 데이터셋을 구성했어요.</p></div>
+        <div class="step"><span class="k">발견</span><p>백준이 2026-04-28부로 서비스를 종료한 것을 확인했어요.</p></div>
+        <div class="step fix"><span class="k">조치</span><p>23개 전부 프로그래머스의 살아있는 문제로 교체하고, "링크는 실접속 확인 후에만 등록"이라는 원칙을 세웠어요.</p></div>
+      </div>
+    </div>
+
+    <div class="te-item">
+      <div class="te-head">
+        <h3>기업 라벨이 전부 틀렸다는 걸 재검증 과정에서 발견했다</h3>
+        <span class="te-phase">Phase 7.5b · 2주차</span>
+      </div>
+      <div class="te-flow">
+        <div class="step"><span class="k">초안</span><p>회사별 경향에 맞는 오리지널 문제를 AI가 직접 창작하고, 기존 38개 문제엔 "이 회사 스타일"이라는 라벨을 붙여뒀어요.</p></div>
+        <div class="step"><span class="k">발견</span><p>라벨을 실제 출처와 대조 재검증하던 중, "다트 게임"(현대 라벨)은 사실 카카오 2018 기출이고 "조이스틱"(삼성 라벨)은 네덜란드 NWERC 2010 문제였다는 걸 발견했어요. 라벨이 실제 출처와 무관하게 스타일만 보고 붙여진 것이었죠.</p></div>
+        <div class="step fix"><span class="k">조치</span><p>AI 창작 방식 자체를 폐기(생성 문제 7건 삭제)하고, "실제 존재하는 문제를 경향에 맞춰 매칭 추천"하는 파이프라인으로 전면 전환했어요.</p></div>
+      </div>
+      <div class="te-quote">"겉보기엔 그럴듯한 라벨도, 근거를 다시 확인하지 않으면 틀린 채로 남는다는 걸 배웠어요."</div>
+    </div>
+
+    <div class="te-item">
+      <div class="te-head">
+        <h3>일시정지 날짜 필드, 다섯 번을 고치고서야 진짜 원인을 찾았다</h3>
+        <span class="te-phase">Phase 8.5 · 2주차</span>
+      </div>
+      <div class="te-flow">
+        <div class="step"><span class="k">1차</span><p>iOS에서 날짜 필드가 패널 밖으로 튀어나온다는 피드백 → 안내 텍스트를 겹쳐 추가했지만 해결 안 됨.</p></div>
+        <div class="step"><span class="k">2차</span><p>select 3개(년/월/일)로 통째로 교체했으나 "너무 못생겼다"는 피드백으로 되돌림.</p></div>
+        <div class="step fix"><span class="k">3차</span><p>진짜 원인은 날짜 필드가 아니라 옆 버튼에 <code>min-width</code>가 빠져있던 flex 레이아웃 버그였다는 걸 발견해 수정.</p></div>
+        <div class="step"><span class="k">4차</span><p>iOS 전용 placeholder를 추가했지만 실기기에서 여전히 튀어나옴.</p></div>
+        <div class="step fix"><span class="k">5차</span><p>iOS 네이티브 date picker가 페이지 CSS 폭 자체를 무시하는 문제로 결론 — 세로 배치로 전환하고, 뒤늦게 발견한 CSS 캐스케이드 버그까지 고친 뒤 <code>overflow:hidden</code> 안전장치를 추가.</p></div>
+      </div>
+      <div class="te-quote">"같은 버그가 반복되는 것처럼 보여도, 매번 원인은 달랐어요. 증상만 보고 고치면 다음 라운드에서 또 만나게 되더라고요."</div>
+    </div>
+
+    <div class="te-item">
+      <div class="te-head">
+        <h3>배포 직전에 발견한, 조용히 모든 구독을 날릴 뻔한 버그</h3>
+        <span class="te-phase">Phase 8 · 2주차</span>
+      </div>
+      <div class="te-flow">
+        <div class="step"><span class="k">문제</span><p>Web Push용 VAPID 키가 로컬 파일에만 저장되고 있었어요. Render 같은 배포 환경은 재시작 시 파일시스템이 초기화될 수 있어서, 배포할 때마다 키가 바뀌고 기존 사용자 구독이 전부 무효화될 뻔했어요.</p></div>
+        <div class="step fix"><span class="k">조치</span><p>환경변수(<code>VAPID_PUBLIC_KEY</code>/<code>VAPID_PRIVATE_KEY</code>)를 우선 사용하도록 고치고, 없을 때만 로컬 파일로 폴백하게 만들었어요.</p></div>
+      </div>
+    </div>
+
+    <div class="te-item">
+      <div class="te-head">
+        <h3>"we don't have access to your repo" — Render 자동배포가 안 걸린 이유</h3>
+        <span class="te-phase">Phase 8.5 · 2주차</span>
+      </div>
+      <div class="te-flow">
+        <div class="step"><span class="k">증상</span><p>Render 대시보드는 "Auto-Deploy: On Commit"으로 정상 표시되는데, push를 해도 배포가 자동으로 안 걸리고 매번 수동 배포를 눌러야 했어요.</p></div>
+        <div class="step"><span class="k">발견</span><p>GitHub 저장소에 Render 웹훅 자체가 등록돼 있지 않았어요 — 대시보드 표시와 실제 연동 상태가 어긋나 있었던 거죠.</p></div>
+        <div class="step fix"><span class="k">조치</span><p>Render의 GitHub 연동에 의존하는 대신, <code>main</code> push 시 Render Deploy Hook URL을 직접 호출하는 GitHub Actions 워크플로를 새로 만들어 우회했어요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. LEARNED -->
+  <section id="learned">
+    <div class="section-tag">05 · LEARNED</div>
+    <h2>배운 점</h2>
+    <div class="reflect-grid">
+      <div class="reflect-card">
+        <div class="n">01</div>
+        <p>실접속·재검증 없이 "그럴듯한" 데이터를 그대로 믿으면 안 된다는 걸 두 번(백준 서비스 종료, 기업 라벨 오류) 겪고서야 몸으로 익혔어요. 이후 원칙으로 문서화했어요.</p>
+      </div>
+      <div class="reflect-card">
+        <div class="n">02</div>
+        <p>같은 버그가 반복돼도 원인은 매번 다를 수 있어요. 일시정지 날짜 필드처럼, 증상이 같다고 지난번 해결책을 그대로 다시 쓰면 또 실패해요.</p>
+      </div>
+      <div class="reflect-card">
+        <div class="n">03</div>
+        <p>대시보드 표시(Auto-Deploy: On)를 실제 동작과 동일시하면 안 된다는 것 — 겉으로 정상처럼 보여도 실제 연동 지점(웹훅)을 직접 확인해야 했어요.</p>
+      </div>
+      <div class="reflect-card">
+        <div class="n">04</div>
+        <p>페르소나 인터뷰로 "알림 확인 ≠ 실제 착수"라는, 처음 가정에 없던 마찰을 발견했어요. 기능을 먼저 만들기보다, 가정을 먼저 검증하는 게 방향을 덜 틀리게 해줬어요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. NOW -->
+  <section id="now">
+    <div class="section-tag">06 · NOW</div>
+    <h2>지금 여기까지 왔다</h2>
+    <div class="phase-log">
+      <div class="phase-row done"><span class="id">phase 0</span><span class="st">✓</span><span class="name">프로젝트 셋업</span></div>
+      <div class="phase-row done"><span class="id">phase 1</span><span class="st">✓</span><span class="name">핵심 MVP — 오늘의 문제 조회</span></div>
+      <div class="phase-row done"><span class="id">phase 2</span><span class="st">✓</span><span class="name">사용자별 설정 및 필터</span></div>
+      <div class="phase-row done"><span class="id">phase 3</span><span class="st">✓</span><span class="name">오늘의 문제 상호작용 · 반응형 · 다크모드</span></div>
+      <div class="phase-row done"><span class="id">phase 4</span><span class="st">✓</span><span class="name">데이터 영속성 (Postgres)</span></div>
+      <div class="phase-row done"><span class="id">phase 5</span><span class="st">✓</span><span class="name">PWA / Web Push 인프라</span><span class="note">실기기 알림 수신 확인 완료</span></div>
+      <div class="phase-row done"><span class="id">phase 6</span><span class="st">✓</span><span class="name">알림 스케줄링 자동화 · 알고리즘 탭 · 통계 대시보드</span></div>
+      <div class="phase-row done"><span class="id">phase 7</span><span class="st">✓</span><span class="name">문제 제안 → GitHub PR 자동화</span></div>
+      <div class="phase-row done"><span class="id">phase 7.5</span><span class="st">✓</span><span class="name">기업별 경향 조사 · 문제 매칭 파이프라인 전환</span></div>
+      <div class="phase-row done"><span class="id">phase 8</span><span class="st">✓</span><span class="name">배포 (Render + Neon + GitHub Actions)</span></div>
+      <div class="phase-row done"><span class="id">phase 8.5</span><span class="st">✓</span><span class="name">배포 후 UI 버그 수정</span></div>
+      <div class="phase-row done"><span class="id">phase 9</span><span class="st">✓</span><span class="name">CS 개념 사전 탭</span></div>
+      <div class="phase-row partial"><span class="id">phase 9+</span><span class="st">△</span><span class="name">다중 알림 채널 · 난이도 자동 조정</span><span class="note">향후 로드맵 (선택)</span></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  AlGoPing · algoping.onrender.com · 2026 Summer AI Camp 개인 프로젝트 · 2026-07-31 기준
+</footer>
+
+</body>
+</html>
